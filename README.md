@@ -19,4 +19,3 @@ Posar en settings.json:
     "json.schemas": [
         
     ],
-    npm install -D eslint prettier eslint-config-prettier eslint-plugin-prettier eslint-plugin-tailwindcss
