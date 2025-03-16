@@ -34,6 +34,7 @@ export default function SearchBar({ onSelectCountry }) {
   const [filterDescriptionVisible, setFilterDescriptionVisible] =
     useState(false);
   const [allCountriesVisible, setAllCountriesVisible] = useState(false);
+  const [selectedLocality, setSelectedLocality] = useState(null);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -60,6 +61,16 @@ export default function SearchBar({ onSelectCountry }) {
   const handleSelectLocality = (locality) => {
     setSearchText(locality.name);
     setFilteredLocalities([]);
+    setSelectedLocality(locality.name);
+  };
+
+  const handleSubmitEditing = () => {
+    const locality = localities.find(
+      (loc) => loc.name.toLowerCase() === searchText.toLowerCase(),
+    );
+    if (locality) {
+      setSelectedLocality(locality.name);
+    }
   };
 
   return (
@@ -71,6 +82,7 @@ export default function SearchBar({ onSelectCountry }) {
           placeholder='Search for a locality in Spain'
           value={searchText}
           onChangeText={handleSearch}
+          onSubmitEditing={handleSubmitEditing}
         />
         <TouchableOpacity
           onPress={() => setFilterDescriptionVisible(!filterDescriptionVisible)}
