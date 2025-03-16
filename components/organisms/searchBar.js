@@ -27,14 +27,14 @@ const localities = [
   // Agrega más localidades según sea necesario
 ];
 
-export default function SearchBar({ onSelectCountry }) {
+export default function SearchBar({ onSelectLocality }) {
   const [searchText, setSearchText] = useState('');
   const [filteredLocalities, setFilteredLocalities] = useState([]);
-  const [selectedCountries, setSelectedCountries] = useState([]); //más tarde para filtrar estadísticas por country
+  const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterDescriptionVisible, setFilterDescriptionVisible] =
     useState(false);
   const [allCountriesVisible, setAllCountriesVisible] = useState(false);
-  const [selectedLocality, setSelectedLocality] = useState(null); //más tarde para buscar localidad en el mapa
+  const [selectedLocality, setSelectedLocality] = useState(null);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -62,6 +62,7 @@ export default function SearchBar({ onSelectCountry }) {
     setSearchText(locality.name);
     setFilteredLocalities([]);
     setSelectedLocality(locality.name);
+    onSelectLocality(locality);
   };
 
   const handleSubmitEditing = () => {
@@ -70,6 +71,7 @@ export default function SearchBar({ onSelectCountry }) {
     );
     if (locality) {
       setSelectedLocality(locality.name);
+      onSelectLocality(locality);
     }
   };
 
@@ -111,7 +113,7 @@ export default function SearchBar({ onSelectCountry }) {
           >
             <AntDesign name='close' size={24} color='black' />
           </TouchableOpacity>
-          <Text>
+          <Text style={styles.filterDescriptionText}>
             This filter allows you to select countries to filter tourism
             statistics within Spain. By default, the filter is set to show
             statistics for all countries.
@@ -181,6 +183,7 @@ const styles = StyleSheet.create({
     top: 50,
     width: '100%',
     alignItems: 'center',
+    zIndex: 1, //muestra encima del mapa
   },
   searchBar: {
     flexDirection: 'row',
@@ -207,6 +210,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     width: '90%',
+  },
+  filterDescriptionText: {
+    marginRight: 35,
+    padding: 5,
+    textAlign: 'justify',
   },
   closeIconTouchable: {
     position: 'absolute',
