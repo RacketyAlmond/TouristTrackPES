@@ -1,10 +1,14 @@
 import { StyleSheet, View } from 'react-native';
-import Map from './components/organisms/map';
+import SearchBar from './components/organisms/searchBar';
 
 export default function App() {
+  const handleSelectCountry = (country) => {
+    console.log(`Selected country: ${country.name}`);
+  };
+
   return (
     <View style={styles.container}>
-      <Map />
+      <SearchBar onSelectCountry={handleSelectCountry} />
     </View>
   );
 }
