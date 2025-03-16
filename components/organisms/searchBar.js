@@ -7,21 +7,29 @@ import {
   Text,
   ScrollView,
   Modal,
-  FlatList,
 } from 'react-native';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons, AntDesign } from '@expo/vector-icons';
 
 const countries = [
-  { name: 'Spain', code: 'ES', flag: '🇪🇸' },
+  { name: 'England', code: 'GB', flag: '🇬🇧' },
   { name: 'France', code: 'FR', flag: '🇫🇷' },
   { name: 'Germany', code: 'DE', flag: '🇩🇪' },
   { name: 'Italy', code: 'IT', flag: '🇮🇹' },
   // Agrega más países según sea necesario
 ];
 
+const localities = [
+  { name: 'Madrid' },
+  { name: 'Barcelona' },
+  { name: 'Valencia' },
+  { name: 'Seville' },
+  { name: 'Zaragoza' },
+  // Agrega más localidades según sea necesario
+];
+
 export default function SearchBar({ onSelectCountry }) {
   const [searchText, setSearchText] = useState('');
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [filteredLocalities, setFilteredLocalities] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterDescriptionVisible, setFilterDescriptionVisible] =
     useState(false);
@@ -30,12 +38,12 @@ export default function SearchBar({ onSelectCountry }) {
   const handleSearch = (text) => {
     setSearchText(text);
     if (text) {
-      const filtered = countries.filter((country) =>
-        country.name.toLowerCase().startsWith(text.toLowerCase()),
+      const filtered = localities.filter((locality) =>
+        locality.name.toLowerCase().startsWith(text.toLowerCase()),
       );
-      setFilteredCountries(filtered);
+      setFilteredLocalities(filtered);
     } else {
-      setFilteredCountries([]);
+      setFilteredLocalities([]);
     }
   };
 
@@ -47,6 +55,11 @@ export default function SearchBar({ onSelectCountry }) {
 
   const handleRemoveCountry = (country) => {
     setSelectedCountries(selectedCountries.filter((c) => c !== country));
+  };
+
+  const handleSelectLocality = (locality) => {
+    setSearchText(locality.name);
+    setFilteredLocalities([]);
   };
 
   return (
@@ -65,16 +78,32 @@ export default function SearchBar({ onSelectCountry }) {
           <MaterialIcons name='filter-list' size={24} color='blue' />
         </TouchableOpacity>
       </View>
+      {filteredLocalities.length > 0 && (
+        <ScrollView vertical style={styles.results}>
+          {filteredLocalities.map((locality, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.countryButton}
+              onPress={() => handleSelectLocality(locality)}
+            >
+              <Text style={styles.countryName}>{locality.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      )}
       {filterDescriptionVisible && (
         <View style={styles.filterDescription}>
+          <TouchableOpacity
+            style={styles.closeIconTouchable}
+            onPress={() => setFilterDescriptionVisible(false)}
+          >
+            <AntDesign name='close' size={24} color='black' />
+          </TouchableOpacity>
           <Text>
             This filter allows you to select countries to filter tourism
             statistics within Spain. By default, the filter is set to show
             statistics for all countries.
           </Text>
-          <TouchableOpacity onPress={() => setFilterDescriptionVisible(false)}>
-            <Text style={styles.closeButton}>Close</Text>
-          </TouchableOpacity>
           <ScrollView horizontal style={styles.selectedCountries}>
             {selectedCountries.map((country) => (
               <TouchableOpacity
@@ -93,49 +122,43 @@ export default function SearchBar({ onSelectCountry }) {
           >
             <Text style={styles.addFilterButton}>Add filter</Text>
           </TouchableOpacity>
+          <Modal
+            visible={allCountriesVisible}
+            animationType='slide'
+            transparent={true}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                <TouchableOpacity
+                  style={styles.closeIconTouchable}
+                  onPress={() => setAllCountriesVisible(false)}
+                >
+                  <AntDesign name='close' size={24} color='black' />
+                </TouchableOpacity>
+                <ScrollView style={styles.countryList}>
+                  {countries.map((item) => (
+                    <TouchableOpacity
+                      key={item.code}
+                      style={[
+                        styles.countryButton,
+                        selectedCountries.includes(item) &&
+                          styles.selectedCountryButton,
+                      ]}
+                      onPress={() => {
+                        handleSelectCountry(item);
+                        setAllCountriesVisible(false);
+                      }}
+                    >
+                      <Text style={styles.flag}>{item.flag}</Text>
+                      <Text style={styles.countryName}>{item.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </View>
+            </View>
+          </Modal>
         </View>
       )}
-      {filteredCountries.length > 0 && (
-        <ScrollView vertical style={styles.results}>
-          {filteredCountries.map((country) => (
-            <TouchableOpacity
-              key={country.code}
-              style={styles.countryButton}
-              onPress={() => handleSelectCountry(country)}
-            >
-              <Text style={styles.flag}>{country.flag}</Text>
-              <Text style={styles.countryName}>{country.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      )}
-      <Modal visible={allCountriesVisible} animationType='slide'>
-        <ScrollView vertical style={styles.modalContainer}>
-          <FlatList
-            data={countries}
-            keyExtractor={(item) => item.code}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[
-                  styles.countryButton,
-                  selectedCountries.includes(item) &&
-                    styles.selectedCountryButton,
-                ]}
-                onPress={() => {
-                  handleSelectCountry(item);
-                  setAllCountriesVisible(false);
-                }}
-              >
-                <Text style={styles.flag}>{item.flag}</Text>
-                <Text style={styles.countryName}>{item.name}</Text>
-              </TouchableOpacity>
-            )}
-          />
-          <TouchableOpacity onPress={() => setAllCountriesVisible(false)}>
-            <Text style={styles.closeButton}>Close</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </Modal>
     </View>
   );
 }
@@ -164,6 +187,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginLeft: 10,
+    outlineStyle: 'none',
   },
   filterDescription: {
     marginTop: 10,
@@ -172,11 +196,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '90%',
   },
-  closeButton: {
-    color: 'blue',
-    marginTop: 10,
-    marginBottom: 10,
-    textAlign: 'right',
+  closeIconTouchable: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 10, // Aumentar el área de clic
   },
   selectedCountries: {
     marginTop: 10,
@@ -218,10 +242,21 @@ const styles = StyleSheet.create({
   countryName: {
     fontSize: 16,
   },
-  modalContainer: {
+  modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
     padding: 20,
+    alignItems: 'center',
+  },
+  countryList: {
+    width: '100%',
+    marginTop: 40,
   },
 });
