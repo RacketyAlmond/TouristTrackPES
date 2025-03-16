@@ -30,11 +30,11 @@ const localities = [
 export default function SearchBar({ onSelectCountry }) {
   const [searchText, setSearchText] = useState('');
   const [filteredLocalities, setFilteredLocalities] = useState([]);
-  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [selectedCountries, setSelectedCountries] = useState([]); //más tarde para filtrar estadísticas por country
   const [filterDescriptionVisible, setFilterDescriptionVisible] =
     useState(false);
   const [allCountriesVisible, setAllCountriesVisible] = useState(false);
-  const [selectedLocality, setSelectedLocality] = useState(null);
+  const [selectedLocality, setSelectedLocality] = useState(null); //más tarde para buscar localidad en el mapa
 
   const handleSearch = (text) => {
     setSearchText(text);
