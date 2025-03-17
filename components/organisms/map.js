@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView, { Polygon, Marker } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
+import Area from '../atoms/area';
 
 export default function Map() {
   const cities = [
@@ -19,11 +20,14 @@ export default function Map() {
       }}
     >
       {cities.map((city, index) => (
+        <>
         <Marker
           keyr={index}
           coordinate={{ latitude: city.latitude, longitude: city.longitude }}
           pinColor={city.color}
         />
+        <Area municipi='madrid' numTuristes={500000} />
+        </>
       ))}
     </MapView>
   );
