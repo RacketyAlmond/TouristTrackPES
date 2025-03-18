@@ -1,8 +1,10 @@
-/* eslint-disable prettier/prettier */
-// Filtro.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
+const normalizeString = (str) => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
 
 const Filtro = ({nacionalidadesDisponibles}) => {
 
@@ -14,10 +16,16 @@ const Filtro = ({nacionalidadesDisponibles}) => {
   }
 
   const handleKeyPress = () => {
-    if (nacionalidadesDisponibles.includes(searchTerm) && !filters.includes(searchTerm)) {
-      setFilters((prevFilters) => [...prevFilters, searchTerm]);
+    const normalizedSearchTerm = normalizeString(searchTerm);
+
+    const match = nacionalidadesDisponibles.find(
+      (nacionality) => normalizeString(nacionality) === normalizedSearchTerm
+    );
+
+    if (match && !filters.includes(match)) {
+      setFilters((prevFilters) => [...prevFilters, match]);
       setSearchTerm("");
-      obtenerEstadisiticas(searchTerm);
+      obtenerEstadisiticas(match);
     }
   };
 

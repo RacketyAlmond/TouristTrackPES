@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import Filtro from './components/organisms/filtro';
@@ -22,9 +21,9 @@ export default function App() {
         const municipalityData = getDataOfMunicipality('Santander', data);
         console.log(municipalityData);
         console.log('lista');
-        const uwu = listOriginCountries(municipalityData);
-        setAvailableNacionalities(uwu);
-        console.log(uwu);
+        const countries = listOriginCountries(municipalityData);
+        setAvailableNacionalities(countries);
+        console.log(countries);
         const filteredData = filterData(
           [2024],
           [5, 6, 7],
