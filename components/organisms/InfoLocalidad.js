@@ -77,16 +77,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     right: 20,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    borderRadius: 20,
+    padding: 10,
     backgroundColor: 'gainsboro',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  closeButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    zIndex: 10, // Asegura que el botón de cerrar esté por encima del InfoLocalidad
   },
   title: {
     fontSize: 24,
