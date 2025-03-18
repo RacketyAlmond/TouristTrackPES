@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 export default function InfoLocalidad({ locality, onClose }) {
   if (!locality) return null;
@@ -19,7 +19,7 @@ export default function InfoLocalidad({ locality, onClose }) {
         );
       } else {
         stars.push(
-          <FontAwesome key={i} name='star-o' size={20} color='gold' border />,
+          <FontAwesome key={i} name='star-o' size={20} color='gold' />,
         );
       }
     }
@@ -30,10 +30,10 @@ export default function InfoLocalidad({ locality, onClose }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-        <Text style={styles.closeButtonText}>X</Text>
+        <MaterialIcons name='close' size={20} color='black' />
       </TouchableOpacity>
       <Text style={styles.title}>{locality.name}</Text>
-      <Text style={styles.comarca}>{locality.comarca}</Text>
+      <Text style={styles.comunidad}>{locality.comunidad}</Text>
       <View style={styles.ratingContainer}>
         {renderStars(locality.rating)}
         <Text style={styles.ratingText}>
@@ -41,13 +41,13 @@ export default function InfoLocalidad({ locality, onClose }) {
         </Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.info}>
-          Número de turistas: {locality.tourists}M
-        </Text>
+        <Text style={styles.info}>Número de turistas: </Text>
+        <Text style={styles.valueInfo}>{locality.tourists}M</Text>
         <Text style={styles.parameter}> anuales </Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.info}>Gasto medio: {locality.expenses}€</Text>
+        <Text style={styles.info}>Gasto medio: </Text>
+        <Text style={styles.valueInfo}>{locality.expenses}€</Text>
         <Text style={styles.parameter}> por persona y noche </Text>
       </View>
       <TouchableOpacity style={styles.estadisticasButton}>
@@ -75,8 +75,14 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    top: 20,
+    right: 20,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'gainsboro',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   closeButtonText: {
     fontSize: 18,
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     color: 'rebeccapurple',
   },
-  comarca: {
+  comunidad: {
     fontSize: 15,
     marginBottom: 10,
     color: 'gray',
@@ -103,6 +109,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   info: {
+    fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 5,
   },
@@ -110,6 +117,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: 'gray',
+  },
+  valueInfo: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: 'rebeccapurple',
   },
   estadisticasButton: {
     alignItems: 'center',

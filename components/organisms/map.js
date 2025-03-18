@@ -8,6 +8,7 @@ export default function Map({ selectedLocality, onSelectLocality }) {
   const cities = [
     {
       name: 'Madrid',
+      comarca: 'Comunidad de Madrid',
       latitude: 40.4168,
       longitude: -3.7038,
       color: 'red',
@@ -18,6 +19,7 @@ export default function Map({ selectedLocality, onSelectLocality }) {
     },
     {
       name: 'Barcelona',
+      comarca: 'Cataluña',
       latitude: 41.3784,
       longitude: 2.192,
       color: 'blue',
@@ -28,6 +30,7 @@ export default function Map({ selectedLocality, onSelectLocality }) {
     },
     {
       name: 'Valencia',
+      comarca: 'Comunidad Valenciana',
       latitude: 39.4699,
       longitude: -0.3763,
       color: 'green',
@@ -38,6 +41,7 @@ export default function Map({ selectedLocality, onSelectLocality }) {
     },
     {
       name: 'Seville',
+      comarca: 'Andalucía',
       latitude: 37.3891,
       longitude: -5.9845,
       color: 'orange',
@@ -48,6 +52,7 @@ export default function Map({ selectedLocality, onSelectLocality }) {
     },
     {
       name: 'Zaragoza',
+      comarca: 'Aragón',
       latitude: 41.6488,
       longitude: -0.8891,
       color: 'purple',

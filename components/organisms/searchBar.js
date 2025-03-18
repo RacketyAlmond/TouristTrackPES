@@ -107,12 +107,7 @@ export default function SearchBar({ onSelectLocality }) {
       )}
       {filterDescriptionVisible && (
         <View style={styles.filterDescription}>
-          <TouchableOpacity
-            style={styles.closeIconTouchable}
-            onPress={() => setFilterDescriptionVisible(false)}
-          >
-            <AntDesign name='close' size={24} color='black' />
-          </TouchableOpacity>
+          <Text style={styles.title}>Filter</Text>
           <Text style={styles.filterDescriptionText}>
             This filter allows you to select countries to filter tourism
             statistics within Spain. By default, the filter is set to show
@@ -204,23 +199,24 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     outlineStyle: 'none',
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    marginLeft: 5,
+    color: 'black',
+  },
   filterDescription: {
     marginTop: 10,
+    paddingHorizontal: 10,
     padding: 10,
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     width: '90%',
   },
   filterDescriptionText: {
-    marginRight: 35,
     padding: 5,
     textAlign: 'justify',
-  },
-  closeIconTouchable: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 10, // Aumentar el área de clic
   },
   selectedCountries: {
     marginTop: 10,
