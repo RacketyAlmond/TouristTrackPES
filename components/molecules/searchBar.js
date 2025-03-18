@@ -34,7 +34,6 @@ export default function SearchBar({ onSearch }) {
   const [filterDescriptionVisible, setFilterDescriptionVisible] =
     useState(false);
   const [allCountriesVisible, setAllCountriesVisible] = useState(false);
-  const [selectedLocality, setSelectedLocality] = useState(null);
 
   const handleSearch = (text) => {
     setSearchText(text);
