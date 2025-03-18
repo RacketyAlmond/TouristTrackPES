@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
-
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const normalizeString = (str) => {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 };
 
-const Filtro = ({nacionalidadesDisponibles}) => {
+const Filtro = ({ nacionalidadesDisponibles }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
 
   const obtenerEstadisticas = (nacionalidad) => {
-    console.log(`Pos aqui iria la llamada a la API para obtener las estadisticas de ${nacionalidad}`);
+    console.log(
+      `Pos aqui iria la llamada a la API para obtener las estadisticas de ${nacionalidad}`,
+    );
   };
 
   const handleSearchChange = (text) => {
@@ -22,7 +33,7 @@ const Filtro = ({nacionalidadesDisponibles}) => {
     if (text.length > 0) {
       const normalizedText = normalizeString(text);
       const filtered = nacionalidadesDisponibles.filter((nacionalidad) =>
-        normalizeString(nacionalidad).includes(normalizedText)
+        normalizeString(nacionalidad).includes(normalizedText),
       );
       setFilteredOptions(filtered);
     } else {
@@ -33,9 +44,9 @@ const Filtro = ({nacionalidadesDisponibles}) => {
   const handleSelect = (nacionalidad) => {
     const normalizedSearchTerm = normalizeString(nacionalidad);
     const match = nacionalidadesDisponibles.find(
-      (nacionalidad) => normalizeString(nacionalidad) === normalizedSearchTerm
+      (nacionalidad) => normalizeString(nacionalidad) === normalizedSearchTerm,
     );
-  
+
     if (!filters.includes(match) && nacionalidadesDisponibles.includes(match)) {
       setFilters([...filters, match]);
       obtenerEstadisticas(match);
@@ -51,8 +62,10 @@ const Filtro = ({nacionalidadesDisponibles}) => {
   return (
     <View style={styles.externalContainer}>
       <Text style={styles.bigText}>Filtrar por nacionalidad</Text>
-      <Text style={styles.smallText}>Selecciona la nacionalidad por la que quieres ver las estadísticas</Text>
-      
+      <Text style={styles.smallText}>
+        Selecciona la nacionalidad por la que quieres ver las estadísticas
+      </Text>
+
       {/* Contenedor de filtros seleccionados */}
       <ScrollView horizontal style={styles.scrollContainer}>
         <View style={styles.filterContainer}>
@@ -60,7 +73,7 @@ const Filtro = ({nacionalidadesDisponibles}) => {
             <View key={index} style={styles.filter}>
               <Text style={styles.filterText}>{filter}</Text>
               <TouchableOpacity onPress={() => handleDelete(filter)}>
-                <MaterialIcons name="cancel" size={20} color="lightgray" />
+                <MaterialIcons name='cancel' size={20} color='lightgray' />
               </TouchableOpacity>
             </View>
           ))}
@@ -69,7 +82,7 @@ const Filtro = ({nacionalidadesDisponibles}) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Buscar país..."
+        placeholder='Buscar país...'
         value={searchTerm}
         onChangeText={handleSearchChange}
         onSubmitEditing={() => handleSelect(searchTerm)}
@@ -80,7 +93,10 @@ const Filtro = ({nacionalidadesDisponibles}) => {
             data={filteredOptions}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item)}>
+              <TouchableOpacity
+                style={styles.dropdownItem}
+                onPress={() => handleSelect(item)}
+              >
                 <Text>{item}</Text>
               </TouchableOpacity>
             )}

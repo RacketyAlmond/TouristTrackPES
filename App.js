@@ -12,8 +12,7 @@ import {
 
 export default function App() {
   const [data, setData] = useState('');
-  const[availableNacionalities, setAvailableNacionalities] = useState([]);
-
+  const [availableNacionalities, setAvailableNacionalities] = useState([]);
 
   useEffect(() => {
     fetchCSV(
@@ -49,7 +48,7 @@ export default function App() {
           : 'se esta haciendo fetch de la API...'}
       </Text>
       <StatusBar style='auto' />
-      <Filtro nacionalidadesDisponibles= {availableNacionalities}/>
+      <Filtro nacionalidadesDisponibles={availableNacionalities} />
     </View>
   );
 }

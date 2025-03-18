@@ -1,6 +1,12 @@
 import Papa from 'papaparse';
 import 'fast-text-encoding';
 
+const decodeISO88591 = (buffer) => {
+  return Array.from(new Uint8Array(buffer))
+    .map((byte) => String.fromCharCode(byte))
+    .join('');
+};
+
 export const fetchCSV = (callback, errorCallback) => {
   const url =
     'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Cantabria';
@@ -10,8 +16,7 @@ export const fetchCSV = (callback, errorCallback) => {
       return resp.arrayBuffer();
     })
     .then((data) => {
-      const decoder = new TextDecoder('ISO-8859-1');
-      const decodedText = decoder.decode(data);
+      const decodedText = decodeISO88591(data);
 
       const parsedData = Papa.parse(decodedText, { header: true });
       console.log(parsedData.data);
