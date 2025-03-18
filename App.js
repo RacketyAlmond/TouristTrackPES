@@ -48,7 +48,7 @@ export default function App() {
           : 'se esta haciendo fetch de la API...'}
       </Text>
       <StatusBar style='auto' />
-      <Filtro nacionalidadesDisponibles={availableNacionalities} />
+      <Filtro countryArray={availableNacionalities} />
     </View>
   );
 }

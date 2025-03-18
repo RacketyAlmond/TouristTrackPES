@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Vibration,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -17,14 +18,15 @@ const normalizeString = (str) => {
     .toLowerCase();
 };
 
-const Filtro = ({ nacionalidadesDisponibles }) => {
+const Filtro = ({ countryArray }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState([]);
   const [filteredOptions, setFilteredOptions] = useState([]);
+  const [textColor, setTextColor] = useState('black');
 
-  const obtenerEstadisticas = (nacionalidad) => {
+  const findStats = (country) => {
     console.log(
-      `Pos aqui iria la llamada a la API para obtener las estadisticas de ${nacionalidad}`,
+      `Pos aqui iria la llamada a la API para obtener las estadisticas de ${country}`,
     );
   };
 
@@ -32,8 +34,8 @@ const Filtro = ({ nacionalidadesDisponibles }) => {
     setSearchTerm(text);
     if (text.length > 0) {
       const normalizedText = normalizeString(text);
-      const filtered = nacionalidadesDisponibles.filter((nacionalidad) =>
-        normalizeString(nacionalidad).includes(normalizedText),
+      const filtered = countryArray.filter((country) =>
+        normalizeString(country).includes(normalizedText),
       );
       setFilteredOptions(filtered);
     } else {
@@ -41,18 +43,29 @@ const Filtro = ({ nacionalidadesDisponibles }) => {
     }
   };
 
-  const handleSelect = (nacionalidad) => {
-    const normalizedSearchTerm = normalizeString(nacionalidad);
-    const match = nacionalidadesDisponibles.find(
-      (nacionalidad) => normalizeString(nacionalidad) === normalizedSearchTerm,
+  const handleSelect = (country) => {
+    const normalizedSearchTerm = normalizeString(country);
+    const match = countryArray.find(
+      (country) => normalizeString(country) === normalizedSearchTerm,
     );
-
-    if (!filters.includes(match) && nacionalidadesDisponibles.includes(match)) {
+    if (!filters.includes(match)) {
       setFilters([...filters, match]);
-      obtenerEstadisticas(match);
+      findStats(match);
+      setSearchTerm('');
+      setFilteredOptions([]);
     }
-    setSearchTerm('');
-    setFilteredOptions([]);
+  };
+
+  const handleSubmit = () => {
+    if (filteredOptions.length > 0) {
+      handleSelect(filteredOptions[0]);
+    } else {
+      setTextColor('#c20303');
+      Vibration.vibrate(500);
+      setTimeout(() => {
+        setTextColor('black');
+      }, 500);
+    }
   };
 
   const handleDelete = (filter) => {
@@ -60,32 +73,35 @@ const Filtro = ({ nacionalidadesDisponibles }) => {
   };
 
   return (
+    // Contenedor principal
     <View style={styles.externalContainer}>
-      <Text style={styles.bigText}>Filtrar por nacionalidad</Text>
+      <Text style={styles.bigText}>Filtrar</Text>
       <Text style={styles.smallText}>
-        Selecciona la nacionalidad por la que quieres ver las estadísticas
+        Selecciona un país para ver los datos turísticos de sus habitantes
       </Text>
 
-      {/* Contenedor de filtros seleccionados */}
+      {/* Contenedor de filtros */}
       <ScrollView horizontal style={styles.scrollContainer}>
         <View style={styles.filterContainer}>
           {filters.map((filter, index) => (
             <View key={index} style={styles.filter}>
               <Text style={styles.filterText}>{filter}</Text>
               <TouchableOpacity onPress={() => handleDelete(filter)}>
-                <MaterialIcons name='cancel' size={20} color='lightgray' />
+                <MaterialIcons name='cancel' size={20} color='white' />
               </TouchableOpacity>
             </View>
           ))}
         </View>
       </ScrollView>
 
+      {/* Filtro de búsqueda */}
+      <Text> Añadir filtro:</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { color: textColor }]}
         placeholder='Buscar país...'
         value={searchTerm}
         onChangeText={handleSearchChange}
-        onSubmitEditing={() => handleSelect(searchTerm)}
+        onSubmitEditing={() => handleSubmit()}
       />
       {filteredOptions.length > 0 && (
         <View style={styles.dropdown}>
@@ -110,28 +126,34 @@ const Filtro = ({ nacionalidadesDisponibles }) => {
 const styles = StyleSheet.create({
   externalContainer: {
     width: '90%',
-    borderRadius: 5,
+    borderRadius: 15,
     padding: 20,
+    paddingTop: 10,
     backgroundColor: 'lightgray',
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
   },
   scrollContainer: {
-    marginBottom: 10,
+    marginVertical: 10,
   },
   filterContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 5,
   },
   filter: {
     flexDirection: 'row',
-    backgroundColor: 'gray',
-    borderRadius: 5,
+    backgroundColor: '#003366',
+    borderRadius: 10,
     padding: 8,
     marginRight: 5,
     alignItems: 'center',
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  filterText: {
+    color: 'white',
+    marginRight: 5,
   },
   input: {
     height: 40,
