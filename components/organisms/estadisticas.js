@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
+    position: 'absolute',
   },
   sub_container: {
     padding: 10,
@@ -189,6 +190,7 @@ const styles = StyleSheet.create({
   textoCabecera: {
     fontSize: 24,
     fontWeight: 'bold',
+    alignContent: 'center',
   },
   titulos_morados: {
     fontSize: 18,
