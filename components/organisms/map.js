@@ -1,28 +1,24 @@
 import React, { useState, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import {
-  SafeAreaView,
-  View,
-  Button,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import SearchBar from '../molecules/searchBar';
+import InfoLocalidad from '../molecules/InfoLocalidad';
 
 export default function Map() {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
   const mapRef = useRef(null);
 
-  const buscarCiudad = async () => {
-    const result = await getCoordinatesFromCity(city);
+  const buscarCiudad = async (cityName) => {
+    const result = await getCoordinatesFromCity(cityName);
     if (result) {
       setCoords(result);
       mapRef.current.animateToRegion(
         {
           latitude: parseFloat(result.lat),
           longitude: parseFloat(result.lon),
-          latitudeDelta: 1.5,
-          longitudeDelta: 1.5,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
         },
         1000,
       );
@@ -54,25 +50,26 @@ export default function Map() {
     }
   };
 
+  const handleCloseInfoLocalidad = () => {
+    setCity('');
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          placeholder='Introduce una ciudad'
-          value={city}
-          onChangeText={setCity}
-          style={styles.input}
-        />
-        <Button title='Buscar' onPress={buscarCiudad} />
-      </View>
+      <SearchBar
+        onSearch={(cityName) => {
+          setCity(cityName);
+          buscarCiudad(cityName);
+        }}
+      />
       <MapView
         ref={mapRef}
         style={styles.map}
         initialRegion={{
           latitude: 40.0,
           longitude: -3.5,
-          latitudeDelta: 5.0,
-          longitudeDelta: 5.0,
+          latitudeDelta: 5.5,
+          longitudeDelta: 5.5,
         }}
       >
         {coords && (
@@ -82,9 +79,13 @@ export default function Map() {
               longitude: parseFloat(coords.lon),
             }}
             title={city}
+            onPress={() => setCity(city)}
           />
         )}
       </MapView>
+      {city && (
+        <InfoLocalidad locality={city} onClose={handleCloseInfoLocalidad} />
+      )}
     </SafeAreaView>
   );
 }
@@ -92,15 +93,6 @@ export default function Map() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  searchContainer: {
-    padding: 10,
-    backgroundColor: '#fff',
-  },
-  input: {
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    padding: 8,
   },
   map: {
     flex: 1,

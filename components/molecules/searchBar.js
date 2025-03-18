@@ -27,7 +27,7 @@ const localities = [
   // Agrega más localidades según sea necesario
 ];
 
-export default function SearchBar({ onSelectLocality }) {
+export default function SearchBar({ onSearch }) {
   const [searchText, setSearchText] = useState('');
   const [filteredLocalities, setFilteredLocalities] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
@@ -59,19 +59,15 @@ export default function SearchBar({ onSelectLocality }) {
   };
 
   const handleSelectLocality = (locality) => {
+    onSearch(locality.name);
     setSearchText(locality.name);
     setFilteredLocalities([]);
-    setSelectedLocality(locality.name);
-    onSelectLocality(locality);
   };
 
   const handleSubmitEditing = () => {
-    const locality = localities.find(
-      (loc) => loc.name.toLowerCase() === searchText.toLowerCase(),
-    );
-    if (locality) {
-      setSelectedLocality(locality.name);
-      onSelectLocality(locality);
+    if (searchText.trim() !== '') {
+      onSearch(searchText.trim());
+      setFilteredLocalities([]);
     }
   };
 
