@@ -50,6 +50,9 @@ export default function InfoLocalidad({ locality, onClose }) {
         <Text style={styles.info}>Gasto medio: {locality.expenses}€</Text>
         <Text style={styles.parameter}> por persona y noche </Text>
       </View>
+      <TouchableOpacity style={styles.estadisticasButton}>
+        <Text style={styles.textButton}>Ver más estadísticas</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -107,5 +110,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 5,
     color: 'gray',
+  },
+  estadisticasButton: {
+    alignItems: 'center',
+    borderRadius: 10,
+    paddingVertical: 10,
+    marginHorizontal: 55,
+    marginVertical: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    backgroundColor: 'rebeccapurple',
+  },
+  textButton: {
+    color: 'white',
+    fontSize: 18,
   },
 });
