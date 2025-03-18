@@ -1,4 +1,5 @@
 import Papa from 'papaparse';
+import 'fast-text-encoding';
 
 export const fetchCSV = (callback, errorCallback) => {
   const url =
@@ -6,10 +7,13 @@ export const fetchCSV = (callback, errorCallback) => {
   fetch(url)
     .then((resp) => {
       if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
-      return resp.text();
+      return resp.arrayBuffer();
     })
     .then((data) => {
-      const parsedData = Papa.parse(data, { header: true });
+      const decoder = new TextDecoder('ISO-8859-1');
+      const decodedText = decoder.decode(data);
+
+      const parsedData = Papa.parse(decodedText, { header: true });
       console.log(parsedData.data);
 
       callback(parsedData.data); // Llamamos al callback con los datos
@@ -48,8 +52,7 @@ export const sumNumTourists = (data) => {
 
 export const filterData = (years, months, originCountry, data) => {
   const filteredData = data.filter((row) => {
-    const firstKey = Object.keys(row)[0]; // Obtener la primera columna (AÑO)
-    const year = parseInt(row[firstKey]);
+    const year = parseInt(row.AÑO);
     const month = parseInt(row.MES);
     return (
       (years.length === 0 || years.includes(year)) &&

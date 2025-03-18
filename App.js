@@ -1,5 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Filtro from './components/organisms/filtro';
 import React, { useEffect, useState } from 'react';
 import {
   fetchCSV,
@@ -11,6 +13,8 @@ import {
 
 export default function App() {
   const [data, setData] = useState('');
+  const[availableNacionalities, setAvailableNacionalities] = useState([]);
+
 
   useEffect(() => {
     fetchCSV(
@@ -18,7 +22,9 @@ export default function App() {
         const municipalityData = getDataOfMunicipality('Santander', data);
         console.log(municipalityData);
         console.log('lista');
-        console.log(listOriginCountries(municipalityData));
+        const uwu = listOriginCountries(municipalityData);
+        setAvailableNacionalities(uwu);
+        console.log(uwu);
         const filteredData = filterData(
           [2024],
           [5, 6, 7],
@@ -44,6 +50,7 @@ export default function App() {
           : 'se esta haciendo fetch de la API...'}
       </Text>
       <StatusBar style='auto' />
+      <Filtro nacionalidadesDisponibles= {availableNacionalities}/>
     </View>
   );
 }
@@ -51,7 +58,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
