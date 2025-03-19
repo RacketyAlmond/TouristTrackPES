@@ -68,3 +68,27 @@ export const filterData = (years, months, originCountry, data) => {
 
   return filteredData;
 };
+
+export const getTopCountries = (data, topN = 5) => {
+  const countryTouristsMap = {};
+
+  data.forEach((row) => {
+    const country = row.PAIS_ORIGEN?.trim();
+    const tourists = parseInt(row.TURISTAS) || 0;
+    if (!country || country.startsWith('Total')) return;
+
+    if (!countryTouristsMap[country]) {
+      countryTouristsMap[country] = 0;
+    }
+
+    countryTouristsMap[country] += tourists;
+  });
+
+  // Convertir el objeto en un array de pares [país, total_turistas], ordenarlo y tomar los 5 primeros
+  const topCountries = Object.entries(countryTouristsMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, topN)
+    .map(([country]) => country);
+
+  return topCountries;
+};

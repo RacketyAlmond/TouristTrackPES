@@ -1,6 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import Estadisticas from './components/organisms/estadisticas';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
 import Filtro from './components/organisms/filtro';
+import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import {
   fetchCSV,
@@ -8,11 +17,14 @@ import {
   getDataOfMunicipality,
   listOriginCountries,
   sumNumTourists,
+  getTopCountries,
 } from './filters';
 
 export default function App() {
+  const [screen, setScreen] = useState(false);
   const [data, setData] = useState('');
   const [availableNacionalities, setAvailableNacionalities] = useState([]);
+  const [topCountries, setTopCountries] = useState([]);
 
   useEffect(() => {
     fetchCSV(
@@ -23,24 +35,22 @@ export default function App() {
         const countries = listOriginCountries(municipalityData);
         setAvailableNacionalities(countries);
         console.log(countries);
-        const filteredData = filterData(
-          [2024],
-          [5, 6, 7],
-          ['Italia', 'Francia'],
-          municipalityData,
-        );
+        const filteredData = filterData([2024], [], [], municipalityData);
         console.log('filtro');
         console.log(filteredData);
         console.log('suma');
         const totalTourists = sumNumTourists(filteredData);
         console.log(totalTourists.toString());
         setData(totalTourists.toString());
+        const top5 = getTopCountries(filteredData, 5);
+        console.log(top5);
+        setTopCountries(top5);
       }, // Callback de éxito
       (error) => setData('Error cargando el CSV'), // Callback de error
     );
   }, []);
 
-  return (
+  const PantallaA = () => (
     <View style={styles.container}>
       <Text>
         {data
@@ -49,6 +59,20 @@ export default function App() {
       </Text>
       <StatusBar style='auto' />
       <Filtro countryArray={availableNacionalities} />
+    </View>
+  );
+
+  const PantallaB = () => (
+    <View>
+      <Estadisticas topPaises={topCountries} />
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {screen ? <PantallaA /> : <PantallaB />}
+
+      <Button title='Cambiar Pantalla' onPress={() => setScreen(!screen)} />
     </View>
   );
 }
