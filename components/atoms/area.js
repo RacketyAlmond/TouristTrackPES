@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import MapView, { Circle } from 'react-native-maps';
+import { Circle } from 'react-native-maps';
 import { StyleSheet } from 'react-native';
+import { getCoordinatesFromCity } from '../../utils';
 
 export default function Area({ municipi, numTuristes }) {
   const [coordinates, setCoordinates] = useState(null);
@@ -25,30 +26,6 @@ export default function Area({ municipi, numTuristes }) {
       buscarCiudad(municipi);
     }
   }, [municipi]); // Se ejecuta cuando cambia 'municipi'
-
-  const getCoordinatesFromCity = async (cityName) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`,
-        {
-          headers: {
-            'User-Agent':
-              'TourisTrack/1.0 (sergi.font.jane@estudiantat.upc.edu)',
-          },
-        },
-      );
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        return { lat: data[0].lat, lon: data[0].lon };
-      } else {
-        console.log('No se encontraron resultados.');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error al obtener las coordenadas:', error);
-      return null;
-    }
-  };
 
   // Mientras se cargan las coordenadas, no renderizamos el círculo
   if (!coordinates) {

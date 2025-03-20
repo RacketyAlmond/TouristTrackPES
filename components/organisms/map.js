@@ -3,6 +3,8 @@ import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import SearchBar from '../molecules/searchBar';
 import InfoLocalidad from '../molecules/InfoLocalidad';
+import { getCoordinatesFromCity } from '../../utils';
+import Area from '../atoms/area';
 
 export default function Map() {
   const [city, setCity] = useState('');
@@ -22,31 +24,6 @@ export default function Map() {
         },
         1000,
       );
-    }
-  };
-
-  const getCoordinatesFromCity = async (cityName) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`,
-        {
-          headers: {
-            'User-Agent':
-              'TourisTrack/1.0 (sergi.font.jane@estudiantat.upc.edu)',
-          },
-        },
-      );
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        const { lat, lon } = data[0];
-        return { lat, lon };
-      } else {
-        console.log('No se encontraron resultados.');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error al obtener las coordenadas:', error);
-      return null;
     }
   };
 
@@ -73,17 +50,21 @@ export default function Map() {
         }}
       >
         {coords && (
-          <Marker
-            coordinate={{
-              latitude: parseFloat(coords.lat),
-              longitude: parseFloat(coords.lon),
-            }}
-            title={city}
-            onPress={() => setCity(city)}
-          />
+          <>
+            <Marker
+              coordinate={{
+                latitude: parseFloat(coords.lat),
+                longitude: parseFloat(coords.lon),
+              }}
+              title={city}
+              onPress={() => setCity(city)}
+            />
+            <Area municipi={city} numTuristes={1000000000} />
+          </>
         )}
       </MapView>
       {city && (
+        //TODO: locality es un objeto con los datos de la localidad, no una string
         <InfoLocalidad locality={city} onClose={handleCloseInfoLocalidad} />
       )}
     </SafeAreaView>
