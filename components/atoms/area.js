@@ -57,10 +57,10 @@ export default function Area({ municipi, numTuristes }) {
 
   return (
     <Circle
-      center={coordinates} 
-      radius={5000} 
+      center={coordinates}
+      radius={5000}
       strokeWidth={0}
-      fillColor={fillColor} 
+      fillColor={fillColor}
     />
   );
 }
