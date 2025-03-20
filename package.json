@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "prettier:check": "prettier --check .",
     "test": "jest"
   },
   "dependencies": {
