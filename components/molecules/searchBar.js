@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   TextInput,
@@ -10,46 +10,35 @@ import {
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Filter from './filter';
 
-const localities = [
+const LOCALITIES = [
   { name: 'Madrid' },
   { name: 'Barcelona' },
   { name: 'Valencia' },
   { name: 'Seville' },
   { name: 'Zaragoza' },
-  // Agrega más localidades según sea necesario
 ];
 
 export default function SearchBar({ onSearch }) {
   const [searchText, setSearchText] = useState('');
-  const [filteredLocalities, setFilteredLocalities] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
-  const [filterDescriptionVisible, setFilterDescriptionVisible] =
-    useState(false);
+  const [filterVisible, setFilterVisible] = useState(false);
 
-  const handleSearch = (text) => {
-    setSearchText(text);
-    if (text) {
-      const filtered = localities.filter((locality) =>
-        locality.name.toLowerCase().startsWith(text.toLowerCase()),
-      );
-      setFilteredLocalities(filtered);
-    } else {
-      setFilteredLocalities([]);
-    }
-  };
+  const filteredLocalities = useMemo(() => {
+    if (!searchText) return [];
+    return LOCALITIES.filter((locality) =>
+      locality.name.toLowerCase().startsWith(searchText.toLowerCase()),
+    );
+  }, [searchText]);
 
-  const handleSelectLocality = (locality) => {
-    onSearch(locality.name);
-    setSearchText(locality.name);
-    setFilteredLocalities([]);
-  };
+  const handleSearch = useCallback((text) => setSearchText(text), []);
 
-  const handleSubmitEditing = () => {
-    if (searchText.trim() !== '') {
-      onSearch(searchText.trim());
-      setFilteredLocalities([]);
-    }
-  };
+  const handleSelectLocality = useCallback(
+    (locality) => {
+      onSearch(locality.name);
+      setSearchText(locality.name);
+    },
+    [onSearch],
+  );
 
   return (
     <View style={styles.container}>
@@ -60,19 +49,19 @@ export default function SearchBar({ onSearch }) {
           placeholder='Search for a locality in Spain'
           value={searchText}
           onChangeText={handleSearch}
-          onSubmitEditing={handleSubmitEditing}
+          onSubmitEditing={() =>
+            searchText.trim() && onSearch(searchText.trim())
+          }
         />
-        <TouchableOpacity
-          onPress={() => setFilterDescriptionVisible(!filterDescriptionVisible)}
-        >
+        <TouchableOpacity onPress={() => setFilterVisible(!filterVisible)}>
           <MaterialIcons name='filter-list' size={24} color='blue' />
         </TouchableOpacity>
       </View>
       {filteredLocalities.length > 0 && (
-        <ScrollView vertical style={styles.results}>
-          {filteredLocalities.map((locality, index) => (
+        <ScrollView style={styles.results}>
+          {filteredLocalities.map((locality) => (
             <TouchableOpacity
-              key={index}
+              key={locality.name}
               style={styles.countryButton}
               onPress={() => handleSelectLocality(locality)}
             >
@@ -84,8 +73,8 @@ export default function SearchBar({ onSearch }) {
       <Filter
         selectedCountries={selectedCountries}
         setSelectedCountries={setSelectedCountries}
-        filterDescriptionVisible={filterDescriptionVisible}
-        setFilterDescriptionVisible={setFilterDescriptionVisible}
+        filterDescriptionVisible={filterVisible}
+        setFilterDescriptionVisible={setFilterVisible}
       />
     </View>
   );
@@ -97,7 +86,7 @@ const styles = StyleSheet.create({
     top: 50,
     width: '100%',
     alignItems: 'center',
-    zIndex: 1, //muestra encima del mapa
+    zIndex: 1,
   },
   searchBar: {
     flexDirection: 'row',
