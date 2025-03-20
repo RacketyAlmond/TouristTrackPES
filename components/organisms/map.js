@@ -21,12 +21,12 @@ export default function Map() {
     >
       {cities.map((city, index) => (
         <>
-        <Marker
-          keyr={index}
-          coordinate={{ latitude: city.latitude, longitude: city.longitude }}
-          pinColor={city.color}
-        />
-        <Area municipi='madrid' numTuristes={500000} />
+          <Marker
+            keyr={index}
+            coordinate={{ latitude: city.latitude, longitude: city.longitude }}
+            pinColor={city.color}
+          />
+          <Area municipi='barcelona' numTuristes={200000} />
         </>
       ))}
     </MapView>
