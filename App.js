@@ -29,7 +29,7 @@ export default function App() {
   useEffect(() => {
     fetchCSV(
       (data) => {
-        const municipalityData = getDataOfMunicipality('Santander', data);
+        const municipalityData = getDataOfMunicipality('Reinosa', data);
         console.log(municipalityData);
         console.log('lista');
         const countries = listOriginCountries(municipalityData);

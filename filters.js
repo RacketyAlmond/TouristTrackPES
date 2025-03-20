@@ -47,6 +47,17 @@ export const listOriginCountries = (data) => {
   return countryList;
 };
 
+export const listMunicipalities = (data) => {
+  const municipalityList = [];
+  data.forEach((row) => {
+    const municipality = row.MUNICIPIO_DESTINO;
+    if (!municipalityList.includes(municipality)) {
+      municipalityList.push(municipality);
+    }
+  });
+  return municipalityList;
+};
+
 export const sumNumTourists = (data) => {
   const totalNum = data.reduce((total, row) => {
     const tourists = parseInt(row.TURISTAS);
