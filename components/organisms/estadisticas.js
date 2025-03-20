@@ -6,16 +6,16 @@ import cca2countries from 'i18n-iso-countries';
 
 cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
 
-export default function Estadisticas({ topPaises }) {
+export default function Estadisticas({
+  topPaises,
+  opcionesAnos,
+  sumaTuristas,
+  selectedItemAnos,
+  setSelectedItemAnos,
+}) {
   //primer desplegable nº turistas (años)
-  const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
-  const opcionesAnos = [
-    { label: '1 año', value: '1 año' },
-    { label: '2 años', value: '2 años' },
-    { label: '3 años', value: '3 años' },
-    { label: '4 años', value: '4 años' },
-    { label: '5 años', value: '5 años' },
-  ];
+  //const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
+  //const opcionesAnos = ['20, '2 años', '3 años', '4 años', '5 años'];
 
   //segundo desplegable nº turistas (paises)
   const [selectedItemPaises, setSelectedItemPaises] =
@@ -76,17 +76,14 @@ export default function Estadisticas({ topPaises }) {
       {/*nº turistas*/}
       <View style={styles.numeroTuristas_container}>
         <Text style={styles.titulos_morados}>Nº de turistas</Text>
+        <Text style={styles.titulos_morados}>{sumaTuristas}</Text>
         <Picker
           selectedValue={selectedItemAnos}
           onValueChange={(itemValue) => setSelectedItemAnos(itemValue)}
           style={styles.pickerAno}
         >
           {opcionesAnos.map((opcionAno) => (
-            <Picker.Item
-              key={opcionAno.value}
-              label={opcionAno.label}
-              value={opcionAno.value}
-            />
+            <Picker.Item key={opcionAno} label={opcionAno} value={opcionAno} />
           ))}
         </Picker>
         <Picker
@@ -129,11 +126,7 @@ export default function Estadisticas({ topPaises }) {
           style={styles.pickerAno}
         >
           {opcionesAnos.map((opcionAno) => (
-            <Picker.Item
-              key={opcionAno.value}
-              label={opcionAno.label}
-              value={opcionAno.value}
-            />
+            <Picker.Item key={opcionAno} label={opcionAno} value={opcionAno} />
           ))}
         </Picker>
         <Picker

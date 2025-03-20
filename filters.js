@@ -58,6 +58,17 @@ export const listMunicipalities = (data) => {
   return municipalityList;
 };
 
+export const listYears = (data) => {
+  const yearList = [];
+  data.forEach((row) => {
+    const year = row.AÑO;
+    if (!yearList.includes(year)) {
+      yearList.push(year);
+    }
+  });
+  return yearList;
+};
+
 export const sumNumTourists = (data) => {
   const totalNum = data.reduce((total, row) => {
     const tourists = parseInt(row.TURISTAS);

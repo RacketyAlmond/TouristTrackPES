@@ -18,6 +18,7 @@ import {
   listOriginCountries,
   sumNumTourists,
   getTopCountries,
+  listYears,
 } from './filters';
 
 export default function App() {
@@ -25,6 +26,9 @@ export default function App() {
   const [data, setData] = useState('');
   const [availableNacionalities, setAvailableNacionalities] = useState([]);
   const [topCountries, setTopCountries] = useState([]);
+  const [years, setYears] = useState([]);
+  const [selectedItemAnos, setSelectedItemAnos] = useState('2019');
+  const [sumaTuristas, setSumaTuristas] = useState(0);
 
   useEffect(() => {
     fetchCSV(
@@ -35,11 +39,20 @@ export default function App() {
         const countries = listOriginCountries(municipalityData);
         setAvailableNacionalities(countries);
         console.log(countries);
-        const filteredData = filterData([2024], [], [], municipalityData);
+        const yearOptions = listYears(municipalityData);
+        console.log(yearOptions);
+        setYears(yearOptions);
+        const filteredData = filterData(
+          [parseInt(selectedItemAnos)],
+          [],
+          [],
+          municipalityData,
+        );
         console.log('filtro');
         console.log(filteredData);
         console.log('suma');
         const totalTourists = sumNumTourists(filteredData);
+        setSumaTuristas(totalTourists);
         console.log(totalTourists.toString());
         setData(totalTourists.toString());
         const top5 = getTopCountries(filteredData, 5);
@@ -64,7 +77,13 @@ export default function App() {
 
   const PantallaB = () => (
     <View>
-      <Estadisticas topPaises={topCountries} />
+      <Estadisticas
+        topPaises={topCountries}
+        opcionesAnos={years}
+        sumaTuristas={sumaTuristas}
+        selectedItemAnos={selectedItemAnos}
+        setSelectedItemAnos={setSelectedItemAnos}
+      />
     </View>
   );
 
