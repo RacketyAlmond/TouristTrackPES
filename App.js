@@ -75,6 +75,7 @@ export default function App() {
     </View>
   );
 
+  //console.log(selectedItemAnos);
   const PantallaB = () => (
     <View>
       <Estadisticas
