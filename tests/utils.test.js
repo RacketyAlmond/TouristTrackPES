@@ -1,4 +1,4 @@
-import { getCoordinatesFromCity } from '../utils';
+import { getCoordinatesFromCity } from '../utils.js';
 
 describe('Test function that returns the coordinates of an especific city', () => {
   test('Given Barcelona name then returns its coordinates', async () => {
