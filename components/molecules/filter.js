@@ -19,10 +19,11 @@ cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
 
 export default function Filter({
   countryArray,
+  selectedCountries,
+  setSelectedCountries,
 }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [tempSelectedCountries, setTempSelectedCountries] = useState([]);
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
 
   const getCountryFlag = (countryName) => {
@@ -72,7 +73,11 @@ export default function Filter({
     setSelectedCountries(
       selectedCountries.filter((c) => c.name !== country.name),
     );
+    setTempSelectedCountries(
+      tempSelectedCountries.filter((c) => c.name !== country.name),
+    );
   };
+  
 
   /* pretendia hacer que se puedieran eliminar paises escogidos en el modal pero no funciona pa ná.*/
   const removeCountryTemp = (country) => {

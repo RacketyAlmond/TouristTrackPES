@@ -23,6 +23,17 @@ export default function SearchBar({ onSearch }) {
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false);
 
+  const availableNacionalities = [
+    'Alemania',
+    'Francia',
+    'Italia',
+    'Portugal',
+    'Reino Unido',
+    'Suecia',
+    'Suiza',
+    'Perú',
+  ];
+
   const filteredLocalities = useMemo(() => {
     if (!searchText) return [];
     return LOCALITIES.filter((locality) =>
@@ -70,12 +81,13 @@ export default function SearchBar({ onSearch }) {
           ))}
         </ScrollView>
       )}
-      <Filter
-        selectedCountries={selectedCountries}
-        setSelectedCountries={setSelectedCountries}
-        filterDescriptionVisible={filterVisible}
-        setFilterDescriptionVisible={setFilterVisible}
-      />
+      {filterVisible && (
+        <Filter
+          countryArray={availableNacionalities}
+          selectedCountries={selectedCountries}
+          setSelectedCountries={setSelectedCountries}
+        />
+      )}
     </View>
   );
 }
