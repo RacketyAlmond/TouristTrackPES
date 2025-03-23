@@ -87,7 +87,6 @@ export const filterData = (years, months, originCountry, data) => {
       (months.length === 0 || months.includes(month))
     );
   });
-
   return filteredData;
 };
 

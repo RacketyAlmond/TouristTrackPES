@@ -6,7 +6,7 @@ import InfoLocalidad from '../molecules/InfoLocalidad';
 import { getCoordinatesFromCity } from '../../utils';
 import Area from '../atoms/area';
 
-export default function Map() {
+export default function Map(data) {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
   const mapRef = useRef(null);
@@ -49,6 +49,13 @@ export default function Map() {
           longitudeDelta: 5.5,
         }}
       >
+        {/**data.map((locality) => (
+          <Area
+            key={locality.municipi}
+            municipi={locality.municipi}
+            numTuristes={locality.numTuristes}
+          />
+        ))**/}
         {coords && (
           <>
             <Marker
