@@ -55,9 +55,10 @@ export default function Filter({
     const newSelectedCountries = [
       ...selectedCountries,
       ...tempSelectedCountries.filter(
-        (tempCountry) => !selectedCountries.some((selectedCountry) => selectedCountry.name === tempCountry.name)
+        (tempCountry) => !selectedCountries.some((selectedCountry) => selectedCountry.name === tempCountry.name),
       )
     ];
+
     setSelectedCountries(newSelectedCountries);
     setTempSelectedCountries([]);
     toggleModal();
@@ -77,7 +78,7 @@ export default function Filter({
       tempSelectedCountries.filter((c) => c.name !== country.name),
     );
   };
-  
+
 
   /* pretendia hacer que se puedieran eliminar paises escogidos en el modal pero no funciona pa ná.*/
   const removeCountryTemp = (country) => {
@@ -114,7 +115,7 @@ export default function Filter({
       <Modal visible={isModalVisible} animationType='slide' transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            
+
             <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
               <AntDesign name='close' size={24} color='black' />
             </TouchableOpacity>

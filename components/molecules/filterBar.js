@@ -16,7 +16,8 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
     if (text.length > 0) {
       const normalizedText = normalizeString(text);
       const filtered = countriesWithFlags.filter((country) =>
-        normalizeString(country.name).includes(normalizedText) && !selectedCountries.includes(country)
+        normalizeString(country.name).includes(normalizedText) &&
+        !selectedCountries.some((selectedCountry) => selectedCountry.name === country.name)
       );
       setFilteredOptions(filtered);
     } else {
@@ -26,7 +27,6 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
 
   const handleSelect = (country) => {
     onSelect(country);
-    selectedCountries.push(country);
     setSearchTerm('');
     setFilteredOptions([]);
   };
