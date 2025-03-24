@@ -113,3 +113,7 @@ export const getTopCountries = (data, topN = 5) => {
 
   return topCountries;
 };
+
+export const getTouristMunicipalities = (data, countries) => {
+  // Devuelve un objeto con los municipios y el número de turistas total de los países indicados
+};
