@@ -12,30 +12,28 @@ import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import cca2countries from 'i18n-iso-countries';
 import Grafica from '../molecules/grafica';
-import { filterData } from '../../filters';
+import { filterData, listOriginCountries, listYears } from '../../filters';
 cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
 
-export default function Estadisticas({
-  topPaises,
-  opcionesAnos,
-  sumaTuristas,
-  selectedItemAnos,
-  setSelectedItemAnos,
-}) {
+export default function Estadisticas({ topPaises, sumaTuristas, dataApi }) {
   //primer desplegable nº turistas (años)
   //const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
   //const opcionesAnos = ['20, '2 años', '3 años', '4 años', '5 años'];
 
   //segundo desplegable nº turistas (paises)
-  const [selectedItemPaises, setSelectedItemPaises] = useState('España');
-  const opcionesPaises = [
+  const [selectedItemPaises, setSelectedItemPaises] = useState('Italia');
+  //const [opcionesAnos, setOpcionesAnos] = useState(['2021', '2019', '2020']);
+
+  const [selectedItemAnos, setSelectedItemAnos] = useState('2021');
+
+  /*const opcionesPaises = [
     'Todos los países',
     'España',
     'Italia',
     'Francia',
     'Alemania',
     'Suiza',
-  ];
+  ];*/
 
   //funcion para obtener la bandera en .png
   const getCountryFlag = (countryName) => {
@@ -65,7 +63,7 @@ export default function Estadisticas({
     'Compras',
   ];
 
-  const dataApi = [
+  const dataApiDurum = [
     {
       AÑO: '2019',
       CONTINENTE_ORIGEN: 'total',
@@ -84,16 +82,26 @@ export default function Estadisticas({
     },
   ];
 
-  const filteredData = filterData(
-    [parseInt(selectedItemAnos)],
-    [],
-    [selectedItemPaises.toLowerCase()],
-    dataApi,
-  ); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
+  const filteredData = dataApi
+    ? filterData(
+        [parseInt(selectedItemAnos)],
+        [],
+        [selectedItemPaises],
+        dataApi,
+      )
+    : [];
+
+  const opcionesAnos = dataApi ? listYears(dataApi) : [];
+
+  const opcionesPaises = dataApi ? listOriginCountries(dataApi) : [];
+
+  //const filteredData = filterData([2019], [], ['Italia'], dataApi); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
 
   const transformDataForChart = (filteredData) => {
     if (!filteredData || filteredData.length === 0) {
       console.warn('No hay datos disponibles para la gráfica.');
+      console.warn('filteredData');
+      console.warn(dataApi);
       return {
         labels: [],
         datasets: [{ data: [] }],

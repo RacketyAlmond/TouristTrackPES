@@ -19,11 +19,12 @@ import {
   sumNumTourists,
   getTopCountries,
   listYears,
+  getTouristMunicipalities,
 } from './filters';
 
 export default function App() {
   const [screen, setScreen] = useState(false);
-  const [data, setData] = useState('');
+  const [data, setData] = useState([]);
   const [availableNacionalities, setAvailableNacionalities] = useState([]);
   const [topCountries, setTopCountries] = useState([]);
   const [years, setYears] = useState([]);
@@ -33,7 +34,11 @@ export default function App() {
   useEffect(() => {
     fetchCSV(
       (data) => {
-        const municipalityData = getDataOfMunicipality('Reinosa', data);
+        console.log(
+          getTouristMunicipalities(data, ['Italia', 'Francia', 'Alemania']),
+        );
+        const municipalityData = getDataOfMunicipality('Santander', data);
+        setData(municipalityData);
         console.log(municipalityData);
         console.log('lista');
         const countries = listOriginCountries(municipalityData);
@@ -42,19 +47,13 @@ export default function App() {
         const yearOptions = listYears(municipalityData);
         console.log(yearOptions);
         setYears(yearOptions);
-        const filteredData = filterData(
-          [parseInt(selectedItemAnos)],
-          [],
-          [],
-          municipalityData,
-        );
+        const filteredData = filterData([2019], [], [], municipalityData);
         console.log('filtro');
         console.log(filteredData);
         console.log('suma');
         const totalTourists = sumNumTourists(filteredData);
         setSumaTuristas(totalTourists);
         console.log(totalTourists.toString());
-        setData(totalTourists.toString());
         const top5 = getTopCountries(filteredData, 5);
         console.log(top5);
         setTopCountries(top5);
@@ -79,11 +78,9 @@ export default function App() {
   const PantallaB = () => (
     <View>
       <Estadisticas
+        dataApi={data}
         topPaises={topCountries}
-        opcionesAnos={years}
         sumaTuristas={sumaTuristas}
-        selectedItemAnos={selectedItemAnos}
-        setSelectedItemAnos={setSelectedItemAnos}
       />
     </View>
   );
