@@ -18,12 +18,12 @@ const LOCALITIES = [
   { name: 'Zaragoza' },
 ];
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar({ onSearch, availableNacionalities }) {
   const [searchText, setSearchText] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false);
 
-  const availableNacionalities = [
+  /*const availableNacionalities = [
     'Alemania',
     'Francia',
     'Italia',
@@ -32,7 +32,7 @@ export default function SearchBar({ onSearch }) {
     'Suecia',
     'Suiza',
     'Perú',
-  ];
+  ];*/
 
   const filteredLocalities = useMemo(() => {
     if (!searchText) return [];

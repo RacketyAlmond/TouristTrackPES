@@ -40,7 +40,7 @@ export const listOriginCountries = (data) => {
   const countryList = [];
   data.forEach((row) => {
     const country = row.PAIS_ORIGEN;
-    if (!countryList.includes(country)) {
+    if (country && !countryList.includes(country)) {
       countryList.push(country);
     }
   });

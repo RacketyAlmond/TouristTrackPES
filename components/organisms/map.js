@@ -5,11 +5,14 @@ import SearchBar from '../molecules/searchBar';
 import InfoLocalidad from '../molecules/InfoLocalidad';
 import { getCoordinatesFromCity } from '../../utils';
 import Area from '../atoms/area';
+import { listOriginCountries } from '../../dataestur';
 
-export default function Map(data) {
+export default function Map({ data }) {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
   const mapRef = useRef(null);
+
+  const listCountries = data ? listOriginCountries(data) : [];
 
   const buscarCiudad = async (cityName) => {
     const result = await getCoordinatesFromCity(cityName);
@@ -38,6 +41,7 @@ export default function Map(data) {
           setCity(cityName);
           buscarCiudad(cityName);
         }}
+        availableNacionalities={listCountries}
       />
       <MapView
         ref={mapRef}
