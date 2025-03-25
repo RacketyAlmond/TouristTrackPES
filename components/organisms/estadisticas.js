@@ -19,7 +19,6 @@ import { getCountryFlag } from '../../utils';
 export default function Estadisticas() {
   const route = useRoute();
   const { locality, dataApi } = route.params;
-  const sumaTuristas = locality.tourists;
   const topPaises = getTopCountries(dataApi);
   //primer desplegable nº turistas (años)
   //const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
@@ -137,14 +136,14 @@ export default function Estadisticas() {
 
         {/*ciudad*/}
         <View style={styles.sub_container}>
-          <Text style={styles.titulos_morados}>Barcelona</Text>
-          <Text style={styles.subtitulo}>Cataluña</Text>
+          <Text style={styles.titulos_morados}>{locality.name}</Text>
+          <Text style={styles.subtitulo}>{locality.comunidad}</Text>
         </View>
 
         {/*nº turistas*/}
         <View style={styles.numeroTuristas_container}>
           <Text style={styles.titulos_morados}>Nº de turistas</Text>
-          <Text style={styles.titulos_morados}>{sumaTuristas}</Text>
+          <Text style={styles.titulos_morados}>{locality.tourists}</Text>
           <Picker
             selectedValue={selectedItemAnos}
             onValueChange={(itemValue) => setSelectedItemAnos(itemValue)}

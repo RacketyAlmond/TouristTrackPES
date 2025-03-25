@@ -8,18 +8,27 @@ import Area from '../atoms/area';
 import {
   listOriginCountries,
   getTotalTouristsOfMunicipality,
+  getTouristMunicipality,
+  getDataOfMunicipality,
 } from '../../dataestur';
 
 export default function Map({ data }) {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
-  const mapRef = useRef(null);
+  const [selectedCountries, setSelectedCountries] = useState([]);
 
-  const totalTouristsOfMunicipality = getTotalTouristsOfMunicipality(
-    city,
-    data,
-  );
+  const mapRef = useRef(null);
+  const dataMunicipality = data ? getDataOfMunicipality(city, data) : [];
+
   const listCountries = data ? listOriginCountries(data) : [];
+  const totalTouristsOfMunicipality =
+    selectedCountries.length > 0
+      ? getTouristMunicipality(
+          city,
+          data,
+          selectedCountries.map((country) => country.name),
+        )
+      : getTotalTouristsOfMunicipality(city, data);
 
   const buscarCiudad = async (cityName) => {
     const result = await getCoordinatesFromCity(cityName);
@@ -49,6 +58,8 @@ export default function Map({ data }) {
           buscarCiudad(cityName);
         }}
         availableNacionalities={listCountries}
+        selectedCountries={selectedCountries}
+        setSelectedCountries={setSelectedCountries}
       />
       <MapView
         ref={mapRef}
@@ -87,7 +98,7 @@ export default function Map({ data }) {
           city={city}
           numTourists={totalTouristsOfMunicipality}
           onClose={handleCloseInfoLocalidad}
-          data={data}
+          data={dataMunicipality}
         />
       )}
     </SafeAreaView>

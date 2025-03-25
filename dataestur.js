@@ -156,3 +156,18 @@ export const getTotalTouristsOfMunicipality = (municipality, data) => {
   }, 0);
   return totalNum;
 };
+
+export const getTouristMunicipality = (municipality, data, countries) => {
+  // Devuelve un objeto con los municipios y el número de turistas total de los países indicados
+  if (!data) return 0;
+  const filteredData = data.filter(
+    (row) =>
+      row.MUNICIPIO_DESTINO === municipality &&
+      countries.includes(row.PAIS_ORIGEN),
+  );
+  const totalNum = filteredData.reduce((total, row) => {
+    const tourists = parseInt(row.TURISTAS);
+    return total + tourists;
+  }, 0);
+  return totalNum;
+};

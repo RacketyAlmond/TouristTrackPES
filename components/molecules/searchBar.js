@@ -18,9 +18,13 @@ const LOCALITIES = [
   { name: 'Zaragoza' },
 ];
 
-export default function SearchBar({ onSearch, availableNacionalities }) {
+export default function SearchBar({
+  onSearch,
+  availableNacionalities,
+  selectedCountries,
+  setSelectedCountries,
+}) {
   const [searchText, setSearchText] = useState('');
-  const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false);
 
   /*const availableNacionalities = [
@@ -68,6 +72,13 @@ export default function SearchBar({ onSearch, availableNacionalities }) {
           <MaterialIcons name='filter-list' size={24} color='blue' />
         </TouchableOpacity>
       </View>
+      {filterVisible && (
+        <Filter
+          countryArray={availableNacionalities}
+          selectedCountries={selectedCountries}
+          setSelectedCountries={setSelectedCountries}
+        />
+      )}
       {filteredLocalities.length > 0 && (
         <ScrollView style={styles.results}>
           {filteredLocalities.map((locality) => (
@@ -80,13 +91,6 @@ export default function SearchBar({ onSearch, availableNacionalities }) {
             </TouchableOpacity>
           ))}
         </ScrollView>
-      )}
-      {filterVisible && (
-        <Filter
-          countryArray={availableNacionalities}
-          selectedCountries={selectedCountries}
-          setSelectedCountries={setSelectedCountries}
-        />
       )}
     </View>
   );
