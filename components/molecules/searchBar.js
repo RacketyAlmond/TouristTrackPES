@@ -18,10 +18,21 @@ const LOCALITIES = [
   { name: 'Zaragoza' },
 ];
 
-export default function SearchBar({ onSearch }) {
+export default function SearchBar({ onSearch, availableNacionalities }) {
   const [searchText, setSearchText] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false);
+
+  /*const availableNacionalities = [
+    'Alemania',
+    'Francia',
+    'Italia',
+    'Portugal',
+    'Reino Unido',
+    'Suecia',
+    'Suiza',
+    'Perú',
+  ];*/
 
   const filteredLocalities = useMemo(() => {
     if (!searchText) return [];
@@ -70,12 +81,13 @@ export default function SearchBar({ onSearch }) {
           ))}
         </ScrollView>
       )}
-      <Filter
-        selectedCountries={selectedCountries}
-        setSelectedCountries={setSelectedCountries}
-        filterDescriptionVisible={filterVisible}
-        setFilterDescriptionVisible={setFilterVisible}
-      />
+      {filterVisible && (
+        <Filter
+          countryArray={availableNacionalities}
+          selectedCountries={selectedCountries}
+          setSelectedCountries={setSelectedCountries}
+        />
+      )}
     </View>
   );
 }
