@@ -62,18 +62,6 @@ export default function App() {
     );
   }, []);
 
-  const PantallaA = () => (
-    <View style={styles.container}>
-      <Text>
-        {data
-          ? `La suma de turistas es: ${data}`
-          : 'se esta haciendo fetch de la API...'}
-      </Text>
-      <StatusBar style='auto' />
-      <Filtro countryArray={availableNacionalities} />
-    </View>
-  );
-
   //console.log(selectedItemAnos);
   const PantallaB = () => (
     <View>
@@ -87,7 +75,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {screen ? <PantallaA /> : <PantallaB />}
+      <PantallaB />
 
       <Button title='Cambiar Pantalla' onPress={() => setScreen(!screen)} />
     </View>

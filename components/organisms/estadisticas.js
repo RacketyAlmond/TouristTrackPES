@@ -91,9 +91,9 @@ export default function Estadisticas({ topPaises, sumaTuristas, dataApi }) {
       )
     : [];
 
-  const opcionesAnos = dataApi ? listYears(dataApi) : [];
+  const opcionesAnos = dataApi ? listYears(dataApi) : ['2021'];
 
-  const opcionesPaises = dataApi ? listOriginCountries(dataApi) : [];
+  const opcionesPaises = dataApi ? listOriginCountries(dataApi) : ['Italia'];
 
   //const filteredData = filterData([2019], [], ['Italia'], dataApi); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
 
@@ -176,7 +176,11 @@ export default function Estadisticas({ topPaises, sumaTuristas, dataApi }) {
           </Picker>
         </View>
         <View>
-          <Grafica data={data} title='Ventas mensuales' />
+          {filteredData.length > 0 ? (
+            <Grafica data={data} title='Ventas mensuales' />
+          ) : (
+            <></>
+          )}
         </View>
 
         {/*top paises*/}
