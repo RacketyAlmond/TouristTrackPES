@@ -96,6 +96,7 @@ export const filterData = (years, months, originCountry, data) => {
 
 export const getTopCountries = (data, topN = 5) => {
   const countryTouristsMap = {};
+  if (!data) return [];
 
   data.forEach((row) => {
     const country = row.PAIS_ORIGEN?.trim();
@@ -139,4 +140,15 @@ export const getTouristMunicipalities = (data, countries) => {
   });
 
   return municipalityTourists;
+};
+
+export const getTotalTouristsOfMunicipality = (municipality, data) => {
+  const filteredData = data.filter(
+    (row) => row.MUNICIPIO_DESTINO === municipality,
+  );
+  const totalNum = filteredData.reduce((total, row) => {
+    const tourists = parseInt(row.TURISTAS);
+    return total + tourists;
+  }, 0);
+  return totalNum;
 };

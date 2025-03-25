@@ -5,13 +5,20 @@ import SearchBar from '../molecules/searchBar';
 import InfoLocalidad from '../molecules/InfoLocalidad';
 import { getCoordinatesFromCity } from '../../utils';
 import Area from '../atoms/area';
-import { listOriginCountries } from '../../dataestur';
+import {
+  listOriginCountries,
+  getTotalTouristsOfMunicipality,
+} from '../../dataestur';
 
 export default function Map({ data }) {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
   const mapRef = useRef(null);
 
+  const totalTouristsOfMunicipality = getTotalTouristsOfMunicipality(
+    city,
+    data,
+  );
   const listCountries = data ? listOriginCountries(data) : [];
 
   const buscarCiudad = async (cityName) => {
@@ -70,13 +77,18 @@ export default function Map({ data }) {
               title={city}
               onPress={() => setCity(city)}
             />
-            <Area municipi={city} numTuristes={1000000000} />
+            <Area municipi={city} numTuristes={totalTouristsOfMunicipality} />
           </>
         )}
       </MapView>
       {city && (
         //TODO: locality es un objeto con los datos de la localidad, no una string
-        <InfoLocalidad locality={city} onClose={handleCloseInfoLocalidad} />
+        <InfoLocalidad
+          city={city}
+          numTourists={totalTouristsOfMunicipality}
+          onClose={handleCloseInfoLocalidad}
+          data={data}
+        />
       )}
     </SafeAreaView>
   );

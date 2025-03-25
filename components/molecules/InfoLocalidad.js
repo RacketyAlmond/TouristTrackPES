@@ -1,9 +1,19 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-export default function InfoLocalidad({ locality, onClose }) {
-  if (!locality) return null;
+export default function InfoLocalidad({ city, numTourists, onClose, data }) {
+  const navigation = useNavigation();
+  if (!city) return null;
+  const locality = {
+    name: city,
+    comunidad: 'Comunidad',
+    rating: 4.5,
+    ratingCount: 1000,
+    tourists: numTourists,
+    expenses: 100,
+  };
 
   const renderStars = (rating) => {
     const stars = [];
@@ -42,7 +52,7 @@ export default function InfoLocalidad({ locality, onClose }) {
       </View>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.info}>Número de turistas: </Text>
-        <Text style={styles.valueInfo}>{locality.tourists}M</Text>
+        <Text style={styles.valueInfo}>{locality.tourists}</Text>
         <Text style={styles.parameter}> anuales </Text>
       </View>
       <View style={{ flexDirection: 'row' }}>
@@ -50,7 +60,15 @@ export default function InfoLocalidad({ locality, onClose }) {
         <Text style={styles.valueInfo}>{locality.expenses}€</Text>
         <Text style={styles.parameter}> por persona y noche </Text>
       </View>
-      <TouchableOpacity style={styles.estadisticasButton}>
+      <TouchableOpacity
+        style={styles.estadisticasButton}
+        onPress={() =>
+          navigation.navigate('Estadisticas', {
+            locality: locality,
+            dataApi: data,
+          })
+        }
+      >
         <Text style={styles.textButton}>Ver más estadísticas</Text>
       </TouchableOpacity>
     </View>

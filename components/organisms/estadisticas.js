@@ -13,9 +13,16 @@ import { Picker } from '@react-native-picker/picker';
 import cca2countries from 'i18n-iso-countries';
 import Grafica from '../molecules/grafica';
 import { filterData, listOriginCountries, listYears } from '../../filters';
+import { useRoute } from '@react-navigation/native';
+import { getTopCountries } from '../../dataestur';
+
 cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
 
-export default function Estadisticas({ topPaises, sumaTuristas, dataApi }) {
+export default function Estadisticas() {
+  const route = useRoute();
+  const { locality, dataApi } = route.params;
+  const sumaTuristas = locality.tourists;
+  const topPaises = getTopCountries(dataApi);
   //primer desplegable nº turistas (años)
   //const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
   //const opcionesAnos = ['20, '2 años', '3 años', '4 años', '5 años'];
