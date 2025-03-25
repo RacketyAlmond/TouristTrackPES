@@ -27,7 +27,11 @@ export default function Filter({
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
 
   const getCountryFlag = (countryName) => {
-    const cca2 = cca2countries.getAlpha2Code(countryName, 'es');
+    let cca2 = cca2countries.getAlpha2Code(countryName, 'es');
+    if (countryName === "Estados Unidos de América")
+      cca2 = "US"
+    if (countryName === "República Eslovaca")
+      cca2 = "SK"
     if (!cca2) {
       console.warn(`No se encontró la bandera de ${countryName}`);
       return null;
