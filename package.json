@@ -2,13 +2,16 @@
   "name": "touristrack",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prettier:check": "prettier --check .",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -27,15 +30,25 @@
     "react-native-autocomplete-dropdown": "^4.4.0",
     "react-native-chart-kit": "^6.12.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.19.13"
+    "react-native-dotenv": "^3.4.11",
+    "react-native-geocoding": "^0.5.0",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-google-places-autocomplete": "^2.5.7",
+    "react-native-maps": "^1.20.1",
+    "react-native-vector-icons": "^10.2.0",
+    "react-native-web": "~0.19.13",
+    "react-native-web-maps": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@react-native-community/cli": "^18.0.0",
+    "@babel/preset-env": "^7.26.9",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.1",
     "eslint-config-expo": "~8.0.1",
     "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-jest": "^28.11.0",
     "eslint-plugin-prettier": "^5.2.3",
+    "jest": "^29.7.0",
     "prettier": "^3.5.3"
   },
   "private": true
