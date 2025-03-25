@@ -1,12 +1,24 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Vibration, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Vibration,
+  Image,
+} from 'react-native';
 
 const normalizeString = (str) => {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
 };
 
-const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
+const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredOptions, setFilteredOptions] = useState([]);
   const [textColor, setTextColor] = useState('black');
@@ -15,9 +27,12 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
     setSearchTerm(text);
     if (text.length > 0) {
       const normalizedText = normalizeString(text);
-      const filtered = countriesWithFlags.filter((country) =>
-        normalizeString(country.name).includes(normalizedText) &&
-        !selectedCountries.some((selectedCountry) => selectedCountry.name === country.name)
+      const filtered = countriesWithFlags.filter(
+        (country) =>
+          normalizeString(country.name).includes(normalizedText) &&
+          !selectedCountries.some(
+            (selectedCountry) => selectedCountry.name === country.name,
+          ),
       );
       setFilteredOptions(filtered);
     } else {
@@ -45,7 +60,7 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
     <View>
       <TextInput
         style={[styles.input, { color: textColor }]}
-        placeholder="Search country..."
+        placeholder='Search country...'
         value={searchTerm}
         onChangeText={handleSearchChange}
         onSubmitEditing={handleSubmit}
@@ -56,8 +71,14 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries}) => {
             data={filteredOptions}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item)}>
-                <Image source={{ uri: item.flag }} style={{ width: 20, height: 20, marginRight: 10 }} />
+              <TouchableOpacity
+                style={styles.dropdownItem}
+                onPress={() => handleSelect(item)}
+              >
+                <Image
+                  source={{ uri: item.flag }}
+                  style={{ width: 20, height: 20, marginRight: 10 }}
+                />
                 <Text>{item.name}</Text>
               </TouchableOpacity>
             )}

@@ -11,11 +11,10 @@ import {
   Image,
 } from 'react-native';
 import FilterBar from './filterBar';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AntDesign } from '@expo/vector-icons';
 import cca2countries from 'i18n-iso-countries';
 cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
-
 
 export default function Filter({
   countryArray,
@@ -28,10 +27,8 @@ export default function Filter({
 
   const getCountryFlag = (countryName) => {
     let cca2 = cca2countries.getAlpha2Code(countryName, 'es');
-    if (countryName === "Estados Unidos de América")
-      cca2 = "US"
-    if (countryName === "República Eslovaca")
-      cca2 = "SK"
+    if (countryName === 'Estados Unidos de América') cca2 = 'US';
+    if (countryName === 'República Eslovaca') cca2 = 'SK';
     if (!cca2) {
       console.warn(`No se encontró la bandera de ${countryName}`);
       return null;
@@ -47,7 +44,7 @@ export default function Filter({
     setCountriesWithFlags(countriesWithFlags);
   }, [countryArray]);
 
-  const countryNames = selectedCountries.map(country => country.name);
+  const countryNames = selectedCountries.map((country) => country.name);
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -59,8 +56,11 @@ export default function Filter({
     const newSelectedCountries = [
       ...selectedCountries,
       ...tempSelectedCountries.filter(
-        (tempCountry) => !selectedCountries.some((selectedCountry) => selectedCountry.name === tempCountry.name),
-      )
+        (tempCountry) =>
+          !selectedCountries.some(
+            (selectedCountry) => selectedCountry.name === tempCountry.name,
+          ),
+      ),
     ];
 
     setSelectedCountries(newSelectedCountries);
@@ -83,7 +83,6 @@ export default function Filter({
     );
   };
 
-
   /* pretendia hacer que se puedieran eliminar paises escogidos en el modal pero no funciona pa ná.*/
   const removeCountryTemp = (country) => {
     setTempSelectedCountries(
@@ -95,21 +94,21 @@ export default function Filter({
     <View style={styles.container}>
       <Text style={styles.title}>Filter</Text>
       <Text style={styles.description}>
-        This filter allows you to select countries to filter tourism
-        statistics within Spain. By default, the filter is set to show
-        statistics for all countries.
+        This filter allows you to select countries to filter tourism statistics
+        within Spain. By default, the filter is set to show statistics for all
+        countries.
       </Text>
 
       <ScrollView horizontal style={styles.selectedCountriesContainer}>
-      {selectedCountries.map(({name, flag}) => (
-        <View key={name} style={[styles.countryButton, styles.selected]}>
-          <Image source={{ uri: flag }} style={styles.flag} />
-          <Text style={styles.countryName}>{name} </Text>
-          <TouchableOpacity onPress={() => removeCountry({name})}>
-            <MaterialIcons name="cancel" size={20} color="white" />
-          </TouchableOpacity>
-        </View>
-      ))}
+        {selectedCountries.map(({ name, flag }) => (
+          <View key={name} style={[styles.countryButton, styles.selected]}>
+            <Image source={{ uri: flag }} style={styles.flag} />
+            <Text style={styles.countryName}>{name} </Text>
+            <TouchableOpacity onPress={() => removeCountry({ name })}>
+              <MaterialIcons name='cancel' size={20} color='white' />
+            </TouchableOpacity>
+          </View>
+        ))}
       </ScrollView>
 
       <TouchableOpacity onPress={toggleModal} style={styles.addButton}>
@@ -119,23 +118,26 @@ export default function Filter({
       <Modal visible={isModalVisible} animationType='slide' transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-
             <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
               <AntDesign name='close' size={24} color='black' />
             </TouchableOpacity>
 
             <ScrollView horizontal style={styles.selectedCountriesContainer}>
-              {tempSelectedCountries.map(({name,flag}) => (
-                <View key={name} style={[styles.countryButton, styles.selected]}>
+              {tempSelectedCountries.map(({ name, flag }) => (
+                <View
+                  key={name}
+                  style={[styles.countryButton, styles.selected]}
+                >
                   <Image source={{ uri: flag }} style={styles.flag} />
                   <Text style={styles.countryName}>{name} </Text>
                 </View>
               ))}
             </ScrollView>
-            <FilterBar 
-              countriesWithFlags={countriesWithFlags} 
-              onSelect={selectCountry} 
-              selectedCountries={selectedCountries}/>
+            <FilterBar
+              countriesWithFlags={countriesWithFlags}
+              onSelect={selectCountry}
+              selectedCountries={selectedCountries}
+            />
             <TouchableOpacity onPress={applyFilters} style={styles.applyButton}>
               <Text style={styles.applyButtonText}>Apply Filters</Text>
             </TouchableOpacity>
@@ -230,6 +232,6 @@ const styles = StyleSheet.create({
   flag: {
     width: 20,
     height: 20,
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
