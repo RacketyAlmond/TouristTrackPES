@@ -9,7 +9,7 @@ const decodeISO88591 = (buffer) => {
 
 export const fetchCSV = (callback, errorCallback) => {
   const url =
-    'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Cantabria';
+    'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Madrid';
   fetch(url)
     .then((resp) => {
       if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
@@ -39,7 +39,11 @@ export const getDataOfMunicipality = (municipality, data) => {
 export const listOriginCountries = (data) => {
   const countryList = [];
   data.forEach((row) => {
-    const country = row.PAIS_ORIGEN;
+    let country = row.PAIS_ORIGEN;
+    if (
+      country === 'Palestina. Estado Observador, no miembro de Naciones Unidas'
+    )
+      country = 'Palestina';
     if (
       country &&
       !countryList.includes(country) &&

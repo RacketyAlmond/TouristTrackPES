@@ -13,8 +13,7 @@ import {
 import FilterBar from './filterBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AntDesign } from '@expo/vector-icons';
-import cca2countries from 'i18n-iso-countries';
-cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
+import { getCountryFlag } from '../../utils';
 
 export default function Filter({
   countryArray,
@@ -24,17 +23,6 @@ export default function Filter({
   const [isModalVisible, setModalVisible] = useState(false);
   const [tempSelectedCountries, setTempSelectedCountries] = useState([]);
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
-
-  const getCountryFlag = (countryName) => {
-    let cca2 = cca2countries.getAlpha2Code(countryName, 'es');
-    if (countryName === 'Estados Unidos de América') cca2 = 'US';
-    if (countryName === 'República Eslovaca') cca2 = 'SK';
-    if (!cca2) {
-      console.warn(`No se encontró la bandera de ${countryName}`);
-      return null;
-    }
-    return `https://flagcdn.com/w320/${cca2.toLowerCase()}.png`;
-  };
 
   useEffect(() => {
     const countriesWithFlags = countryArray.map((country) => ({

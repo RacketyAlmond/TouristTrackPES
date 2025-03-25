@@ -10,13 +10,11 @@ import {
 } from 'react-native';
 import { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import cca2countries from 'i18n-iso-countries';
 import Grafica from '../molecules/grafica';
 import { filterData, listOriginCountries, listYears } from '../../filters';
 import { useRoute } from '@react-navigation/native';
 import { getTopCountries } from '../../dataestur';
-
-cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
+import { getCountryFlag } from '../../utils';
 
 export default function Estadisticas() {
   const route = useRoute();
@@ -43,14 +41,6 @@ export default function Estadisticas() {
   ];*/
 
   //funcion para obtener la bandera en .png
-  const getCountryFlag = (countryName) => {
-    const cca2 = cca2countries.getAlpha2Code(countryName, 'es');
-    if (!cca2) {
-      console.warn(`No se encontró la bandera de ${countryName}`);
-      return null;
-    }
-    return `https://flagcdn.com/w320/${cca2.toLowerCase()}.png`;
-  };
 
   //primer desplegable gasto (años)
   const [selectedItemAnos2, setSelectedItemAnos2] = useState('1 año');
