@@ -144,6 +144,8 @@ export default function Estadisticas() {
         <View style={styles.numeroTuristas_container}>
           <Text style={styles.titulos_morados}>Nº de turistas</Text>
           <Text style={styles.titulos_morados}>{locality.tourists}</Text>
+        </View>
+        <View style={styles.select_container}>
           <Picker
             selectedValue={selectedItemAnos}
             onValueChange={(itemValue) => setSelectedItemAnos(itemValue)}
@@ -173,7 +175,7 @@ export default function Estadisticas() {
         </View>
         <View>
           {filteredData.length > 0 ? (
-            <Grafica data={data} title='Ventas mensuales' />
+            <Grafica data={data} title='Número Turistas' />
           ) : (
             <></>
           )}
@@ -270,6 +272,13 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     //alignItems: 'center',
+    gap: 10,
+  },
+  select_container: {
+    padding: 0,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'space-between',
     gap: 10,
   },
   cabecera: {

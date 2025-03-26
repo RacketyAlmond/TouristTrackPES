@@ -27,17 +27,6 @@ export default function SearchBar({
   const [searchText, setSearchText] = useState('');
   const [filterVisible, setFilterVisible] = useState(false);
 
-  /*const availableNacionalities = [
-    'Alemania',
-    'Francia',
-    'Italia',
-    'Portugal',
-    'Reino Unido',
-    'Suecia',
-    'Suiza',
-    'Perú',
-  ];*/
-
   const filteredLocalities = useMemo(() => {
     if (!searchText) return [];
     return LOCALITIES.filter((locality) =>
@@ -99,7 +88,7 @@ export default function SearchBar({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 50,
+    top: 80,
     width: '100%',
     alignItems: 'center',
     zIndex: 1,
@@ -124,7 +113,7 @@ const styles = StyleSheet.create({
     outlineStyle: 'none',
   },
   results: {
-    marginTop: 20,
+    marginTop: 5,
   },
   countryButton: {
     flexDirection: 'row',

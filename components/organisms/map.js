@@ -30,7 +30,7 @@ export default function Map({ data }) {
         )
       : getTotalTouristsOfMunicipality(city, data);
 
-  const buscarCiudad = async (cityName) => {
+  const searchCity = async (cityName) => {
     const result = await getCoordinatesFromCity(cityName);
     if (result) {
       setCoords(result);
@@ -55,7 +55,7 @@ export default function Map({ data }) {
       <SearchBar
         onSearch={(cityName) => {
           setCity(cityName);
-          buscarCiudad(cityName);
+          searchCity(cityName);
         }}
         availableNacionalities={listCountries}
         selectedCountries={selectedCountries}

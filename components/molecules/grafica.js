@@ -6,10 +6,11 @@ const screenWidth = Dimensions.get('window').width - 40;
 
 const Grafica = ({ data, title }) => {
   return (
-    <View>
+    <View style={{ marginVertical: 10, alignItems: 'center' }}>
       <Text style={{ textAlign: 'center', fontSize: 18, marginBottom: 10 }}>
         {title}
       </Text>
+
       <LineChart
         data={data}
         width={screenWidth}
