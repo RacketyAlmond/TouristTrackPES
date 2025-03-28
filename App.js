@@ -1,20 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Map from './components/organisms/map';
+import Estadisticas from './components/organisms/estadisticas';
+import { fetchCSV } from './dataestur';
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchCSV(
+      (fetchedData) => setData(fetchedData),
+      (error) => console.error('Error al obtener los datos:', error),
+    );
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style='auto' />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName='Mapa'
+        screenOptions={{ headerShown: false }}
+      >
+        <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
+        <Stack.Screen name='Estadisticas' component={Estadisticas} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
