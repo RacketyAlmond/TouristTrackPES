@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
+  Platform,
 } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Filter from './filter';
@@ -88,7 +89,7 @@ export default function SearchBar({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 80,
+    top: Platform.OS === 'ios' ? 80 : 40,
     width: '100%',
     alignItems: 'center',
     zIndex: 1,
