@@ -15,6 +15,8 @@ import { filterData, listOriginCountries, listYears } from '../../filters';
 import { useRoute } from '@react-navigation/native';
 import { getTopCountries } from '../../dataestur';
 import { getCountryFlag } from '../../utils';
+import SelectorPlataforma from '../molecules/selectorPlataforma';
+
 
 export default function Estadisticas() {
   const route = useRoute();
@@ -142,36 +144,24 @@ export default function Estadisticas() {
 
         {/*nº turistas*/}
         <View style={styles.numeroTuristas_container}>
-          <Text style={styles.titulos_morados}>Nº de turistas</Text>
+          <Text style={styles.titulos_morados}>Nº de turistas:</Text>
           <Text style={styles.titulos_morados}>{locality.tourists}</Text>
         </View>
         <View style={styles.select_container}>
-          <Picker
+          <SelectorPlataforma
             selectedValue={selectedItemAnos}
-            onValueChange={(itemValue) => setSelectedItemAnos(itemValue)}
+            onValueChange={(item) => setSelectedItemAnos(item)}
+            options={opcionesAnos}
             style={styles.pickerAno}
-          >
-            {opcionesAnos.map((opcionAno) => (
-              <Picker.Item
-                key={opcionAno}
-                label={opcionAno}
-                value={opcionAno}
-              />
-            ))}
-          </Picker>
-          <Picker
+          />
+
+          <SelectorPlataforma
             selectedValue={selectedItemPaises}
-            onValueChange={(itemValue) => setSelectedItemPaises(itemValue)}
+            onValueChange={(item) => setSelectedItemPaises(item)}
+            options={opcionesPaises}
             style={styles.pickerPais}
-          >
-            {opcionesPaises.map((opcionPais) => (
-              <Picker.Item
-                key={opcionPais}
-                label={opcionPais}
-                value={opcionPais}
-              />
-            ))}
-          </Picker>
+          />
+
         </View>
         <View>
           {filteredData.length > 0 ? (
@@ -202,45 +192,27 @@ export default function Estadisticas() {
         {/*gasto*/}
         <View style={styles.numeroTuristas_container}>
           <Text style={styles.titulos_morados}>Gasto</Text>
-          <Picker
+          <SelectorPlataforma
             selectedValue={selectedItemAnos2}
-            onValueChange={(itemValue) => setSelectedItemAnos2(itemValue)}
+            onValueChange={(item) => setSelectedItemAnos2(item)}
+            options={opcionesAnos}
             style={styles.pickerAno}
-          >
-            {opcionesAnos.map((opcionAno) => (
-              <Picker.Item
-                key={opcionAno}
-                label={opcionAno}
-                value={opcionAno}
-              />
-            ))}
-          </Picker>
-          <Picker
+          />
+
+          <SelectorPlataforma
             selectedValue={selectedItemPaises2}
-            onValueChange={(itemValue) => setSelectedItemPaises2(itemValue)}
+            onValueChange={(item) => setSelectedItemPaises2(item)}
+            options={opcionesPaises}
             style={styles.pickerPais}
-          >
-            {opcionesPaises.map((opcionPais) => (
-              <Picker.Item
-                key={opcionPais}
-                label={opcionPais}
-                value={opcionPais}
-              />
-            ))}
-          </Picker>
-          <Picker
+          />
+
+          <SelectorPlataforma
             selectedValue={selectedItemGasto}
-            onValueChange={(itemValue) => setSelectedItemGasto(itemValue)}
+            onValueChange={(item) => setSelectedItemGasto(item)}
+            options={opcionesGastos}
             style={styles.pickerPais}
-          >
-            {opcionesGastos.map((opcionGasto) => (
-              <Picker.Item
-                key={opcionGasto}
-                label={opcionGasto}
-                value={opcionGasto}
-              />
-            ))}
-          </Picker>
+          />
+
         </View>
         {/*<StatusBar style='auto' />*/}
       </View>
@@ -270,9 +242,10 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     //alignItems: 'center',
     gap: 10,
+    //paddingRight: 10,
   },
   select_container: {
     padding: 0,
@@ -309,7 +282,7 @@ const styles = StyleSheet.create({
   pickerPais: {
     flex: 1, //new
     //width: 125,
-    minWidth: 125, //new
+    minWidth: 100, //new
     backgroundColor: '#dddddd',
     borderRadius: 5,
   },
