@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ScrollView } from 'react-native';
 import Title from '../atoms/title';
 import Question from '../atoms/question';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -56,28 +56,31 @@ export default function Forum() {
           height: '100%',
         }}
       />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          width: '90%',
-          padding: 20,
-          alignSelf: 'center',
-          marginTop: 70,
-        }}
-      >
-        <Title title={data.city} />
-        {data.questions.map((question, index) => (
-          <View key={index} style={{ marginVertical: 10 }}>
-            <Question
-              user={question.user}
-              date={question.date}
-              text={question.question}
-              answers={question.answers}
-            />
-          </View>
-        ))}
-      </View>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            width: '90%',
+            padding: 20,
+            alignSelf: 'center',
+            marginTop: 20,
+            position: 'relative',
+          }}
+        >
+          <Title title={data.city} />
+          {data.questions.map((question, index) => (
+            <View key={index} style={{ marginVertical: 10 }}>
+              <Question
+                user={question.user}
+                date={question.date}
+                text={question.question}
+                answers={question.answers}
+              />
+            </View>
+          ))}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

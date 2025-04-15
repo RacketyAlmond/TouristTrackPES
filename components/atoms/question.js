@@ -63,7 +63,7 @@ export default function Question({ user, date, text, answers }) {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowNewAnswer(!showNewAnswer)}>
           <Text style={{ color: '#572364' }}>
-            {showNewAnswer ? '' : 'Responder'}
+            {showNewAnswer ? 'No Responder' : 'Responder'}
           </Text>
         </TouchableOpacity>
       </View>
