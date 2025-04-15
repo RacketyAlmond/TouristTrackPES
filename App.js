@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Map from './components/organisms/map';
+import Forum from './components/organisms/forum';
 import Estadisticas from './components/organisms/estadisticas';
 import { fetchCSV } from './dataestur';
 
@@ -19,13 +20,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Mapa'
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
-        <Stack.Screen name='Estadisticas' component={Estadisticas} />
-      </Stack.Navigator>
+      <Forum></Forum>
     </NavigationContainer>
   );
 }
