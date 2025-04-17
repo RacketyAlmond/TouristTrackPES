@@ -1,5 +1,12 @@
-import React from 'react';
-import { View, Image, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Image,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Title from '../atoms/title';
 import Question from '../atoms/question';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -46,6 +53,22 @@ const data = {
 };
 
 export default function Forum() {
+  const [questions, setQuestions] = useState(data.questions);
+  const [newQuestion, setNewQuestion] = useState('');
+
+  const handleAddQuestion = () => {
+    if (newQuestion.trim() !== '') {
+      const newQuestionObject = {
+        user: 'Nuevo Usuario', // Puedes reemplazar esto con el usuario actual
+        question: newQuestion,
+        date: new Date().toISOString(),
+        answers: [],
+      };
+      setQuestions([...questions, newQuestionObject]);
+      setNewQuestion(''); // Limpia el campo de texto
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Image
@@ -57,19 +80,55 @@ export default function Forum() {
         }}
       />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View
+        <SafeAreaView
           style={{
             flex: 1,
             backgroundColor: 'rgba(255, 255, 255, 0.7)',
             width: '90%',
             padding: 20,
             alignSelf: 'center',
-            marginTop: 20,
+            marginTop: 60,
             position: 'relative',
           }}
         >
           <Title title={data.city} />
-          {data.questions.map((question, index) => (
+
+          {/* Campo para escribir una nueva pregunta */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 20,
+              marginBottom: 20,
+            }}
+          >
+            <TextInput
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+                padding: 10,
+              }}
+              placeholder='Escribe tu pregunta...'
+              value={newQuestion}
+              onChangeText={setNewQuestion}
+            />
+            <TouchableOpacity
+              onPress={handleAddQuestion}
+              style={{
+                marginLeft: 10,
+                backgroundColor: '#572364',
+                padding: 10,
+                borderRadius: 5,
+              }}
+            >
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Lista de preguntas */}
+          {questions.map((question, index) => (
             <View key={index} style={{ marginVertical: 10 }}>
               <Question
                 user={question.user}
@@ -79,7 +138,7 @@ export default function Forum() {
               />
             </View>
           ))}
-        </View>
+        </SafeAreaView>
       </ScrollView>
     </SafeAreaView>
   );
