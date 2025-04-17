@@ -1,5 +1,9 @@
 import Papa from 'papaparse';
+import * as FileSystem from 'expo-file-system';
 import 'fast-text-encoding';
+
+const FILE_URI = FileSystem.documentDirectory + 'turismo_data.json';
+const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 const decodeISO88591 = (buffer) => {
   return Array.from(new Uint8Array(buffer))
@@ -7,26 +11,43 @@ const decodeISO88591 = (buffer) => {
     .join('');
 };
 
-export const fetchCSV = (callback, errorCallback) => {
-  const url =
-    'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Madrid';
-  fetch(url)
-    .then((resp) => {
-      if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
-      return resp.arrayBuffer();
-    })
-    .then((data) => {
-      const decodedText = decodeISO88591(data);
+export const fetchCSV = async (callback, errorCallback) => {
+  try {
+    const fileInfo = await FileSystem.getInfoAsync(FILE_URI);
 
-      const parsedData = Papa.parse(decodedText, { header: true });
-      console.log(parsedData.data);
+    if (fileInfo.exists) {
+      const modifiedTime = new Date(fileInfo.modificationTime * 1000).getTime(); // seconds → ms
+      const now = Date.now();
 
-      callback(parsedData.data); // Llamamos al callback con los datos
-    })
-    .catch((error) => {
-      console.error('Error obteniendo el CSV:', error);
-      if (errorCallback) errorCallback(error); // Si hay un callback de error, lo llamamos
+      if (now - modifiedTime < ONE_WEEK) {
+        const content = await FileSystem.readAsStringAsync(FILE_URI);
+        const parsed = JSON.parse(content);
+        console.log('Usando datos guardados en archivo');
+        callback(parsed);
+        return;
+      }
+    }
+
+    const url =
+      'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Soria';
+
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
+
+    const buffer = await resp.arrayBuffer();
+    const decodedText = decodeISO88591(buffer);
+    const parsedData = Papa.parse(decodedText, { header: true }).data;
+
+    await FileSystem.writeAsStringAsync(FILE_URI, JSON.stringify(parsedData), {
+      encoding: FileSystem.EncodingType.UTF8,
     });
+
+    console.log('Datos guardados en archivo');
+    callback(parsedData);
+  } catch (error) {
+    console.error('Error obteniendo el CSV:', error);
+    if (errorCallback) errorCallback(error);
+  }
 };
 
 export const getDataOfMunicipality = (municipality, data) => {
