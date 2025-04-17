@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function NavBar() {
-  const navigation = useNavigation(); // Hook para acceder al objeto de navegación
+  const navigation = useNavigation();
 
   return (
     <View style={styles.navbar}>
@@ -13,8 +13,8 @@ export default function NavBar() {
       >
         <Image
           source={require('../../public/map.png')}
-          style={styles.navImage} // Aplica estilos para contener la imagen
-          resizeMode='contain' // Asegura que la imagen se ajuste al contenedor
+          style={styles.navImage}
+          resizeMode='contain'
         />
       </TouchableOpacity>
 
@@ -24,8 +24,8 @@ export default function NavBar() {
       >
         <Image
           source={require('../../public/foro.png')}
-          style={styles.navImage} // Aplica estilos para contener la imagen
-          resizeMode='contain' // Asegura que la imagen se ajuste al contenedor
+          style={styles.navImage}
+          resizeMode='contain'
         />
       </TouchableOpacity>
 
@@ -35,8 +35,8 @@ export default function NavBar() {
       >
         <Image
           source={require('../../public/xat.png')}
-          style={styles.navImage} // Aplica estilos para contener la imagen
-          resizeMode='contain' // Asegura que la imagen se ajuste al contenedor
+          style={styles.navImage}
+          resizeMode='contain'
         />
       </TouchableOpacity>
 
@@ -46,8 +46,8 @@ export default function NavBar() {
       >
         <Image
           source={require('../../public/user.png')}
-          style={styles.navImage} // Aplica estilos para contener la imagen
-          resizeMode='contain' // Asegura que la imagen se ajuste al contenedor
+          style={styles.navImage}
+          resizeMode='contain'
         />
       </TouchableOpacity>
     </View>
@@ -60,19 +60,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 60,
-    backgroundColor: '#f0f0f0', // Fondo opcional para la barra
+    backgroundColor: '#f0f0f0',
   },
   navButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  navText: {
-    color: '#572364',
-    fontWeight: 'bold',
-  },
   navImage: {
-    width: 30, // Ajusta el ancho de la imagen
-    height: 30, // Ajusta la altura de la imagen
+    width: 30,
+    height: 30,
+    tintColor: '#572364',
   },
 });
