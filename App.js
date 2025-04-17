@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Map from './components/organisms/map';
-import Estadisticas from './components/organisms/estadisticas';
+import Chats from './components/organisms/chats';
 import { fetchCSV } from './dataestur';
 
 const Stack = createNativeStackNavigator();
@@ -20,11 +19,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName='Mapa'
+        initialRouteName='Chats'
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
-        <Stack.Screen name='Estadisticas' component={Estadisticas} />
+        <Stack.Screen name='Chats'>{() => <Chats data={data} />}</Stack.Screen>
+        <Stack.Screen name='Chats' component={Chats} />
       </Stack.Navigator>
     </NavigationContainer>
   );
