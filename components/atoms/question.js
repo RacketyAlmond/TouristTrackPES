@@ -58,7 +58,7 @@ export default function Question({
         }}
       >
         <Avatar avatar={avatar} />
-        <View>
+        <View style={{ marginLeft: 10, flex: 1 }}>
           <View
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
