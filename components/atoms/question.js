@@ -53,8 +53,8 @@ export default function Question({
     >
       <View
         style={{
-          flexDirection: 'row', // 👈 Put avatar and text side by side
-          alignItems: 'flex-start', // Optional: Align items to the top
+          flexDirection: 'row',
+          alignItems: 'flex-start',
         }}
       >
         <Avatar avatar={avatar} />

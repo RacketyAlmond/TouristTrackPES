@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 
 const renderAvatar = (avatar) => {
   if (avatar) {
@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    marginRight: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0.5, height: 2 },
     shadowOpacity: 0.2,
