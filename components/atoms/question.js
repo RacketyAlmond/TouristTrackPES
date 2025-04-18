@@ -3,8 +3,16 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
+import Avatar from './avatar';
 
-export default function Question({ user, date, text, answers }) {
+export default function Question({
+  avatar,
+  user,
+  nationality,
+  date,
+  text,
+  answers,
+}) {
   // Estado para mostrar u ocultar las respuestas
   const [showAnswers, setShowAnswers] = useState(false);
 
@@ -43,11 +51,23 @@ export default function Question({ user, date, text, answers }) {
         borderBottomColor: '#ccc',
       }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ fontWeight: 'bold' }}>{user}</Text>
-        <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+      <View
+        style={{
+          flexDirection: 'row', // 👈 Put avatar and text side by side
+          alignItems: 'flex-start', // Optional: Align items to the top
+        }}
+      >
+        <Avatar avatar={avatar} />
+        <View>
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <Text style={{ fontWeight: 'bold' }}>{user}</Text>
+            <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+          </View>
+          <Text>{text}</Text>
+        </View>
       </View>
-      <Text>{text}</Text>
 
       <View
         style={{

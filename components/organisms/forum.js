@@ -15,35 +15,53 @@ const data = {
   city: 'Madrid',
   questions: [
     {
+      id: 1,
       user: 'Usuario1',
+      nationality: 'España',
+      avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
       question: '¿Qué es la ciudad de Madrid?',
       date: '2025-4-01',
       answers: [
         {
+          id: 2,
           user: 'Usuario2',
+          nationality: 'Francia',
+          avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
           answer:
             'La ciudad de Madrid es una ciudad española ubicada en el centro de España.',
           date: '2023-10-02',
         },
         {
+          id: 3,
           user: 'Usuario3',
+          nationality: 'Francia',
+          avatar: 'https://randomuser.me/api/portraits/women/47.jpg',
           answer: 'Madrid es la capital de España y de la comunidad de Madrid.',
           date: '2023-10-03',
         },
       ],
     },
     {
+      id: 4,
       user: 'Usuario4',
+      nationality: 'Alemania',
+      avatar: 'https://randomuser.me/api/portraits/men/67.jpg',
       question: '¿Qué lugares turísticos hay en Madrid?',
       date: '2023-10-04',
       answers: [
         {
+          id: 5,
           user: 'Usuario5',
+          nationality: 'Alemania',
+          avatar: 'https://randomuser.me/api/portraits/men/97.jpg',
           answer: 'El Palacio Real de Madrid.',
           date: '2023-10-05',
         },
         {
+          id: 6,
           user: 'Usuario6',
+          nationality: 'Francia',
+          avatar: 'https://randomuser.me/api/portraits/men/55.jpg',
           answer: 'La Plaza Mayor de Madrid.',
           date: '2023-10-06',
         },
@@ -131,6 +149,7 @@ export default function Forum() {
           {questions.map((question, index) => (
             <View key={index} style={{ marginVertical: 10 }}>
               <Question
+                avatar={question.avatar}
                 user={question.user}
                 date={question.date}
                 text={question.question}
