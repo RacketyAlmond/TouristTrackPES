@@ -19,7 +19,7 @@ export const fetchCSV = async (callback, errorCallback) => {
       const modifiedTime = new Date(fileInfo.modificationTime * 1000).getTime(); // seconds → ms
       const now = Date.now();
 
-      if (now - modifiedTime < ONE_WEEK) {
+      if (false) {
         const content = await FileSystem.readAsStringAsync(FILE_URI);
         const parsed = JSON.parse(content);
         console.log('Usando datos guardados en archivo');
@@ -29,7 +29,7 @@ export const fetchCSV = async (callback, errorCallback) => {
     }
 
     const url =
-      'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Soria';
+      'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Lleida';
 
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
@@ -38,12 +38,19 @@ export const fetchCSV = async (callback, errorCallback) => {
     const decodedText = decodeISO88591(buffer);
     const parsedData = Papa.parse(decodedText, { header: true }).data;
 
-    await FileSystem.writeAsStringAsync(FILE_URI, JSON.stringify(parsedData), {
-      encoding: FileSystem.EncodingType.UTF8,
-    });
+    const normalizedData = normalizarMunicipios(parsedData);
+
+    await FileSystem.writeAsStringAsync(
+      FILE_URI,
+      JSON.stringify(normalizedData),
+      {
+        encoding: FileSystem.EncodingType.UTF8,
+      },
+    );
 
     console.log('Datos guardados en archivo');
-    callback(parsedData);
+    callback(normalizedData);
+    console.log('data:', normalizedData);
   } catch (error) {
     console.error('Error obteniendo el CSV:', error);
     if (errorCallback) errorCallback(error);
@@ -52,7 +59,7 @@ export const fetchCSV = async (callback, errorCallback) => {
 
 export const getDataOfMunicipality = (municipality, data) => {
   const filteredData = data.filter(
-    (row) => row.MUNICIPIO_DESTINO === municipality,
+    (row) => row.MUNICIPIO_DESTINO.toLowerCase() === municipality.toLowerCase(),
   );
   return filteredData;
 };
@@ -169,7 +176,7 @@ export const getTouristMunicipalities = (data, countries) => {
 
 export const getTotalTouristsOfMunicipality = (municipality, data) => {
   const filteredData = data.filter(
-    (row) => row.MUNICIPIO_DESTINO === municipality,
+    (row) => row.MUNICIPIO_DESTINO.toLowerCase() === municipality.toLowerCase(),
   );
   const totalNum = filteredData.reduce((total, row) => {
     const tourists = parseInt(row.TURISTAS);
@@ -183,7 +190,7 @@ export const getTouristMunicipality = (municipality, data, countries) => {
   if (!data) return 0;
   const filteredData = data.filter(
     (row) =>
-      row.MUNICIPIO_DESTINO === municipality &&
+      row.MUNICIPIO_DESTINO.toLowerCase() === municipality.toLowerCase() &&
       countries.includes(row.PAIS_ORIGEN),
   );
   const totalNum = filteredData.reduce((total, row) => {
@@ -191,4 +198,20 @@ export const getTouristMunicipality = (municipality, data, countries) => {
     return total + tourists;
   }, 0);
   return totalNum;
+};
+
+const formatearMunicipio = (nombre) => {
+  if (!nombre) return '';
+  if (nombre.includes(',')) {
+    const [principal, articulo] = nombre.split(',').map((s) => s.trim());
+    return `${articulo} ${principal}`;
+  }
+  return nombre;
+};
+
+const normalizarMunicipios = (data) => {
+  return data.map((item) => ({
+    ...item,
+    MUNICIPIO_DESTINO: formatearMunicipio(item.MUNICIPIO_DESTINO),
+  }));
 };

@@ -34,6 +34,7 @@ export default function Map({ data }) {
     const result = await getCoordinatesFromCity(cityName);
     if (result) {
       setCoords(result);
+      setCity(result.name);
       mapRef.current.animateToRegion(
         {
           latitude: parseFloat(result.lat),
@@ -54,7 +55,7 @@ export default function Map({ data }) {
     <SafeAreaView style={styles.container}>
       <SearchBar
         onSearch={(cityName) => {
-          setCity(cityName);
+          //setCity(cityName);
           searchCity(cityName);
         }}
         availableNacionalities={listCountries}
