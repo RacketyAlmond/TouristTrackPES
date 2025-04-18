@@ -11,6 +11,7 @@ import Title from '../atoms/title';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SlEarphones } from 'react-icons/sl';
 
 const data = {
   city: 'Madrid',
@@ -91,8 +92,8 @@ export default function Forum() {
     filterQuestions('', countries);
   };
 
-  const filterQuestions = (query, countries) => {
-    let filtered = data.questions;
+  const filterQuestions = (query, countries, questionsToFilter = questions) => {
+    let filtered = questionsToFilter;
 
     // Filtrar por texto de búsqueda
     if (query.trim() !== '') {
@@ -119,9 +120,16 @@ export default function Forum() {
         answers: [],
         nationality: 'España', // Puedes reemplazar esto con la nacionalidad del usuario actual
       };
-      setQuestions([...questions, newQuestionObject]);
-      setFilteredQuestions([...questions, newQuestionObject]);
-      setNewQuestion(''); // Limpia el campo de texto
+
+      // Actualiza las preguntas
+      const updatedQuestions = [...questions, newQuestionObject];
+      setQuestions(updatedQuestions);
+
+      // Aplica los filtros actuales usando la lista actualizada
+      filterQuestions('', selectedCountries, updatedQuestions);
+
+      // Limpia el campo de texto
+      setNewQuestion('');
     }
   };
 
@@ -136,7 +144,7 @@ export default function Forum() {
         }}
       />
       {/* Barra de búsqueda */}
-      <View style={{ flex: 1, padding: 20 }}>
+      <View style={{ flex: 1, marginTop: 40, padding: 20 }}>
         <ForoSearchBar
           onSearch={handleSearch}
           availableNationalities={availableNationalities} // Pasar las nacionalidades únicas
@@ -196,7 +204,6 @@ export default function Forum() {
             {filteredQuestions.map((question, index) => (
               <View key={index} style={{ marginVertical: 10 }}>
                 <Question
-                  avatar={question.avatar}
                   user={question.user}
                   date={question.date}
                   text={question.question}
