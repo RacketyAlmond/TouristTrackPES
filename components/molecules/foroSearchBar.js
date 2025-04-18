@@ -37,7 +37,7 @@ export default function ForoSearchBar({
         <FontAwesome name='search' size={20} color='#333' />
         <TextInput
           style={styles.input}
-          placeholder='Buscar mensajes...'
+          placeholder='Buscar pregunta...'
           value={searchText}
           onChangeText={handleSearch}
         />
@@ -50,11 +50,7 @@ export default function ForoSearchBar({
           onPress={() => setFilterVisible(!filterVisible)}
           style={styles.filterButton}
         >
-          <MaterialIcons
-            name='filter-list'
-            size={24}
-            color={selectedCountries.length > 0 ? '#0066cc' : '#888'}
-          />
+          <MaterialIcons name='filter-list' size={24} />
         </TouchableOpacity>
       </View>
 
@@ -73,7 +69,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 20 : 10,
-    width: '100%',
+    width: '90%', // Ajusta el ancho del componente
+    alignSelf: 'center', // Centra el componente horizontalmente
     alignItems: 'center',
     zIndex: 1,
   },
@@ -84,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 5,
-    width: '90%',
+    width: '100%', // Asegura que la barra de búsqueda ocupe todo el ancho del contenedor
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
@@ -95,9 +92,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
     outlineStyle: 'none',
-  },
-  results: {
-    marginTop: 5,
   },
   clearButton: {
     padding: 8,

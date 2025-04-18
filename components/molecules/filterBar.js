@@ -27,7 +27,7 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries }) => {
     setSearchTerm(text);
     if (text.length > 0) {
       const normalizedText = normalizeString(text);
-      const filtered = countriesWithFlags.filter(
+      const filtered = countriesWithFlags?.filter(
         (country) =>
           normalizeString(country.name).includes(normalizedText) &&
           !selectedCountries.some(
@@ -47,7 +47,7 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries }) => {
   };
 
   const handleSubmit = () => {
-    if (filteredOptions.length > 0) {
+    if (filteredOptions?.length > 0) {
       handleSelect(filteredOptions[0]);
     } else {
       setTextColor('#c20303');
@@ -65,7 +65,7 @@ const FilterBar = ({ countriesWithFlags, onSelect, selectedCountries }) => {
         onChangeText={handleSearchChange}
         onSubmitEditing={handleSubmit}
       />
-      {filteredOptions.length > 0 && (
+      {filteredOptions?.length > 0 && (
         <View style={styles.dropdown}>
           <FlatList
             data={filteredOptions}

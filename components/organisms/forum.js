@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Title from '../atoms/title';
 import Question from '../atoms/question';
+import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const data = {
@@ -72,7 +73,42 @@ const data = {
 
 export default function Forum() {
   const [questions, setQuestions] = useState(data.questions);
+  const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
   const [newQuestion, setNewQuestion] = useState('');
+  const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
+
+  // Extraer las nacionalidades únicas de las preguntas
+  const availableNationalities = Array.from(
+    new Set(data.questions.map((q) => q.nationality)),
+  );
+
+  const handleSearch = (query) => {
+    filterQuestions(query, selectedCountries);
+  };
+
+  const handleFilterByCountries = (countries) => {
+    setSelectedCountries(countries);
+    filterQuestions('', countries);
+  };
+
+  const filterQuestions = (query, countries) => {
+    let filtered = data.questions;
+
+    // Filtrar por texto de búsqueda
+    if (query.trim() !== '') {
+      filtered = filtered.filter((q) =>
+        q.question.toLowerCase().includes(query.toLowerCase()),
+      );
+    }
+
+    // Filtrar por países seleccionados
+    if (countries.length > 0) {
+      const countryNames = countries.map((country) => country.name); // Extraer nombres de los países
+      filtered = filtered.filter((q) => countryNames.includes(q.nationality));
+    }
+
+    setFilteredQuestions(filtered);
+  };
 
   const handleAddQuestion = () => {
     if (newQuestion.trim() !== '') {
@@ -81,8 +117,10 @@ export default function Forum() {
         question: newQuestion,
         date: new Date().toISOString(),
         answers: [],
+        nationality: 'España', // Puedes reemplazar esto con la nacionalidad del usuario actual
       };
       setQuestions([...questions, newQuestionObject]);
+      setFilteredQuestions([...questions, newQuestionObject]);
       setNewQuestion(''); // Limpia el campo de texto
     }
   };
@@ -97,68 +135,78 @@ export default function Forum() {
           height: '100%',
         }}
       />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <SafeAreaView
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(255, 255, 255, 0.7)',
-            width: '90%',
-            padding: 20,
-            alignSelf: 'center',
-            marginTop: 60,
-            position: 'relative',
-          }}
-        >
-          <Title title={data.city} />
+      {/* Barra de búsqueda */}
+      <View style={{ flex: 1, padding: 20 }}>
+        <ForoSearchBar
+          onSearch={handleSearch}
+          availableNationalities={availableNationalities} // Pasar las nacionalidades únicas
+          selectedCountries={selectedCountries} // Pasar los países seleccionados
+          setSelectedCountries={handleFilterByCountries} // Actualizar los países seleccionados
+        />
 
-          {/* Campo para escribir una nueva pregunta */}
-          <View
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <SafeAreaView
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 20,
-              marginBottom: 20,
+              flex: 1,
+              backgroundColor: 'rgba(255, 255, 255, 0.7)',
+              width: '90%',
+              padding: 20,
+              alignSelf: 'center',
+              marginTop: 60,
+              position: 'relative',
             }}
           >
-            <TextInput
+            <Title title={data.city} />
+
+            {/* Campo para escribir una nueva pregunta */}
+            <View
               style={{
-                flex: 1,
-                borderWidth: 1,
-                borderColor: '#ccc',
-                borderRadius: 5,
-                padding: 10,
-              }}
-              placeholder='Escribe tu pregunta...'
-              value={newQuestion}
-              onChangeText={setNewQuestion}
-            />
-            <TouchableOpacity
-              onPress={handleAddQuestion}
-              style={{
-                marginLeft: 10,
-                backgroundColor: '#572364',
-                padding: 10,
-                borderRadius: 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 20,
+                marginBottom: 20,
               }}
             >
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Lista de preguntas */}
-          {questions.map((question, index) => (
-            <View key={index} style={{ marginVertical: 10 }}>
-              <Question
-                avatar={question.avatar}
-                user={question.user}
-                date={question.date}
-                text={question.question}
-                answers={question.answers}
+              <TextInput
+                style={{
+                  flex: 1,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  borderRadius: 5,
+                  padding: 10,
+                }}
+                placeholder='Escribe tu pregunta...'
+                value={newQuestion}
+                onChangeText={setNewQuestion}
               />
+              <TouchableOpacity
+                onPress={handleAddQuestion}
+                style={{
+                  marginLeft: 10,
+                  backgroundColor: '#572364',
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
+              </TouchableOpacity>
             </View>
-          ))}
-        </SafeAreaView>
-      </ScrollView>
+
+            {/* Lista de preguntas */}
+            {filteredQuestions.map((question, index) => (
+              <View key={index} style={{ marginVertical: 10 }}>
+                <Question
+                  avatar={question.avatar}
+                  user={question.user}
+                  date={question.date}
+                  text={question.question}
+                  answers={question.answers}
+                />
+              </View>
+            ))}
+          </SafeAreaView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
