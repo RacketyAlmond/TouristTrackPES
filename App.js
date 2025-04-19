@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Map from './components/organisms/map';
 import Forum from './components/organisms/forum';
+import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import { fetchCSV } from './dataestur';
 
@@ -20,7 +21,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Forum></Forum>
+      <IndexForos></IndexForos>
     </NavigationContainer>
   );
 }
