@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 15,
     paddingVertical: 5,
-    width: '100%', // Asegura que la barra de búsqueda ocupe todo el ancho del contenedor
+    width: '110%', // Asegura que la barra de búsqueda ocupe todo el ancho del contenedor
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

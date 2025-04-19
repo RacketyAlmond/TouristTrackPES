@@ -152,54 +152,55 @@ export default function Forum() {
           setSelectedCountries={handleFilterByCountries} // Actualizar los países seleccionados
         />
 
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          <SafeAreaView
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            width: '100%',
+            padding: 20,
+            alignSelf: 'center',
+            marginTop: 60,
+            position: 'relative',
+            borderRadius: 20,
+          }}
+        >
+          <Title title={data.city} />
+
+          {/* Campo para escribir una nueva pregunta */}
+          <View
             style={{
-              flex: 1,
-              backgroundColor: 'rgba(255, 255, 255, 0.7)',
-              width: '90%',
-              padding: 20,
-              alignSelf: 'center',
-              marginTop: 60,
-              position: 'relative',
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 20,
+              marginBottom: 20,
             }}
           >
-            <Title title={data.city} />
-
-            {/* Campo para escribir una nueva pregunta */}
-            <View
+            <TextInput
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 20,
-                marginBottom: 20,
+                flex: 1,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+                padding: 10,
+              }}
+              placeholder='Escribe tu pregunta...'
+              placeholderTextColor={'#888'}
+              value={newQuestion}
+              onChangeText={setNewQuestion}
+            />
+            <TouchableOpacity
+              onPress={handleAddQuestion}
+              style={{
+                marginLeft: 10,
+                backgroundColor: '#572364',
+                padding: 10,
+                borderRadius: 5,
               }}
             >
-              <TextInput
-                style={{
-                  flex: 1,
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  borderRadius: 5,
-                  padding: 10,
-                }}
-                placeholder='Escribe tu pregunta...'
-                value={newQuestion}
-                onChangeText={setNewQuestion}
-              />
-              <TouchableOpacity
-                onPress={handleAddQuestion}
-                style={{
-                  marginLeft: 10,
-                  backgroundColor: '#572364',
-                  padding: 10,
-                  borderRadius: 5,
-                }}
-              >
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
-              </TouchableOpacity>
-            </View>
-
+              <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             {/* Lista de preguntas */}
             {filteredQuestions.map((question, index) => (
               <View key={index} style={{ marginVertical: 10 }}>
@@ -211,8 +212,8 @@ export default function Forum() {
                 />
               </View>
             ))}
-          </SafeAreaView>
-        </ScrollView>
+          </ScrollView>
+        </SafeAreaView>
       </View>
     </SafeAreaView>
   );
