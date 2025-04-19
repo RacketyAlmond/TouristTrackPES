@@ -203,7 +203,7 @@ export default function Forum() {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             {/* Lista de preguntas */}
             {filteredQuestions.map((question, index) => (
-              <View key={index} style={{ marginVertical: 10 }}>
+              <View key={index} style={{ marginVertical: 0 }}>
                 <Question
                   user={question.user}
                   date={question.date}
