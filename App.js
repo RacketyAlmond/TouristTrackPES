@@ -21,7 +21,29 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <IndexForos></IndexForos>
+      <Stack.Navigator
+        screenOptions={{
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          animation: 'slide_from_right',
+        }}
+      >
+        <Stack.Screen
+          name='Foros'
+          component={IndexForos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Forum'
+          component={Forum}
+          options={{
+            headerShown: false, // Ocultar el header
+            gestureEnabled: true, // Habilitar gestos
+            gestureDirection: 'horizontal', // Dirección del gesto
+            animation: 'slide_from_right', // Animación al navegar
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

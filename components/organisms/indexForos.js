@@ -59,7 +59,7 @@ export default function IndexForos() {
         }}
       />
 
-      <SafeAreaView
+      <View
         style={{
           flex: 1,
           backgroundColor: 'rgba(255, 255, 255, 0.7)',
@@ -105,7 +105,7 @@ export default function IndexForos() {
             </View>
           ))}
         </ScrollView>
-      </SafeAreaView>
+      </View>
     </SafeAreaView>
   );
 }

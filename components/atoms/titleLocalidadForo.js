@@ -8,24 +8,23 @@ export default function TitleLocalidadForo({ LocName }) {
   const handlePress = () => {
     // Navigate to the Forum screen for this locality
     navigation.navigate('Forum', {
-      localityId: LocName,
       localityName: LocName,
     });
   };
 
   return (
-    <View
-      style={{
-        padding: 10,
-        marginVertical: 0,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        borderTopColor: '#ccc',
-        borderTopWidth: 1,
-        elevation: 1,
-      }}
-    >
-      <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity onPress={handlePress}>
+      <View
+        style={{
+          padding: 10,
+          marginVertical: 0,
+          borderBottomWidth: 1,
+          borderBottomColor: '#ccc',
+          borderTopColor: '#ccc',
+          borderTopWidth: 1,
+          elevation: 1,
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -47,7 +46,7 @@ export default function TitleLocalidadForo({ LocName }) {
             →
           </Text>
         </View>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 }
