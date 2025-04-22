@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Image,
@@ -12,6 +12,11 @@ import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function IndexForos() {
+  // Estado para el texto de búsqueda
+  const [searchLocalidad, setSearchLocalidad] = useState('');
+  // Estado para las localidades filtradas
+  const [filteredLocalidades, setFilteredLocalidades] = useState([]);
+
   const Localidades = [
     'Madrid',
     'Barcelona',
@@ -24,6 +29,24 @@ export default function IndexForos() {
     'Palma de Mallorca',
     'Granada',
   ];
+
+  // Filtrar las localidades cuando cambie el texto de búsqueda
+  useEffect(() => {
+    if (searchLocalidad) {
+      const filtered = Localidades.filter((localidad) =>
+        localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
+      );
+      setFilteredLocalidades(filtered);
+    } else {
+      // Si no hay texto de búsqueda, mostrar todas las localidades
+      setFilteredLocalidades(Localidades);
+    }
+  }, [searchLocalidad]);
+
+  // Inicializar las localidades filtradas al cargar el componente
+  useEffect(() => {
+    setFilteredLocalidades(Localidades);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -70,13 +93,13 @@ export default function IndexForos() {
             }}
             placeholder='Busca una localidad...'
             placeholderTextColor={'#888'}
-            //value={newQuestion}
-            //onChangeText={setNewQuestion}
+            value={searchLocalidad}
+            onChangeText={setSearchLocalidad}
           />
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {/* Lista de foros */}
-          {Localidades.map((Localidad, index) => (
+          {filteredLocalidades.map((Localidad, index) => (
             <View key={index} style={{ marginVertical: 0 }}>
               <TitleLocalidadForo LocName={Localidad} />
             </View>

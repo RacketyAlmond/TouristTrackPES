@@ -20,6 +20,7 @@ export default function TitleLocalidadForo({ LocName }) {
         marginVertical: 0,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
+        borderTopColor: '#ccc',
         borderTopWidth: 1,
         elevation: 1,
       }}
