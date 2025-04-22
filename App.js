@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Map from './components/organisms/map';
 import Forum from './components/organisms/forum';
+import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import { fetchCSV } from './dataestur';
 
@@ -20,7 +21,29 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Forum></Forum>
+      <Stack.Navigator
+        screenOptions={{
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          animation: 'slide_from_right',
+        }}
+      >
+        <Stack.Screen
+          name='Foros'
+          component={IndexForos}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Forum'
+          component={Forum}
+          options={{
+            headerShown: false, // Ocultar el header
+            gestureEnabled: true, // Habilitar gestos
+            gestureDirection: 'horizontal', // Dirección del gesto
+            animation: 'slide_from_right', // Animación al navegar
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

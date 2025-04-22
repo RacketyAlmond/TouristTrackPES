@@ -72,7 +72,9 @@ const data = {
   ],
 };
 
-export default function Forum() {
+export default function Forum({ route }) {
+  const { localityName } = route.params;
+
   const [questions, setQuestions] = useState(data.questions);
   const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
   const [newQuestion, setNewQuestion] = useState('');
@@ -152,7 +154,7 @@ export default function Forum() {
           setSelectedCountries={handleFilterByCountries} // Actualizar los países seleccionados
         />
 
-        <SafeAreaView
+        <View
           style={{
             flex: 1,
             backgroundColor: 'rgba(255, 255, 255, 0.7)',
@@ -164,7 +166,7 @@ export default function Forum() {
             borderRadius: 20,
           }}
         >
-          <Title title={data.city} />
+          <Title title={localityName} />
 
           {/* Campo para escribir una nueva pregunta */}
           <View
@@ -203,7 +205,7 @@ export default function Forum() {
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             {/* Lista de preguntas */}
             {filteredQuestions.map((question, index) => (
-              <View key={index} style={{ marginVertical: 10 }}>
+              <View key={index} style={{ marginVertical: 0 }}>
                 <Question
                   user={question.user}
                   date={question.date}
@@ -213,7 +215,7 @@ export default function Forum() {
               </View>
             ))}
           </ScrollView>
-        </SafeAreaView>
+        </View>
       </View>
     </SafeAreaView>
   );
