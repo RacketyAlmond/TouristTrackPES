@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/chats';
+import Map from './components/organisms/map';
+import Estadisticas from './components/organisms/estadisticas';
 import { fetchCSV } from './dataestur';
 import PersonalChat from './components/organisms/personalChat';
 
