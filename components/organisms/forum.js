@@ -72,9 +72,7 @@ const data = {
   ],
 };
 
-export default function Forum({ route }) {
-  const { localityName } = route.params;
-
+export default function Forum({ localityName }) {
   const [questions, setQuestions] = useState(data.questions);
   const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
   const [newQuestion, setNewQuestion] = useState('');
@@ -186,7 +184,7 @@ export default function Forum({ route }) {
                 padding: 10,
               }}
               placeholder='Escribe tu pregunta...'
-              placeholderTextColor={'#888'}
+              placeholderTextColor='#888'
               value={newQuestion}
               onChangeText={setNewQuestion}
             />

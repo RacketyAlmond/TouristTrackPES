@@ -72,7 +72,7 @@ export default function IndexForos() {
           borderRadius: 20,
         }}
       >
-        <Title title={'Foros'} />
+        <Title title='Foros' />
 
         {/* Campo para buscar un foro */}
         <View
@@ -92,7 +92,7 @@ export default function IndexForos() {
               padding: 10,
             }}
             placeholder='Busca una localidad...'
-            placeholderTextColor={'#888'}
+            placeholderTextColor='#888'
             value={searchLocalidad}
             onChangeText={setSearchLocalidad}
           />

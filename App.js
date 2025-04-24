@@ -8,7 +8,6 @@ import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
 import Xat from './components/organisms/xatProva';
 import User from './components/organisms/userProva';
-import Foro from './components/organisms/foroProva';
 import { fetchCSV } from './dataestur';
 
 const Stack = createNativeStackNavigator();
