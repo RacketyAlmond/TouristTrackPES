@@ -25,7 +25,7 @@ export default function Filter({
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
 
   useEffect(() => {
-    const countriesWithFlags = countryArray.map((country) => ({
+    const countriesWithFlags = countryArray?.map((country) => ({
       name: country,
       flag: getCountryFlag(country),
     }));
@@ -73,13 +73,11 @@ export default function Filter({
     <View style={styles.container}>
       <Text style={styles.title}>Filter</Text>
       <Text style={styles.description}>
-        This filter allows you to select countries to filter tourism statistics
-        within Spain. By default, the filter is set to show statistics for all
-        countries.
+        This filter allows you to select the countries you are interested in.
       </Text>
 
       <ScrollView horizontal style={styles.selectedCountriesContainer}>
-        {selectedCountries.map(({ name, flag }) => (
+        {selectedCountries?.map(({ name, flag }) => (
           <View key={name} style={[styles.countryButton, styles.selected]}>
             <Image source={{ uri: flag }} style={styles.flag} />
             <Text style={styles.countryName}>{name} </Text>
