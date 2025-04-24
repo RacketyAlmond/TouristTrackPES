@@ -25,6 +25,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
         screenOptions={{
           gestureEnabled: true,
           gestureDirection: 'horizontal',
