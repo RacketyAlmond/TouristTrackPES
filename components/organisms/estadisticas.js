@@ -59,25 +59,6 @@ export default function Estadisticas() {
     'Compras',
   ];
 
-  const dataApiDurum = [
-    {
-      AÑO: '2019',
-      CONTINENTE_ORIGEN: 'total',
-      MES: '7',
-      MUNICIPIO_DESTION: 'reinosa',
-      PAIS_ORIGEN: 'españa',
-      TURISTAS: '145',
-    },
-    {
-      AÑO: '2019',
-      CONTINENTE_ORIGEN: 'europa',
-      MES: '8',
-      MUNICIPIO_DESTION: 'reinosa',
-      PAIS_ORIGEN: 'españa',
-      TURISTAS: '250',
-    },
-  ];
-
   const filteredData = dataApi
     ? filterData(
         [parseInt(selectedItemAnos)],

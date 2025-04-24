@@ -32,8 +32,6 @@ export default function Filter({
     setCountriesWithFlags(countriesWithFlags);
   }, [countryArray]);
 
-  const countryNames = selectedCountries.map((country) => country.name);
-
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -66,13 +64,6 @@ export default function Filter({
     setSelectedCountries(
       selectedCountries.filter((c) => c.name !== country.name),
     );
-    setTempSelectedCountries(
-      tempSelectedCountries.filter((c) => c.name !== country.name),
-    );
-  };
-
-  /* pretendia hacer que se puedieran eliminar paises escogidos en el modal pero no funciona pa ná.*/
-  const removeCountryTemp = (country) => {
     setTempSelectedCountries(
       tempSelectedCountries.filter((c) => c.name !== country.name),
     );

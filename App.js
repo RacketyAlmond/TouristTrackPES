@@ -5,6 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/generalChat';
 import Map from './components/organisms/map';
 import Estadisticas from './components/organisms/estadisticas';
+import NavBar from './components/organisms/navBar';
+import Xat from './components/organisms/xatProva';
+import User from './components/organisms/userProva';
+import Foro from './components/organisms/foroProva';
 import { fetchCSV } from './dataestur';
 import PersonalChat from './components/organisms/personalChat';
 
@@ -142,8 +146,12 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
         <Stack.Screen name='Estadisticas' component={Estadisticas} />
+        <Stack.Screen name='Xat' component={Xat} />
+        <Stack.Screen name='User' component={User} />
+        <Stack.Screen name='Foro' component={Foro} />
         <Stack.Screen name='PersonalChat' component={PersonalChat} />
       </Stack.Navigator>
+      <NavBar />
     </NavigationContainer>
   );
 }
