@@ -74,6 +74,7 @@ const data = {
 
 export default function Forum({ route }) {
   const { localityName } = route.params;
+
   const [questions, setQuestions] = useState(data.questions);
   const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
   const [newQuestion, setNewQuestion] = useState('');
@@ -201,7 +202,13 @@ export default function Forum({ route }) {
               <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
             </TouchableOpacity>
           </View>
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+              borderTopWidth: 1,
+              borderTopColor: '#ccc',
+            }}
+          >
             {/* Lista de preguntas */}
             {filteredQuestions.map((question, index) => (
               <View key={index} style={{ marginVertical: 0 }}>

@@ -37,8 +37,6 @@ export default function Question({ user, nationality, date, text, answers }) {
     <View
       style={{
         padding: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
       }}
