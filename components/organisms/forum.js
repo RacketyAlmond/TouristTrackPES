@@ -72,7 +72,8 @@ const data = {
   ],
 };
 
-export default function Forum({ localityName }) {
+export default function Forum({ route }) {
+  const { localityName } = route.params;
   const [questions, setQuestions] = useState(data.questions);
   const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
   const [newQuestion, setNewQuestion] = useState('');

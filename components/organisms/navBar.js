@@ -20,7 +20,7 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Forum')}
+        onPress={() => navigation.navigate('Foros')}
       >
         <Image
           source={require('../../public/forum.png')}
