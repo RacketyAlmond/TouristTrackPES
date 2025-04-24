@@ -5,6 +5,10 @@ import Map from './components/organisms/map';
 import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
+import NavBar from './components/organisms/navBar';
+import Xat from './components/organisms/xatProva';
+import User from './components/organisms/userProva';
+import Foro from './components/organisms/foroProva';
 import { fetchCSV } from './dataestur';
 
 const Stack = createNativeStackNavigator();
@@ -43,7 +47,12 @@ export default function App() {
             animation: 'slide_from_right', // Animación al navegar
           }}
         />
+        <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
+        <Stack.Screen name='Estadisticas' component={Estadisticas} />
+        <Stack.Screen name='Xat' component={Xat} />
+        <Stack.Screen name='User' component={User} />
       </Stack.Navigator>
+      <NavBar />
     </NavigationContainer>
   );
 }
