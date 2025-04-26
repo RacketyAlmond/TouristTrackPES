@@ -2,7 +2,7 @@ import Papa from 'papaparse';
 import * as FileSystem from 'expo-file-system';
 import 'fast-text-encoding';
 
-const FILE_URI = FileSystem.documentDirectory + 'turismo_data.json';
+const FILE_URI = FileSystem.documentDirectory + 'turismo_data.csv';
 const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 const decodeISO88591 = (buffer) => {
@@ -14,43 +14,70 @@ const decodeISO88591 = (buffer) => {
 export const fetchCSV = async (callback, errorCallback) => {
   try {
     const fileInfo = await FileSystem.getInfoAsync(FILE_URI);
+    console.log('Tamaño en bytes:', fileInfo.size);
 
     if (fileInfo.exists) {
-      const modifiedTime = new Date(fileInfo.modificationTime * 1000).getTime(); // seconds → ms
-      const now = Date.now();
+      const modifiedTime = new Date(fileInfo.modificationTime * 1000); // Ahora es un objeto Date
+      const now = new Date(); // También un objeto Date
 
-      if (false) {
+      const modifiedTimeCalc = new Date(
+        fileInfo.modificationTime * 1000,
+      ).getTime(); // en ms
+      const nowCalc = Date.now(); // también en ms
+
+      console.log('Fecha de modificación:', modifiedTime.toLocaleString());
+      console.log('Ahora:', now.toLocaleString());
+
+      console.log('modifiedTime.getDate(): ', modifiedTimeCalc);
+      console.log('Date.now():', nowCalc);
+
+      //si ha pasaado mas de una semana desde la última modificación, actualiza el archivo
+      if (nowCalc - modifiedTimeCalc > ONE_WEEK) {
+        console.log(
+          'Date.now() - modifiedTime.getDate(): ',
+          nowCalc - modifiedTimeCalc,
+        );
+        console.log('ONE_WEEK: ', ONE_WEEK);
+
+        const url =
+          'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Todos';
+
+        console.log('fetching...');
+        const resp = await fetch(url);
+        //console.log('textowww: ', resp.text());
+        if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
+
+        console.log(resp);
+        const buffer = await resp.arrayBuffer();
+        //console.log('decoding...');
+        const decodedText = decodeISO88591(buffer);
+        console.log('writing............');
+
+        await FileSystem.writeAsStringAsync(FILE_URI, decodedText, {
+          encoding: FileSystem.EncodingType.UTF8,
+        });
+        console.log('Datos guardados en archivo');
+
+        console.log('parsing...');
+        const parsedData = Papa.parse(decodedText, { header: true }).data;
+
+        console.log('normalizando...');
+        const normalizedData = normalizarMunicipios(parsedData);
+
+        callback(normalizedData);
+      } else {
+        console.log('Leyendo archivo local...');
         const content = await FileSystem.readAsStringAsync(FILE_URI);
-        const parsed = JSON.parse(content);
-        console.log('Usando datos guardados en archivo');
-        callback(parsed);
-        return;
+
+        console.log('parsing...');
+        const parsedData = Papa.parse(content, { header: true }).data;
+
+        console.log('normalizando...');
+        const normalizedData = normalizarMunicipios(parsedData);
+
+        callback(normalizedData);
       }
     }
-
-    const url =
-      'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Lleida';
-
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
-
-    const buffer = await resp.arrayBuffer();
-    const decodedText = decodeISO88591(buffer);
-    const parsedData = Papa.parse(decodedText, { header: true }).data;
-
-    const normalizedData = normalizarMunicipios(parsedData);
-
-    await FileSystem.writeAsStringAsync(
-      FILE_URI,
-      JSON.stringify(normalizedData),
-      {
-        encoding: FileSystem.EncodingType.UTF8,
-      },
-    );
-
-    console.log('Datos guardados en archivo');
-    callback(normalizedData);
-    console.log('data:', normalizedData);
   } catch (error) {
     console.error('Error obteniendo el CSV:', error);
     if (errorCallback) errorCallback(error);

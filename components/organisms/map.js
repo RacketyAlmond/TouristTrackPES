@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import SearchBar from '../molecules/searchBar';
@@ -18,9 +18,18 @@ export default function Map({ data }) {
   const [selectedCountries, setSelectedCountries] = useState([]);
 
   const mapRef = useRef(null);
+  console.log('getDataOf...');
   const dataMunicipality = data ? getDataOfMunicipality(city, data) : [];
 
-  const listCountries = data ? listOriginCountries(data) : [];
+  console.log('listOrigin...');
+  const listCountries = useMemo(() => {
+    if (data) {
+      return listOriginCountries(data);
+    }
+    return [];
+  }, [data]); // <-- Solo se recalcula cuando data cambia
+
+  console.log('getTourists...');
   const totalTouristsOfMunicipality =
     selectedCountries.length > 0
       ? getTouristMunicipality(
@@ -29,6 +38,8 @@ export default function Map({ data }) {
           selectedCountries.map((country) => country.name),
         )
       : getTotalTouristsOfMunicipality(city, data);
+
+  console.log('done............');
 
   const searchCity = async (cityName) => {
     const result = await getCoordinatesFromCity(cityName);
