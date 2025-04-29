@@ -5,7 +5,7 @@ import MessageChatBubble from '../atoms/messageChatBubble';
 import MessageChatData from '../atoms/messageChatData';
 
 const MessageChatList = ({ messages }) => {
-  // Función para formatear fechas al estilo WhatsApp
+
   const formatDate = (timestamp) => {
     const messageDate = new Date(timestamp);
     const today = new Date();
@@ -15,20 +15,17 @@ const MessageChatList = ({ messages }) => {
     const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
     const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const yesterdayDay = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
-    
-    const timeFormat = { hour: '2-digit', minute: '2-digit' };
-    
+        
     if (messageDay.getTime() === todayDay.getTime()) {
-      return 'HOY';
+      return 'TODAY';
     } else if (messageDay.getTime() === yesterdayDay.getTime()) {
-      return 'AYER';
+      return 'YESTERDAY';
     } else {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      return messageDate.toLocaleDateString('es-ES', options).toUpperCase();
+      return messageDate.toLocaleDateString('en-US', options).toUpperCase();
     }
   };
 
-  // Agrupar mensajes por fecha
   const groupMessagesByDate = () => {
     const groups = [];
     let currentDate = null;

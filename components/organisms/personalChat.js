@@ -1,71 +1,58 @@
 /* eslint-disable prettier/prettier */
 import React, { useState } from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
 import ChatHeader from '../molecules/chatHeader';
 import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput';
+import ChatJson from '../../json/chat.json';
 
-// Datos de ejemplo para el chat
-const MOCK_CHAT = {
-  chatId: '1',
-  contactName: 'Steve',
-  contactAvatar: 'https://www.slashfilm.com/img/gallery/who-plays-alex-in-a-minecraft-movie/intro-1744039987.jpg',
-  messages: [
-    {
-      id: '1',
-      text: 'I... Am Steve',
-      timestamp: '2025-04-12T10:30:00.000Z',
-      isMe: false,
-    },
-    {
-      id: '2',
-      text: 'Flint and Steel',
-      timestamp: '2025-04-12T10:32:00.000Z',
-      isMe: true,
-    },
-    {
-      id: '3',
-      text: 'Chicken Jockey',
-      timestamp: '2025-04-13T10:33:00.000Z',
-      isMe: false,
-    },
-    {
-      id: '4',
-      text: 'When I was a child, I yerned for the mines',
-      timestamp: '2025-04-14T10:35:00.000Z',
-      isMe: true,
-    },
-  ],
-};
 
-const PersonalChat = ({ route, navigation }) => {
-  const [chatData, setChatData] = useState(MOCK_CHAT);
-  const [messages, setMessages] = useState(MOCK_CHAT.messages);
+const PersonalChat = ({ route, navigation, User }) => {
+  const userData = route.params.User;
+  console.log(userData);
+  const currentUser = route.params.currentUser;
+  const currentSession = currentUser.id;
+  const idCurrentSession = currentSession;
+  const chatData = ChatJson.filter(msg => 
+    (msg.sendBy === idCurrentSession && msg.sendTo === userData.id) || 
+    (msg.sendBy === userData.id && msg.sendTo === idCurrentSession)
+  );
+
+  const chatMessages = chatData.map(txt => ({
+    id: txt.id.toString(),
+    text: txt.content,
+    timestamp: txt.timestamp,
+    isMe: txt.sendBy === currentSession,
+  }));
+  
+  const [messages, setMessages] = useState(chatMessages);
 
   const handleSendMessage = (text) => {
     if (text.trim().length === 0) return;
     
+    const messageId = Date.now().toString();
+    
     const newMessage = {
-      id: messages.length + 1,
+      id: messageId,
       text: text,
       timestamp: new Date().toISOString(),
       isMe: true,
     };
     
     setMessages([...messages, newMessage]);
+    
   };
 
-  //Retroceder --> no disponible en este momento
   const goBack = () => {
     navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerSpace} />
       <ChatHeader 
-        contactName={chatData.contactName} 
-        contactAvatar={chatData.contactAvatar}
+        contactName={userData.name} 
+        contactAvatar={userData.avatar}
+        contactDescription={userData.about}
         onBackPress={goBack}
       />
       <MessageChatList messages={messages} />
@@ -77,10 +64,11 @@ const PersonalChat = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
-  },
-  headerSpace: {
-    height: 40,
+    backgroundColor: 'white',
+    paddingTop:
+          Platform.OS === 'android'
+            ? Math.min(StatusBar.currentHeight || 30, 30)
+            : 0,
   },
 });
 

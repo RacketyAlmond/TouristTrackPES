@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   myMessage: {
-    backgroundColor: 'rebeccapurple',
+    backgroundColor: '#572364',
   },
   theirMessage: {
     backgroundColor: 'gainsboro',
