@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Image,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import { View, Image, ScrollView, TextInput } from 'react-native';
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+const API_URL = 'http://192.168.1.41:3001/forums';
 
 export default function IndexForos() {
   // Estado para el texto de búsqueda
   const [searchLocalidad, setSearchLocalidad] = useState('');
   // Estado para las localidades filtradas
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
+  const [Localidades, setLocalidades] = useState([]);
 
-  const Localidades = [
-    'Madrid',
-    'Barcelona',
-    'Valencia',
-    'Sevilla',
-    'Bilbao',
-    'Zaragoza',
-    'Malaga',
-    'Murcia',
-    'Palma de Mallorca',
-    'Granada',
-  ];
+  const obtenerForos = async () => {
+    try {
+      const response = await fetch('https://192.168.1.100:3001/forums');
+      const json = await response.json();
+
+      if (json.success) {
+        const locs = json.forums.map((forum) => forum.Localidad);
+        setLocalidades(locs);
+      }
+    } catch (error) {
+      console.error('Error al obtener los foros:', error);
+    }
+  };
 
   // Filtrar las localidades cuando cambie el texto de búsqueda
   useEffect(() => {
@@ -46,6 +43,7 @@ export default function IndexForos() {
   // Inicializar las localidades filtradas al cargar el componente
   useEffect(() => {
     setFilteredLocalidades(Localidades);
+    obtenerForos();
   }, []);
 
   return (
