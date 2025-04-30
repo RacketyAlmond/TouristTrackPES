@@ -1,46 +1,88 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, Platform, StatusBar } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { StyleSheet, SafeAreaView, Platform, StatusBar, Alert } from 'react-native';
 import ChatHeader from '../molecules/chatHeader';
 import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput';
-import ChatJson from '../../json/chat.json';
 
 
-const PersonalChat = ({ route, navigation, User }) => {
+
+const PersonalChat = ({ route, navigation }) => {
   const userData = route.params.User;
-  console.log(userData);
   const currentUser = route.params.currentUser;
-  const currentSession = currentUser.id;
-  const idCurrentSession = currentSession;
-  const chatData = ChatJson.filter(msg => 
-    (msg.sendBy === idCurrentSession && msg.sendTo === userData.id) || 
-    (msg.sendBy === userData.id && msg.sendTo === idCurrentSession)
-  );
+  const idCurrentSession = currentUser.id;
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const chatMessages = chatData.map(txt => ({
-    id: txt.id.toString(),
-    text: txt.content,
-    timestamp: txt.timestamp,
-    isMe: txt.sendBy === currentSession,
-  }));
-  
-  const [messages, setMessages] = useState(chatMessages);
+  const fetchMessages = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(`http://ip_personal_con_puerto/messages/between/${idCurrentSession}/${userData.id}`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch messages');
+      }
+      const data = await response.json();
+      const formattedMessages = data.map(msg => ({
+        id: msg.id.toString(),
+        text: msg.content,
+        timestamp: transformFirebaseTimestamp(msg.timestamp),
+        isMe: msg.sentByID === idCurrentSession,
+      }));
+      
+      setMessages(formattedMessages);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      Alert.alert('Error', 'Could not load messages. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [idCurrentSession, userData.id]);
 
-  const handleSendMessage = (text) => {
+  const transformFirebaseTimestamp = (timestamp) => {
+      return new Date(timestamp._seconds * 1000).toISOString();
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  const handleSendMessage = async (text) => {
     if (text.trim().length === 0) return;
     
-    const messageId = Date.now().toString();
+    const tempMessageId = Date.now().toString();
     
     const newMessage = {
-      id: messageId,
+      id: tempMessageId,
       text: text,
       timestamp: new Date().toISOString(),
       isMe: true,
     };
     
-    setMessages([...messages, newMessage]);
+    setMessages(prevMessages => [...prevMessages, newMessage]);
     
+    try {
+      const response = await fetch(`http://ip_personal_con_puerto/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sentByID: idCurrentSession,
+          sentToID: userData.id,
+          content: text,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }      
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      Alert.alert('Error', 'Failed to send message. Please try again.');
+    
+    }
   };
 
   const goBack = () => {
@@ -55,7 +97,7 @@ const PersonalChat = ({ route, navigation, User }) => {
         contactDescription={userData.about}
         onBackPress={goBack}
       />
-      <MessageChatList messages={messages} />
+      <MessageChatList messages={messages} isLoading={isLoading} />
       <MessageChatInput onSendMessage={handleSendMessage} />
     </SafeAreaView>
   );
