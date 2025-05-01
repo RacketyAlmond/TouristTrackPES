@@ -43,6 +43,7 @@ export const getCountryFlag = (countryName) => {
   else if (countryName === 'Malawi') cca2 = 'MW';
   else if (countryName === 'Papúa Nueva Guinea') cca2 = 'PG';
   else if (countryName === 'Guinea-Bissau') cca2 = 'GW';
+  else if (countryName === 'Surinam') cca2 = 'SR';
   if (!cca2) {
     console.warn(`No se encontró la bandera de ${countryName}`);
     return null;

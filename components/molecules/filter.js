@@ -25,6 +25,7 @@ export default function Filter({
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
 
   useEffect(() => {
+    console.log('countryArray', countryArray);
     const countriesWithFlags = countryArray.map((country) => ({
       name: country,
       flag: getCountryFlag(country),

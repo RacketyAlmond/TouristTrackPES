@@ -8,19 +8,44 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Grafica from '../molecules/grafica';
-import { filterData, listOriginCountries, listYears } from '../../filters';
 import { useRoute } from '@react-navigation/native';
-import { getTopCountries } from '../../dataestur';
+import {
+  getTopCountries,
+  getDataOfMunicipality,
+  filterData,
+  listYearsOfMunicipality,
+  listOriginCountriesOfMunicipality,
+} from '../../dataestur';
 import { getCountryFlag } from '../../utils';
 import SelectorPlataforma from '../molecules/selectorPlataforma';
 import { transformDataForChart } from '../molecules/transformDataForChart';
 
 export default function Estadisticas() {
   const route = useRoute();
-  const { locality, dataApi } = route.params;
-  const topPaises = getTopCountries(dataApi);
+  const { locality } = route.params;
+
+  const [dataMunicipality, setDataMunicipality] = useState([]);
+
+  useEffect(() => {
+    const loadDataMunicipality = async () => {
+      try {
+        console.log('loadDataMunicipality...');
+        const municipality = locality.name;
+        console.log('locality: ', municipality);
+        const data = await getDataOfMunicipality(municipality);
+        setDataMunicipality(data);
+      } catch (err) {
+        console.error('Error al cargar los datos:', err);
+      }
+    };
+
+    loadDataMunicipality();
+  }, [locality]);
+
+  console.log('top.... ');
+  const topPaises = getTopCountries(dataMunicipality);
 
   //segundo desplegable nº turistas (paises)
   const [selectedItemPaises, setSelectedItemPaises] = useState('Italia');
@@ -46,52 +71,39 @@ export default function Estadisticas() {
     'Compras',
   ];
 
-  /*const dataApiDurum = [
-    {
-      AÑO: '2019',
-      CONTINENTE_ORIGEN: 'total',
-      MES: '7',
-      MUNICIPIO_DESTION: 'reinosa',
-      PAIS_ORIGEN: 'españa',
-      TURISTAS: '145',
-    },
-    {
-      AÑO: '2019',
-      CONTINENTE_ORIGEN: 'europa',
-      MES: '8',
-      MUNICIPIO_DESTION: 'reinosa',
-      PAIS_ORIGEN: 'españa',
-      TURISTAS: '250',
-    },
-  ];
-  */
-
-  const filteredData = dataApi
+  console.log('filteredData.... ');
+  const filteredData = dataMunicipality
     ? filterData(
         [parseInt(selectedItemAnos)],
         [],
         [selectedItemPaises],
-        dataApi,
+        dataMunicipality,
       )
     : [];
 
-  const filteredData2 = dataApi
+  console.log('filteredData2.... ');
+  const filteredData2 = dataMunicipality
     ? filterData(
         [parseInt(selectedItemAnos2)],
         [],
         [selectedItemPaises2],
-        dataApi,
+        dataMunicipality,
       )
     : [];
 
-  const opcionesAnos = dataApi ? listYears(dataApi) : ['2021'];
+  const opcionesAnos = dataMunicipality
+    ? listYearsOfMunicipality(dataMunicipality)
+    : ['2021'];
 
-  const opcionesPaises = dataApi ? listOriginCountries(dataApi) : ['Italia'];
+  const opcionesPaises = dataMunicipality
+    ? listOriginCountriesOfMunicipality(dataMunicipality)
+    : ['Italia'];
 
-  //const filteredData = filterData([2019], [], ['Italia'], dataApi); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
+  //const filteredData = filterData([2019], [], ['Italia'], dataMunicipality); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
 
-  const data = transformDataForChart(filteredData, dataApi);
-  const data2 = transformDataForChart(filteredData2, dataApi);
+  console.log('transformData.... ');
+  const data = transformDataForChart(filteredData);
+  const data2 = transformDataForChart(filteredData2);
 
   return (
     <ScrollView style={styles.container}>

@@ -1,21 +1,19 @@
-export const transformDataForChart = (filteredData, dataApi = []) => {
+export const transformDataForChart = (filteredData) => {
   if (!filteredData || filteredData.length === 0) {
     console.warn('No hay datos disponibles para la gráfica.');
     console.warn('filteredData');
-    console.warn(dataApi);
     return {
       labels: [],
       datasets: [{ data: [] }],
     };
   }
-
   const sortedData = [...filteredData].sort(
     (a, b) => parseInt(a.MES) - parseInt(b.MES),
   );
 
   return {
     labels: sortedData.map(
-      (item) => `${item.AÑO}M${item.MES.padStart(2, '0')}`,
+      (item) => `${item.AÑO}M${item.MES.toString().padStart(2, '0')}`,
     ),
     datasets: [
       {
