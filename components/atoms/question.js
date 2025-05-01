@@ -1,23 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
 
-export default function Question({ user, nationality, date, text, answers }) {
+export default function Question({
+  forumId,
+  questionId,
+  authorId,
+  user,
+  date,
+  text,
+}) {
   // Estado para mostrar u ocultar las respuestas
   const [showAnswers, setShowAnswers] = useState(false);
 
   // Estado para manejar la nueva respuesta
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
-  const [allAnswers, setAllAnswers] = useState(answers);
+  const [allAnswers, setAllAnswers] = useState([]);
 
   // Calcula el tiempo relativo
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
   });
+
+  const getUserInfo = async (userId) => {
+    try {
+      const response = await fetch(`http://192.168.1.41:3001/users/${userId}`);
+      const json = await response.json();
+
+      if (json.success && json.usuario) {
+        const { firstName, userLocation } = json.usuario;
+        return {
+          user: firstName || 'Desconocido',
+          nationality: userLocation || 'Desconocido',
+        };
+      }
+    } catch (error) {
+      console.error(`Error al obtener datos del usuario ${userId}:`, error);
+    }
+
+    return { user: 'Desconocido', nationality: 'Desconocido' };
+  };
+
+  const getAnswers = React.useCallback(async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+      );
+
+      const json = await response.json();
+      if (json.success) {
+        const respuestas = await Promise.all(
+          json.respuestas.map(async (a) => {
+            const { user, nationality } = await getUserInfo(a.Author);
+            return {
+              id: a.id,
+              authorId: a.Author,
+              answer: a.text,
+              date: new Date(a.date._seconds * 1000).toISOString(),
+              nationality, //se puede quitar si no hace falta
+              user,
+            };
+          }),
+        );
+        setAllAnswers(respuestas);
+      }
+    } catch (error) {
+      console.error('Error al obtener las preguntas:', error);
+    }
+  }, [forumId, questionId]);
+
+  useEffect(() => {
+    getAnswers();
+  }, [showAnswers, allAnswers.length, getAnswers]);
 
   // Función para añadir una nueva respuesta
   const handleAddAnswer = () => {

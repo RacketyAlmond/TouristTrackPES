@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Image,
@@ -11,7 +11,6 @@ import Title from '../atoms/title';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SlEarphones } from 'react-icons/sl';
 
 const data = {
   city: 'Madrid',
@@ -73,16 +72,67 @@ const data = {
 };
 
 export default function Forum({ route }) {
-  const { forumId } = route.params;
-  const { localityName } = route.params;
-  const [questions, setQuestions] = useState(data.questions);
-  const [filteredQuestions, setFilteredQuestions] = useState(data.questions);
+  const { forumId, localityName } = route.params;
+  const [questions, setQuestions] = useState([]);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
 
+  const getUserInfo = async (userId) => {
+    try {
+      const response = await fetch(`http://192.168.1.41:3001/users/${userId}`);
+      const json = await response.json();
+
+      if (json.success && json.usuario) {
+        const { firstName, userLocation } = json.usuario;
+        return {
+          user: firstName || 'Desconocido',
+          nationality: userLocation || 'Desconocido',
+        };
+      }
+    } catch (error) {
+      console.error(`Error al obtener datos del usuario ${userId}:`, error);
+    }
+
+    return { user: 'Desconocido', nationality: 'Desconocido' };
+  };
+
+  const getQuestions = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.1.41:3001/forums/${forumId}/preguntas`,
+      );
+
+      const json = await response.json();
+      if (json.success) {
+        const preguntas = await Promise.all(
+          json.preguntas.map(async (q) => {
+            const { user, nationality } = await getUserInfo(q.Author);
+            return {
+              id: q.id,
+              authorId: q.Author,
+              question: q.text,
+              date: new Date(q.date._seconds * 1000).toISOString(),
+              nationality,
+              user,
+            };
+          }),
+        );
+        setQuestions(preguntas);
+        setFilteredQuestions(preguntas);
+      }
+    } catch (error) {
+      console.error('Error al obtener las preguntas:', error);
+    }
+  };
+
+  useEffect(() => {
+    getQuestions();
+  }, []);
+
   // Extraer las nacionalidades únicas de las preguntas
   const availableNationalities = Array.from(
-    new Set(data.questions.map((q) => q.nationality)),
+    new Set(questions.map((q) => q.nationality)),
   );
 
   const handleSearch = (query) => {
@@ -207,10 +257,12 @@ export default function Forum({ route }) {
             {filteredQuestions.map((question, index) => (
               <View key={index} style={{ marginVertical: 0 }}>
                 <Question
+                  forumId={forumId}
+                  questionId={question.id}
+                  authorId={question.authorId}
+                  text={question.question}
                   user={question.user}
                   date={question.date}
-                  text={question.question}
-                  answers={question.answers}
                 />
               </View>
             ))}
