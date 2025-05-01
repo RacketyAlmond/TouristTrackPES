@@ -76,16 +76,50 @@ export default function Question({
   }, [showAnswers, allAnswers.length, getAnswers]);
 
   // Función para añadir una nueva respuesta
-  const handleAddAnswer = () => {
-    setShowNewAnswer(false); // Oculta el campo de texto después de enviar la respuesta
+  const handleAddAnswer = async () => {
     if (newAnswer.trim() !== '') {
-      const newAnswerObject = {
-        user: 'Nuevo Usuario', // Puedes reemplazar esto con el usuario actual
-        date: new Date().toISOString(),
-        answer: newAnswer,
-      };
-      setAllAnswers([...allAnswers, newAnswerObject]);
-      setNewAnswer(''); // Limpia el campo de texto
+      try {
+        const response = await fetch(
+          `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              text: newAnswer,
+            }),
+          },
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          console.error('Error al enviar la pregunta:', json);
+          return;
+        }
+
+        if (json.success) {
+          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+
+          const newAnswerObject = {
+            id: json.preguntaId,
+            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            question: newAnswer,
+            date: new Date().toISOString(),
+            user,
+            nationality,
+          };
+
+          setAllAnswers([...allAnswers, newAnswerObject]);
+          setNewAnswer('');
+        } else {
+          console.error('Error al enviar la pregunta:', json.message);
+        }
+      } catch (error) {
+        console.error('Error en la solicitud POST:', error);
+      }
     }
   };
 

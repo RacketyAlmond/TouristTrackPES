@@ -105,18 +105,19 @@ export default function Forum({ route }) {
 
     setFilteredQuestions(filtered);
   };
+
   const handleAddQuestion = async () => {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `http://localhost:3001/forums/${forumId}/preguntas/`,
+          `http://192.168.1.41:3001/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'Nuevo usuario', // Reemplaza con el ID del usuario autenticado
+              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
               text: newQuestion,
             }),
           },
@@ -124,14 +125,21 @@ export default function Forum({ route }) {
 
         const json = await response.json();
 
+        if (!response.ok) {
+          console.error('Error al enviar la pregunta:', json);
+          return;
+        }
+
         if (json.success) {
+          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+
           const newQuestionObject = {
             id: json.preguntaId,
-            userId: 'Nuevo usuario', // Reemplaza con el ID del usuario autenticado
+            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-            user: 'Nuevo usuario', // o el nombre real del usuario si lo tienes
-            nationality: 'España',
+            user,
+            nationality,
           };
 
           const updatedQuestions = [...questions, newQuestionObject];
