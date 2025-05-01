@@ -15,7 +15,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('https://192.168.1.100:3001/forums');
+      const response = await fetch('http://192.168.1.41:3001/forums');
       const json = await response.json();
 
       if (json.success) {
@@ -38,7 +38,7 @@ export default function IndexForos() {
       // Si no hay texto de búsqueda, mostrar todas las localidades
       setFilteredLocalidades(Localidades);
     }
-  }, [searchLocalidad]);
+  }, [searchLocalidad, Localidades]);
 
   // Inicializar las localidades filtradas al cargar el componente
   useEffect(() => {
