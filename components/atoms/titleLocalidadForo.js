@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function TitleLocalidadForo({ LocName }) {
+export default function TitleLocalidadForo({ LocName, forumId }) {
   const navigation = useNavigation();
 
   const handlePress = () => {
     // Navigate to the Forum screen for this locality
     navigation.navigate('Forum', {
       localityName: LocName,
+      forumId: forumId,
     });
   };
 

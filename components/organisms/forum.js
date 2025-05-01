@@ -73,6 +73,7 @@ const data = {
 };
 
 export default function Forum({ route }) {
+  const { forumId } = route.params;
   const { localityName } = route.params;
   const [questions, setQuestions] = useState(data.questions);
   const [filteredQuestions, setFilteredQuestions] = useState(data.questions);

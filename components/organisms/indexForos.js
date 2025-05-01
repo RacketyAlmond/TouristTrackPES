@@ -4,22 +4,21 @@ import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const API_URL = 'http://192.168.1.41:3001/forums';
-
 export default function IndexForos() {
-  // Estado para el texto de búsqueda
   const [searchLocalidad, setSearchLocalidad] = useState('');
-  // Estado para las localidades filtradas
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('http://192.168.1.41:3001/forums');
+      const response = await fetch('http://192.168.1.41:3001/forums'); // Cambia esto por la URL de tu servidor + ejecuta "node server.js" en rama forum
       const json = await response.json();
 
       if (json.success) {
-        const locs = json.forums.map((forum) => forum.Localidad);
+        const locs = json.forums.map((forum) => ({
+          id: forum.id,
+          localidad: forum.Localidad,
+        }));
         setLocalidades(locs);
       }
     } catch (error) {
@@ -30,8 +29,8 @@ export default function IndexForos() {
   // Filtrar las localidades cuando cambie el texto de búsqueda
   useEffect(() => {
     if (searchLocalidad) {
-      const filtered = Localidades.filter((localidad) =>
-        localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
+      const filtered = Localidades.filter((loc) =>
+        loc.localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
       );
       setFilteredLocalidades(filtered);
     } else {
@@ -97,9 +96,9 @@ export default function IndexForos() {
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           {/* Lista de foros */}
-          {filteredLocalidades.map((Localidad, index) => (
+          {filteredLocalidades.map((loc, index) => (
             <View key={index} style={{ marginVertical: 0 }}>
-              <TitleLocalidadForo LocName={Localidad} />
+              <TitleLocalidadForo forumId={loc.id} LocName={loc.localidad} />
             </View>
           ))}
         </ScrollView>
