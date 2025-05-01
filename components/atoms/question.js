@@ -28,7 +28,7 @@ export default function Question({
 
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://192.168.1.41:3001/users/${userId}`);
+      const response = await fetch(`http://localhost:3001/users/${userId}`);
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -48,7 +48,7 @@ export default function Question({
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
 
       const json = await response.json();

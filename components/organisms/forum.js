@@ -80,7 +80,7 @@ export default function Forum({ route }) {
 
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://192.168.1.41:3001/users/${userId}`);
+      const response = await fetch(`http://localhost:3001/users/${userId}`);
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -100,7 +100,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.41:3001/forums/${forumId}/preguntas`,
+        `http://localhost:3001/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
