@@ -24,14 +24,36 @@ export default function AddChat({ route }) {
     const idCurrentUser = currentUser.id;
     const UserFriend = route.params.dataJson;
     const data = UsersAppJson;
-    const requests = route.params.requestsJson;
     const [searchTerm, setSearchTerm] = useState('');
+    const [requests, setRequests] = useState([]);
     const [searchedUser, setSearchedUser] = useState(null);
     const [isUserFound, setIsUserFound] = useState(false);
 
     useEffect(() => {
         setIsUserFound(searchedUser && searchedUser.id);
-    }, [searchedUser]);
+        fetchRequests();
+    }, [searchedUser, idCurrentUser]);
+
+    const fetchRequests = async () => {
+        try {
+            const response = await fetch(`http://ip_personal/pending-requests/received/${idCurrentUser}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch requests');
+            }
+            const data = await response.json();
+
+            const formattedRequests = data.map(request => ({
+                id: request.id.toString(),
+                name: request.firstName,
+                about: request.about,
+                avatar: request.avatar,
+            }));
+            setRequests(formattedRequests);
+        } catch (error) {
+            console.error('Error fetching requests:', error);
+            Alert.alert('Error', 'Could not load requests. Please try again later.');
+        } 
+    };
 
     const handleSubmit = () => {
         if (!searchTerm.trim()) {
@@ -81,6 +103,33 @@ export default function AddChat({ route }) {
                 { cancelable: false }
               );
         }
+        //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
+        /**else if() {
+            Alert.alert(
+                "USER HAS A REQUEST",
+                `You have already sent a request to the user.`,
+                [
+                  { 
+                    text: "OK", 
+                    style: "default",
+                  }
+                ],
+                { cancelable: false }
+              );
+        }*/
+        else if(requests.some(request => request.id === searchID.id)) {
+            Alert.alert(
+                "USER SENT YOU A REQUEST",
+                `The user has already sent you a request.`,
+                [
+                  { 
+                    text: "OK", 
+                    style: "default",
+                  }
+                ],
+                { cancelable: false }
+              );
+        }
         else {
             setSearchedUser(searchID);
         }
@@ -93,24 +142,9 @@ export default function AddChat({ route }) {
     const startChat = () => {
         if (searchedUser) {
             const User = searchedUser;
-            console.log("User", User);
-            console.log("CurrentUser", currentUser);
-            Alert.alert(
-                "Friend Request Sent",
-                `A friend request has been sent to ${searchedUser.name}.`,
-                [
-                { 
-                    text: "OK", 
-                    style: "default",
-                    onPress: () => {
-                    navigation.navigate('PersonalChat', { currentUser,User});
-                    setSearchTerm('');
-                    setSearchedUser(null);
-                    }
-                }
-                ],
-                { cancelable: false }
-            );
+            navigation.navigate('PersonalChat', { currentUser, User, state: 2 });
+            setSearchTerm('');
+            setSearchedUser(null);
         } else {
             Alert.alert(
                 "Error",
@@ -118,20 +152,72 @@ export default function AddChat({ route }) {
                 [{ text: "OK" }]
             );
         }
-      };
-
-    const acceptChat = (item) => {
-        alert("You have opened a chat with " + item.name);
-        setSearchedUser(null);
     };
 
-    const rejectChat = (item) => {
-        alert("You have rejected the chat with " + item.name);
+    //accepta el chat de les sol·licituds rebudes
+    const acceptChat = async (item) => {
+        Alert.alert(
+            "New Chat Accepted",
+            "You have opened a chat with " + item.name + ".",
+            [{ text: "OK" }]
+        );
         setSearchedUser(null);
+
+        //petició al backend per fer post
+        try {
+            const response = await fetch(`http://ip_personal/allowed-chats`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user1ID: idCurrentUser,
+                user2ID: item.id,
+            }),
+            });
+            
+            if (!response.ok) {
+            throw new Error('Failed to accept chat');
+            }      
+    
+        } catch (error) {
+            console.error('Error accepting chat:', error);
+            Alert.alert('Error', 'Failed to accept chat. Please try again.');
+        }
+
+    };
+
+    //rejecta el chat de les sol·licituds rebudes
+    const rejectChat = async (item) => {
+        Alert.alert(
+            "New Chat _Rejected",
+            "You have rejected a chat with " + item.name + ".",
+            [{ text: "OK" }]
+        );
+        setSearchedUser(null);
+
+        //petició al backend per delete
+        try {
+            const response = await fetch(`http://ip_personal/allowed-chats/${item.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            });
+            
+            if (!response.ok) {
+            throw new Error('Failed to reject chat');
+            }      
+    
+        } catch (error) {
+            console.error('Error rejecting chat:', error);
+            Alert.alert('Error', 'Failed to reject chat. Please try again.');
+        }
     };
 
     const renderItem = ({ item }) => (
         <View style={styles.chatItem}>
+            {/* hacer que este boton acceda al personalChat con un navigate y con el state a 1, de manera que este no pueda escribir mensajes*/}
             <TouchableOpacity>
                 <ChatItem item={item} />
                 <View style={styles.newChatButtonContainer}>

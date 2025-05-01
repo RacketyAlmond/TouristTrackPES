@@ -15,18 +15,17 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UsersJson from '../../json/userFriends.json';
-import UserRequests from '../../json/userRequests.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Chats({currentUser}) {
   const idCurrentSession = currentUser.id;
   const dataJson = UsersJson.find(user => user.idUser === idCurrentSession).friends;
-  const requestsJson = UserRequests.find(user => user.idUser === idCurrentSession).requests;
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState(dataJson);
   const [icon, setIcon] = useState('search');
+  const state = 0; // 0 = chat, 1 = requested, 2 = request
 
 
 
@@ -35,7 +34,7 @@ export default function Chats({currentUser}) {
 
     return (
       <View style={styles.chatItemContainer}>
-        <TouchableOpacity style={styles.chatItem} onPress={() => navigation.navigate('PersonalChat', { currentUser, User})}>
+        <TouchableOpacity style={styles.chatItem} onPress={() => navigation.navigate('PersonalChat', { currentUser, User, state})}>
           <ChatItem item={item} />
         </TouchableOpacity>
 
@@ -44,6 +43,26 @@ export default function Chats({currentUser}) {
         </TouchableOpacity>
       </View>
     );
+  };
+
+  const deleteChat = async (user1Id,user2Id) => {
+    try {
+      const response = await fetch(`http://ip_personal/messages/between/${user1Id}/${user2Id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }      
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+      Alert.alert('Error', 'Failed to send message. Please try again.');
+    
+    }
   };
 
   const handleDeleteChat = (item) => {
@@ -59,12 +78,13 @@ export default function Chats({currentUser}) {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            // 1. Actualizar el estado local filtrando el chat eliminado
             const updatedChats = filter.filter(chat => chat.id !== item.id);
             setFilter(updatedChats);
-            
-            // 2. En una aplicación real, actualizaríamos también los datos persistentes
-            // Simulamos una actualización exitosa
+
+            //funció per eliminar els missatges del chat
+            deleteChat(idCurrentSession,item.id);
+            //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
+
             Alert.alert(
               "Success", 
               `Chat with ${item.name} has been deleted.`
@@ -118,7 +138,7 @@ export default function Chats({currentUser}) {
           onSubmitEditing={handleSubmit}
           value = {searchTerm}
           />
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddChat', { currentUser, requestsJson, dataJson})}>
+        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddChat', { currentUser, dataJson})}>
           <Text style={styles.textButton}>+</Text>
         </TouchableOpacity>
       </View>
