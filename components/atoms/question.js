@@ -95,8 +95,6 @@ export default function Question({
     <View
       style={{
         padding: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
       }}

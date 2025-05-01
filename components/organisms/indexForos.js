@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollView, TextInput } from 'react-native';
+import { View, ImageBackground, ScrollView, TextInput } from 'react-native';
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -47,62 +47,63 @@ export default function IndexForos() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Image
+      <ImageBackground
         source={require('../../public/mapa.png')}
         style={{
-          position: 'absolute',
+          flex: 1,
           width: '100%',
           height: '100%',
         }}
-      />
-
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          width: '95%',
-          padding: 20,
-          alignSelf: 'center',
-          marginHorizontal: 10,
-          marginTop: 60,
-          position: 'relative',
-          borderRadius: 20,
-        }}
+        resizeMode='cover'
       >
-        <Title title='Foros' />
-
-        {/* Campo para buscar un foro */}
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 20,
-            marginBottom: 20,
+            flex: 1,
+            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+            width: '95%',
+            padding: 20,
+            alignSelf: 'center',
+            marginHorizontal: 10,
+            marginTop: 60,
+            position: 'relative',
+            borderRadius: 20,
           }}
         >
-          <TextInput
+          <Title title='Foros' />
+
+          {/* Campo para buscar un foro */}
+          <View
             style={{
-              flex: 1,
-              borderWidth: 1,
-              borderColor: '#ccc',
-              borderRadius: 5,
-              padding: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 20,
+              marginBottom: 20,
             }}
-            placeholder='Busca una localidad...'
-            placeholderTextColor='#888'
-            value={searchLocalidad}
-            onChangeText={setSearchLocalidad}
-          />
+          >
+            <TextInput
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: '#ccc',
+                borderRadius: 5,
+                padding: 10,
+              }}
+              placeholder='Busca una localidad...'
+              placeholderTextColor='#888'
+              value={searchLocalidad}
+              onChangeText={setSearchLocalidad}
+            />
+          </View>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            {/* Lista de foros */}
+            {filteredLocalidades.map((loc, index) => (
+              <View key={index} style={{ marginVertical: 0 }}>
+                <TitleLocalidadForo forumId={loc.id} LocName={loc.localidad} />
+              </View>
+            ))}
+          </ScrollView>
         </View>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-          {/* Lista de foros */}
-          {filteredLocalidades.map((loc, index) => (
-            <View key={index} style={{ marginVertical: 0 }}>
-              <TitleLocalidadForo forumId={loc.id} LocName={loc.localidad} />
-            </View>
-          ))}
-        </ScrollView>
-      </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
