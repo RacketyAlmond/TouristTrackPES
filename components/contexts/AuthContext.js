@@ -46,30 +46,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // const createUserData = async (fname, birthday, userLocation) => {
-  //     try {
-  //         const user = auth.currentUser;
-  //
-  //         if (!user) {
-  //             throw new Error("No user is signed in");
-  //         }
-  //
-  //         console.log(fname);
-  //
-  //         await setDoc(doc(db, "Users", user.uid), {
-  //             email: user.email,
-  //             firstName: fname,
-  //             birthday: birthday,
-  //             userLocation: userLocation
-  //
-  //         });
-  //         console.log("User profile updated successfully!");
-  //         return user;
-  //     } catch (error) {
-  //         console.error("Error creating profile:", error);
-  //         throw error;
-  //     }
-  // };
+  const createUserData = async (fname, birthday, userLocation) => {
+    try {
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error('No user is signed in');
+      }
+
+      console.log(fname);
+
+      await setDoc(doc(db, 'Users', user.uid), {
+        email: user.email,
+        firstName: fname,
+        birthday: birthday,
+        userLocation: userLocation,
+      });
+
+      console.log('User profile updated successfully!');
+      return user;
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      throw error;
+    }
+  };
 
   const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(

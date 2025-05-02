@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/generalChat';
@@ -10,23 +10,18 @@ import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
 
 import AddChat from './components/organisms/addChat';
-import { fetchCSV } from './dataestur';
 import PersonalChat from './components/organisms/personalChat';
-import Xat from './components/organisms/xatProva';
 import UserStack from './components/navigation/UserStack'; // NUEVO
 
-import { fetchCSV } from './dataestur';
-import { AuthProvider } from 'components/contexts/AuthContext'; // NUEVO
-import { UserProvider } from 'components/contexts/UserContext'; // NUEVO
+import { AuthProvider } from './components/contexts/AuthContext'; // NUEVO
+import { UserProvider } from './components/contexts/UserContext'; // NUEVO
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    ///////////////////////////////////////////////////////////////////////////////////
     <UserProvider>
       <AuthProvider>
-        ///////////////////////////////////////////////////////////////////////////
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
@@ -51,9 +46,9 @@ export default function App() {
                 animation: 'slide_from_right', // Animación al navegar
               }}
             />
-            <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
+            <Stack.Screen name='Mapa'>{() => <Map/>}</Stack.Screen>
             <Stack.Screen name='Estadisticas' component={Estadisticas} />
-            <Stack.Screen name='Xat' component={Xat} />
+            <Stack.Screen name='Chat' component={Chats} />
             <Stack.Screen name='PersonalChat' component={PersonalChat} />
             <Stack.Screen name='AddChat' component={AddChat} />
             <Stack.Screen
@@ -64,9 +59,7 @@ export default function App() {
           </Stack.Navigator>
           <NavBar />
         </NavigationContainer>
-        ///////////////////////////////////////////////////////////////////////////
       </AuthProvider>
     </UserProvider>
-    ///////////////////////////////////////////////////////////////////////////////////
   );
 }

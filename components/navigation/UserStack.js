@@ -1,9 +1,12 @@
 // components/navigation/UserStack.js
-import React, { useState } from 'react';
+import React, { useState, View } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthScreen from '../screens/AuthScreen';
 import BirthdateScreen from '../screens/BirthdateScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import { AuthProvider } from '../contexts/AuthContext'; // NUEVO
+import { UserProvider } from '../contexts/UserContext'; // NUEVO
+import { User } from 'firebase/auth';
 
 const Stack = createNativeStackNavigator();
 
