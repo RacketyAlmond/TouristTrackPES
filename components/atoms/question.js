@@ -42,7 +42,28 @@ export default function Question({
     return { user: 'Desconocido', nationality: 'Desconocido' };
   };
 
-  /* llama a la api para obtener las respuestas de la pregunta */
+  const deleteAnswer = async (answerId) => {
+    try {
+      const response = await fetch(
+          `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+          {
+            method: 'DELETE',
+          }
+      );
+
+      const json = await response.json();
+
+      if (json.success) {
+        setAllAnswers((prev) => prev.filter((a) => a.id !== answerId));
+      } else {
+        console.error('No se pudo eliminar la respuesta:', json.error);
+      }
+    } catch (error) {
+      console.error('Error al eliminar la respuesta:', error);
+    }
+  };
+
+
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
@@ -196,12 +217,16 @@ export default function Question({
       {showAnswers && (
         <View>
           {allAnswers.map((answer, answerIndex) => (
-            <Comment
-              key={answerIndex}
-              user={answer.user}
-              date={answer.date}
-              text={answer.answer}
-            />
+              <View key={answerIndex}>
+                <Comment
+                    user={answer.user}
+                    date={answer.date}
+                    text={answer.answer}
+                />
+                <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                  <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>Eliminar</Text>
+                </TouchableOpacity>
+              </View>
           ))}
         </View>
       )}
