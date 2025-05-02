@@ -7,25 +7,22 @@ import Comment from './comment';
 export default function Question({
   forumId,
   questionId,
-  authorId,
+  userId,
   user,
   date,
   text,
 }) {
-  // Estado para mostrar u ocultar las respuestas
   const [showAnswers, setShowAnswers] = useState(false);
-
-  // Estado para manejar la nueva respuesta
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
 
-  // Calcula el tiempo relativo
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
   });
 
+  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}`);
@@ -44,7 +41,6 @@ export default function Question({
 
     return { user: 'Desconocido', nationality: 'Desconocido' };
   };
-
 
   const deleteAnswer = async (answerId) => {
     try {
@@ -68,8 +64,6 @@ export default function Question({
   };
 
 
-
-
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
@@ -83,10 +77,10 @@ export default function Question({
             const { user, nationality } = await getUserInfo(a.Author);
             return {
               id: a.id,
-              authorId: a.Author,
+              userId: a.Author,
               answer: a.text,
               date: new Date(a.date._seconds * 1000).toISOString(),
-              nationality, //se puede quitar si no hace falta
+              nationality, //--> de momento no se filtra por nacionalidad de respuesta
               user,
             };
           }),
@@ -103,16 +97,50 @@ export default function Question({
   }, [showAnswers, allAnswers.length, getAnswers]);
 
   // Función para añadir una nueva respuesta
-  const handleAddAnswer = () => {
-    setShowNewAnswer(false); // Oculta el campo de texto después de enviar la respuesta
+  const handleAddAnswer = async () => {
     if (newAnswer.trim() !== '') {
-      const newAnswerObject = {
-        user: 'Nuevo Usuario', // Puedes reemplazar esto con el usuario actual
-        date: new Date().toISOString(),
-        answer: newAnswer,
-      };
-      setAllAnswers([...allAnswers, newAnswerObject]);
-      setNewAnswer(''); // Limpia el campo de texto
+      try {
+        const response = await fetch(
+          `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              text: newAnswer,
+            }),
+          },
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          console.error('Error al enviar la pregunta:', json);
+          return;
+        }
+
+        if (json.success) {
+          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+
+          const newAnswerObject = {
+            id: json.preguntaId,
+            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            question: newAnswer,
+            date: new Date().toISOString(),
+            user,
+            nationality,
+          };
+
+          setAllAnswers([...allAnswers, newAnswerObject]);
+          setNewAnswer('');
+        } else {
+          console.error('Error al enviar la pregunta:', json.message);
+        }
+      } catch (error) {
+        console.error('Error en la solicitud POST:', error);
+      }
     }
   };
 

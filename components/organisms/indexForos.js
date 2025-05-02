@@ -81,7 +81,7 @@ export default function IndexForos() {
   useEffect(() => {
     setFilteredLocalidades(Localidades);
     obtenerForos();
-  }, []);
+  }, [Localidades]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
