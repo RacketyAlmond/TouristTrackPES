@@ -1,18 +1,23 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Chats from './components/organisms/generalChat';
 import Map from './components/organisms/map';
 import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
+
+import AddChat from './components/organisms/addChat';
+import { fetchCSV } from './dataestur';
+import PersonalChat from './components/organisms/personalChat';
 import Xat from './components/organisms/xatProva';
 import UserStack from './components/navigation/UserStack'; // NUEVO
 
 import { fetchCSV } from './dataestur';
 import { AuthProvider } from 'components/contexts/AuthContext'; // NUEVO
 import { UserProvider } from 'components/contexts/UserContext'; // NUEVO
-
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +54,8 @@ export default function App() {
                 <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
                 <Stack.Screen name='Estadisticas' component={Estadisticas} />
                 <Stack.Screen name='Xat' component={Xat} />
+                <Stack.Screen name='PersonalChat' component={PersonalChat} />
+                <Stack.Screen name='AddChat' component={AddChat} />
                   <Stack.Screen
                       name="User"
                       component={UserStack}
