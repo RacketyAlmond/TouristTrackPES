@@ -1,72 +1,58 @@
-import Papa from 'papaparse';
 import 'fast-text-encoding';
 
-const decodeISO88591 = (buffer) => {
-  return Array.from(new Uint8Array(buffer))
-    .map((byte) => String.fromCharCode(byte))
-    .join('');
+export const getSummaryData = async (countries = []) => {
+  try {
+    const baseUrl = 'http://192.168.1.102:3001/tourism/municipalities';
+
+    // Si se pasa un array, lo convertimos a string tipo query
+    const url =
+      countries.length > 0
+        ? `${baseUrl}?countries=${encodeURIComponent(countries.join(','))}`
+        : baseUrl;
+
+    console.log('url: ', url);
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
+    const data = await resp.json();
+    console.log('✅ Datos recibidos del backend');
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const fetchCSV = (callback, errorCallback) => {
-  const url =
-    'https://dataestur.azure-api.net/API-SEGITTUR-v1/TURISMO_RECEPTOR_MUN_PAIS_DL?CCAA=Todos&Provincia=Madrid';
-  fetch(url)
-    .then((resp) => {
-      if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
-      return resp.arrayBuffer();
-    })
-    .then((data) => {
-      const decodedText = decodeISO88591(data);
+export const getDataOfMunicipality = async (municipality) => {
+  try {
+    const baseUrl = 'http://192.168.1.102:3001/tourism/municipality';
 
-      const parsedData = Papa.parse(decodedText, { header: true });
-      console.log(parsedData.data);
+    // Si se pasa un array, lo convertimos a string tipo query
+    const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
 
-      callback(parsedData.data); // Llamamos al callback con los datos
-    })
-    .catch((error) => {
-      console.error('Error obteniendo el CSV:', error);
-      if (errorCallback) errorCallback(error); // Si hay un callback de error, lo llamamos
-    });
+    console.log('url: ', url);
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
+    const data = await resp.json();
+    console.log('✅ Datos recibidos del backend');
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const getDataOfMunicipality = (municipality, data) => {
-  const filteredData = data.filter(
-    (row) => row.MUNICIPIO_DESTINO === municipality,
-  );
-  return filteredData;
+export const listOriginCountries = async () => {
+  try {
+    const resp = await fetch(
+      'http://192.168.1.102:3001/tourism/originCountries',
+    );
+    if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const listOriginCountries = (data) => {
-  const countryList = [];
-  data.forEach((row) => {
-    let country = row.PAIS_ORIGEN;
-    if (
-      country === 'Palestina. Estado Observador, no miembro de Naciones Unidas'
-    )
-      country = 'Palestina';
-    if (
-      country &&
-      !countryList.includes(country) &&
-      !country.includes('Total')
-    ) {
-      countryList.push(country);
-    }
-  });
-  return countryList;
-};
-
-export const listMunicipalities = (data) => {
-  const municipalityList = [];
-  data.forEach((row) => {
-    const municipality = row.MUNICIPIO_DESTINO;
-    if (!municipalityList.includes(municipality)) {
-      municipalityList.push(municipality);
-    }
-  });
-  return municipalityList;
-};
-
-export const listYears = (data) => {
+export const listYearsOfMunicipality = (data) => {
   const yearList = [];
   data.forEach((row) => {
     const year = row.AÑO;
@@ -77,12 +63,15 @@ export const listYears = (data) => {
   return yearList;
 };
 
-export const sumNumTourists = (data) => {
-  const totalNum = data.reduce((total, row) => {
-    const tourists = parseInt(row.TURISTAS);
-    return total + tourists;
-  }, 0);
-  return totalNum;
+export const listOriginCountriesOfMunicipality = (data) => {
+  const countryList = [];
+  data.forEach((row) => {
+    const country = row.PAIS_ORIGEN;
+    if (!countryList.includes(country)) {
+      countryList.push(country);
+    }
+  });
+  return countryList;
 };
 
 export const filterData = (years, months, originCountry, data) => {
@@ -123,51 +112,9 @@ export const getTopCountries = (data, topN = 5) => {
   return topCountries;
 };
 
-export const getTouristMunicipalities = (data, countries) => {
-  // Devuelve un objeto con los municipios y el número de turistas total de los países indicados
-
-  const municipalityTourists = {};
-  if (!data) return municipalityTourists;
-  data.forEach((row) => {
-    const municipality = row.MUNICIPIO_DESTINO;
-    const country = row.PAIS_ORIGEN;
-    const tourists = parseInt(row.TURISTAS);
-
-    if (!municipality || !country || tourists === 0) return;
-    if (!countries.includes(country)) return;
-
-    if (!municipalityTourists[municipality]) {
-      municipalityTourists[municipality] = 0;
-    }
-
-    municipalityTourists[municipality] += tourists;
-  });
-
-  return municipalityTourists;
-};
-
 export const getTotalTouristsOfMunicipality = (municipality, data) => {
-  const filteredData = data.filter(
-    (row) => row.MUNICIPIO_DESTINO === municipality,
+  const result = data.find(
+    (row) => row.MUNICIPIO_DESTINO.toLowerCase() === municipality.toLowerCase(),
   );
-  const totalNum = filteredData.reduce((total, row) => {
-    const tourists = parseInt(row.TURISTAS);
-    return total + tourists;
-  }, 0);
-  return totalNum;
-};
-
-export const getTouristMunicipality = (municipality, data, countries) => {
-  // Devuelve un objeto con los municipios y el número de turistas total de los países indicados
-  if (!data) return 0;
-  const filteredData = data.filter(
-    (row) =>
-      row.MUNICIPIO_DESTINO === municipality &&
-      countries.includes(row.PAIS_ORIGEN),
-  );
-  const totalNum = filteredData.reduce((total, row) => {
-    const tourists = parseInt(row.TURISTAS);
-    return total + tourists;
-  }, 0);
-  return totalNum;
+  return result ? result.total : 0;
 };

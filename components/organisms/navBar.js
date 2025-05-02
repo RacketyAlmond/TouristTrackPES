@@ -21,10 +21,10 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Foro')}
+        onPress={() => navigation.navigate('Foros')}
       >
         <Image
-          source={require('../../public/foro.png')}
+          source={require('../../public/forum.png')}
           style={styles.navImage}
           resizeMode='contain'
         />
@@ -35,7 +35,7 @@ export default function NavBar() {
         onPress={() => navigation.navigate('Chats')}
       >
         <Image
-          source={require('../../public/xat.png')}
+          source={require('../../public/chat.png')}
           style={styles.navImage}
           resizeMode='contain'
         />
