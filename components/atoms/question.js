@@ -1,35 +1,125 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
 
-export default function Question({ user, nationality, date, text, answers }) {
-  // Estado para mostrar u ocultar las respuestas
+export default function Question({
+  forumId,
+  questionId,
+  userId,
+  user,
+  date,
+  text,
+}) {
   const [showAnswers, setShowAnswers] = useState(false);
-
-  // Estado para manejar la nueva respuesta
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
-  const [allAnswers, setAllAnswers] = useState(answers);
+  const [allAnswers, setAllAnswers] = useState([]);
 
-  // Calcula el tiempo relativo
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
   });
 
+  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
+  const getUserInfo = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:3001/users/${userId}`);
+      const json = await response.json();
+
+      if (json.success && json.usuario) {
+        const { firstName, userLocation } = json.usuario;
+        return {
+          user: firstName || 'Desconocido',
+          nationality: userLocation || 'Desconocido',
+        };
+      }
+    } catch (error) {
+      console.error(`Error al obtener datos del usuario ${userId}:`, error);
+    }
+
+    return { user: 'Desconocido', nationality: 'Desconocido' };
+  };
+
+  /* llama a la api para obtener las respuestas de la pregunta */
+  const getAnswers = React.useCallback(async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+      );
+
+      const json = await response.json();
+      if (json.success) {
+        const respuestas = await Promise.all(
+          json.respuestas.map(async (a) => {
+            const { user, nationality } = await getUserInfo(a.Author);
+            return {
+              id: a.id,
+              userId: a.Author,
+              answer: a.text,
+              date: new Date(a.date._seconds * 1000).toISOString(),
+              nationality, //--> de momento no se filtra por nacionalidad de respuesta
+              user,
+            };
+          }),
+        );
+        setAllAnswers(respuestas);
+      }
+    } catch (error) {
+      console.error('Error al obtener las preguntas:', error);
+    }
+  }, [forumId, questionId]);
+
+  useEffect(() => {
+    getAnswers();
+  }, [showAnswers, allAnswers.length, getAnswers]);
+
   // Función para añadir una nueva respuesta
-  const handleAddAnswer = () => {
-    setShowNewAnswer(false); // Oculta el campo de texto después de enviar la respuesta
+  const handleAddAnswer = async () => {
     if (newAnswer.trim() !== '') {
-      const newAnswerObject = {
-        user: 'Nuevo Usuario', // Puedes reemplazar esto con el usuario actual
-        date: new Date().toISOString(),
-        answer: newAnswer,
-      };
-      setAllAnswers([...allAnswers, newAnswerObject]);
-      setNewAnswer(''); // Limpia el campo de texto
+      try {
+        const response = await fetch(
+          `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              text: newAnswer,
+            }),
+          },
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          console.error('Error al enviar la pregunta:', json);
+          return;
+        }
+
+        if (json.success) {
+          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+
+          const newAnswerObject = {
+            id: json.preguntaId,
+            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            question: newAnswer,
+            date: new Date().toISOString(),
+            user,
+            nationality,
+          };
+
+          setAllAnswers([...allAnswers, newAnswerObject]);
+          setNewAnswer('');
+        } else {
+          console.error('Error al enviar la pregunta:', json.message);
+        }
+      } catch (error) {
+        console.error('Error en la solicitud POST:', error);
+      }
     }
   };
 
@@ -37,8 +127,6 @@ export default function Question({ user, nationality, date, text, answers }) {
     <View
       style={{
         padding: 10,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
       }}
