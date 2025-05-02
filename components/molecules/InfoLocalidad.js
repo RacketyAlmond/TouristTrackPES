@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function InfoLocalidad({ city, numTourists, onClose, data }) {
+export default function InfoLocalidad({ city, numTourists, onClose }) {
   const navigation = useNavigation();
   if (!city) return null;
   const locality = {
@@ -65,7 +65,6 @@ export default function InfoLocalidad({ city, numTourists, onClose, data }) {
         onPress={() =>
           navigation.navigate('Estadisticas', {
             locality: locality,
-            dataApi: data,
           })
         }
       >

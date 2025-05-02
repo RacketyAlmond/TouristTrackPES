@@ -1,4 +1,3 @@
-//import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
@@ -7,22 +6,46 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
+  ScrollView,
 } from 'react-native';
-import { useState } from 'react';
-import { Picker } from '@react-native-picker/picker';
+import { useState, useEffect } from 'react';
 import Grafica from '../molecules/grafica';
-import { filterData, listOriginCountries, listYears } from '../../filters';
 import { useRoute } from '@react-navigation/native';
-import { getTopCountries } from '../../dataestur';
+import {
+  getTopCountries,
+  getDataOfMunicipality,
+  filterData,
+  listYearsOfMunicipality,
+  listOriginCountriesOfMunicipality,
+} from '../../dataestur';
 import { getCountryFlag } from '../../utils';
+import SelectorPlataforma from '../molecules/selectorPlataforma';
+import { transformDataForChart } from '../molecules/transformDataForChart';
 
 export default function Estadisticas() {
   const route = useRoute();
-  const { locality, dataApi } = route.params;
-  const topPaises = getTopCountries(dataApi);
-  //primer desplegable nº turistas (años)
-  //const [selectedItemAnos, setSelectedItemAnos] = useState('1 año');
-  //const opcionesAnos = ['20, '2 años', '3 años', '4 años', '5 años'];
+  const { locality } = route.params;
+
+  const [dataMunicipality, setDataMunicipality] = useState([]);
+
+  useEffect(() => {
+    const loadDataMunicipality = async () => {
+      try {
+        console.log('loadDataMunicipality...');
+        const municipality = locality.name;
+        console.log('locality: ', municipality);
+        const data = await getDataOfMunicipality(municipality);
+        setDataMunicipality(data);
+      } catch (err) {
+        console.error('Error al cargar los datos:', err);
+      }
+    };
+
+    loadDataMunicipality();
+  }, [locality]);
+
+  console.log('top.... ');
+  const topPaises = getTopCountries(dataMunicipality);
 
   //segundo desplegable nº turistas (paises)
   const [selectedItemPaises, setSelectedItemPaises] = useState('Italia');
@@ -30,19 +53,8 @@ export default function Estadisticas() {
 
   const [selectedItemAnos, setSelectedItemAnos] = useState('2021');
 
-  /*const opcionesPaises = [
-    'Todos los países',
-    'España',
-    'Italia',
-    'Francia',
-    'Alemania',
-    'Suiza',
-  ];*/
-
-  //funcion para obtener la bandera en .png
-
   //primer desplegable gasto (años)
-  const [selectedItemAnos2, setSelectedItemAnos2] = useState('1 año');
+  const [selectedItemAnos2, setSelectedItemAnos2] = useState('2021');
 
   //segundo desplegable gasto (paises)
   const [selectedItemPaises2, setSelectedItemPaises2] =
@@ -59,173 +71,138 @@ export default function Estadisticas() {
     'Compras',
   ];
 
-  const filteredData = dataApi
+  const filteredData = dataMunicipality
     ? filterData(
         [parseInt(selectedItemAnos)],
         [],
         [selectedItemPaises],
-        dataApi,
+        dataMunicipality,
       )
     : [];
 
-  const opcionesAnos = dataApi ? listYears(dataApi) : ['2021'];
+  console.log('filteredData2.... ');
+  const filteredData2 = dataMunicipality
+    ? filterData(
+        [parseInt(selectedItemAnos2)],
+        [],
+        [selectedItemPaises2],
+        dataMunicipality,
+      )
+    : [];
 
-  const opcionesPaises = dataApi ? listOriginCountries(dataApi) : ['Italia'];
+  const opcionesAnos = dataMunicipality
+    ? listYearsOfMunicipality(dataMunicipality)
+    : ['2021'];
 
-  //const filteredData = filterData([2019], [], ['Italia'], dataApi); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
+  const opcionesPaises = dataMunicipality
+    ? listOriginCountriesOfMunicipality(dataMunicipality)
+    : ['Italia'];
 
-  const transformDataForChart = (filteredData) => {
-    if (!filteredData || filteredData.length === 0) {
-      console.warn('No hay datos disponibles para la gráfica.');
-      console.warn('filteredData');
-      console.warn(dataApi);
-      return {
-        labels: [],
-        datasets: [{ data: [] }],
-      };
-    }
-    // Ordenar los datos por MES (para que aparezcan en orden en la gráfica)
-    const sortedData = [...filteredData].sort(
-      (a, b) => parseInt(a.MES) - parseInt(b.MES),
-    );
+  //const filteredData = filterData([2019], [], ['Italia'], dataMunicipality); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
 
-    return {
-      labels: sortedData.map(
-        (item) => `${item.AÑO}M${item.MES.padStart(2, '0')}`,
-      ), // YYYYMmm
-      datasets: [
-        {
-          data: sortedData.map((item) => {
-            const turistas = parseInt(item.TURISTAS, 10);
-            return isNaN(turistas) ? 0 : turistas;
-          }),
-        },
-      ],
-    };
-  };
-
+  console.log('transformData.... ');
   const data = transformDataForChart(filteredData);
+  const data2 = transformDataForChart(filteredData2);
 
   return (
-    <SafeAreaView style={styles.safe_container}>
-      <StatusBar barStyle='dark-content' backgroundColor='white' />
-      <View style={styles.main_container}>
-        {/*estadisticas*/}
-        <View style={styles.cabecera}>
-          <Text style={styles.textoCabecera}>Estadísticas</Text>
-        </View>
+    <ScrollView style={styles.container}>
+      <SafeAreaView style={styles.safe_container}>
+        <StatusBar barStyle='dark-content' backgroundColor='white' />
+        <View style={styles.main_container}>
+          {/*estadisticas*/}
+          <View style={styles.cabecera}>
+            <Text style={styles.textoCabecera}>Estadísticas</Text>
+          </View>
 
-        {/*ciudad*/}
-        <View style={styles.sub_container}>
-          <Text style={styles.titulos_morados}>{locality.name}</Text>
-          <Text style={styles.subtitulo}>{locality.comunidad}</Text>
-        </View>
+          {/*ciudad*/}
+          <View style={styles.sub_container}>
+            <Text style={styles.titulos_morados}>{locality.name}</Text>
+            <Text style={styles.subtitulo}>{locality.comunidad}</Text>
+          </View>
 
-        {/*nº turistas*/}
-        <View style={styles.numeroTuristas_container}>
-          <Text style={styles.titulos_morados}>Nº de turistas</Text>
-          <Text style={styles.titulos_morados}>{locality.tourists}</Text>
-        </View>
-        <View style={styles.select_container}>
-          <Picker
-            selectedValue={selectedItemAnos}
-            onValueChange={(itemValue) => setSelectedItemAnos(itemValue)}
-            style={styles.pickerAno}
-          >
-            {opcionesAnos.map((opcionAno) => (
-              <Picker.Item
-                key={opcionAno}
-                label={opcionAno}
-                value={opcionAno}
-              />
-            ))}
-          </Picker>
-          <Picker
-            selectedValue={selectedItemPaises}
-            onValueChange={(itemValue) => setSelectedItemPaises(itemValue)}
-            style={styles.pickerPais}
-          >
-            {opcionesPaises.map((opcionPais) => (
-              <Picker.Item
-                key={opcionPais}
-                label={opcionPais}
-                value={opcionPais}
-              />
-            ))}
-          </Picker>
-        </View>
-        <View>
-          {filteredData.length > 0 ? (
-            <Grafica data={data} title='Número Turistas' />
-          ) : (
-            <></>
-          )}
-        </View>
+          {/*nº turistas*/}
+          <View style={styles.numeroTuristas_container}>
+            <Text style={styles.titulos_morados}>Nº de turistas:</Text>
+            <Text style={styles.titulos_morados}>{locality.tourists}</Text>
+          </View>
+          <View style={styles.select_container}>
+            <SelectorPlataforma
+              selectedValue={selectedItemAnos}
+              onValueChange={(item) => setSelectedItemAnos(item)}
+              options={opcionesAnos}
+              style={styles.pickerAno}
+            />
 
-        {/*top paises*/}
-        <View style={styles.sub_container}>
-          <Text style={styles.titulos_morados}>
-            Top países de los visitantes
-          </Text>
-          {topPaises.map((topPais, index) => (
-            <View key={index} style={styles.pais_container}>
-              <Text style={styles.pais}>
-                {index + 1}. {topPais}
-              </Text>
-              <Image
-                source={{ uri: getCountryFlag(topPais) }}
-                style={styles.banderaPais}
-              />
-            </View>
-          ))}
-        </View>
+            <SelectorPlataforma
+              selectedValue={selectedItemPaises}
+              onValueChange={(item) => setSelectedItemPaises(item)}
+              options={opcionesPaises}
+              style={styles.pickerPais}
+            />
+          </View>
+          <View>
+            {filteredData.length > 0 ? (
+              <Grafica data={data} title='Número Turistas' />
+            ) : (
+              <></>
+            )}
+          </View>
 
-        {/*gasto*/}
-        <View style={styles.numeroTuristas_container}>
-          <Text style={styles.titulos_morados}>Gasto</Text>
-          <Picker
-            selectedValue={selectedItemAnos2}
-            onValueChange={(itemValue) => setSelectedItemAnos2(itemValue)}
-            style={styles.pickerAno}
-          >
-            {opcionesAnos.map((opcionAno) => (
-              <Picker.Item
-                key={opcionAno}
-                label={opcionAno}
-                value={opcionAno}
-              />
+          {/*top paises*/}
+          <View style={styles.sub_container}>
+            <Text style={styles.titulos_morados}>
+              Top países de los visitantes
+            </Text>
+            {topPaises.map((topPais, index) => (
+              <View key={index} style={styles.pais_container}>
+                <Text style={styles.pais}>
+                  {index + 1}. {topPais}
+                </Text>
+                <Image
+                  source={{ uri: getCountryFlag(topPais) }}
+                  style={styles.banderaPais}
+                />
+              </View>
             ))}
-          </Picker>
-          <Picker
-            selectedValue={selectedItemPaises2}
-            onValueChange={(itemValue) => setSelectedItemPaises2(itemValue)}
-            style={styles.pickerPais}
-          >
-            {opcionesPaises.map((opcionPais) => (
-              <Picker.Item
-                key={opcionPais}
-                label={opcionPais}
-                value={opcionPais}
-              />
-            ))}
-          </Picker>
-          <Picker
-            selectedValue={selectedItemGasto}
-            onValueChange={(itemValue) => setSelectedItemGasto(itemValue)}
-            style={styles.pickerPais}
-          >
-            {opcionesGastos.map((opcionGasto) => (
-              <Picker.Item
-                key={opcionGasto}
-                label={opcionGasto}
-                value={opcionGasto}
-              />
-            ))}
-          </Picker>
+          </View>
+
+          {/*gasto*/}
+          <View style={styles.numeroTuristas_container}>
+            <Text style={styles.titulos_morados}>Gasto</Text>
+          </View>
+          <View style={styles.numeroTuristas_container}>
+            <SelectorPlataforma
+              selectedValue={selectedItemAnos2}
+              onValueChange={(item) => setSelectedItemAnos2(item)}
+              options={opcionesAnos}
+              style={styles.pickerAno}
+            />
+
+            <SelectorPlataforma
+              selectedValue={selectedItemPaises2}
+              onValueChange={(item) => setSelectedItemPaises2(item)}
+              options={opcionesPaises}
+              style={styles.pickerPais}
+            />
+
+            <SelectorPlataforma
+              selectedValue={selectedItemGasto}
+              onValueChange={(item) => setSelectedItemGasto(item)}
+              options={opcionesGastos}
+              style={styles.pickerPais}
+            />
+          </View>
+          <View>
+            {filteredData.length > 0 ? (
+              <Grafica data={data} title='Gasto Turistas' />
+            ) : (
+              <></>
+            )}
+          </View>
+          {/*<StatusBar style='auto' />*/}
         </View>
-        {/*<StatusBar style='auto' />*/}
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 }
 
@@ -251,9 +228,10 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     flexWrap: 'nowrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     //alignItems: 'center',
     gap: 10,
+    //paddingRight: 10,
   },
   select_container: {
     padding: 0,
@@ -290,7 +268,7 @@ const styles = StyleSheet.create({
   pickerPais: {
     flex: 1, //new
     //width: 125,
-    minWidth: 125, //new
+    minWidth: 100, //new
     backgroundColor: '#dddddd',
     borderRadius: 5,
   },

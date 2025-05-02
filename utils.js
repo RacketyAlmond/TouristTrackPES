@@ -4,7 +4,7 @@ cca2countries.registerLocale(require('i18n-iso-countries/langs/es.json'));
 export const getCoordinatesFromCity = async (cityName) => {
   try {
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}&countrycodes=es`,
       {
         headers: {
           'User-Agent': 'TourisTrack/1.0 (sergi.font.jane@estudiantat.upc.edu)',
@@ -13,8 +13,8 @@ export const getCoordinatesFromCity = async (cityName) => {
     );
     const data = await response.json();
     if (Array.isArray(data) && data.length > 0) {
-      const { lat, lon } = data[0];
-      return { lat, lon };
+      const { lat, lon, name } = data[0];
+      return { lat, lon, name };
     } else {
       console.log('No se encontraron resultados.');
       return null;
@@ -43,6 +43,7 @@ export const getCountryFlag = (countryName) => {
   else if (countryName === 'Malawi') cca2 = 'MW';
   else if (countryName === 'Papúa Nueva Guinea') cca2 = 'PG';
   else if (countryName === 'Guinea-Bissau') cca2 = 'GW';
+  else if (countryName === 'Surinam') cca2 = 'SR';
   if (!cca2) {
     console.warn(`No se encontró la bandera de ${countryName}`);
     return null;

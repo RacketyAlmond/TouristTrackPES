@@ -17,15 +17,6 @@ import { UserProvider } from 'components/contexts/UserContext'; // NUEVO
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchCSV(
-      (fetchedData) => setData(fetchedData),
-      (error) => console.error('Error al obtener los datos:', error),
-    );
-  }, []);
-
   return (
       ///////////////////////////////////////////////////////////////////////////////////
       <UserProvider>
@@ -70,6 +61,5 @@ export default function App() {
           </AuthProvider>
       </UserProvider>
       ///////////////////////////////////////////////////////////////////////////////////
-
   );
 }
