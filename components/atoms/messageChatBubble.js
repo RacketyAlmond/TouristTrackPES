@@ -5,15 +5,29 @@ import { View, Text, StyleSheet } from 'react-native';
 const MessageChatBubble = ({ message }) => {
   const { text, timestamp, isMe } = message;
 
-  const time  = (timestamp) => {
+  const time = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  }
-  
+  };
+
   return (
-    <View style={[styles.container, isMe ? styles.myMessageContainer : styles.theirMessageContainer]}>
-      <View style={[styles.bubble, isMe ? styles.myMessage : styles.theirMessage]}>
-        <Text style={[styles.messageText, isMe ? styles.myMessageText : styles.theirMessageText]}>{text}</Text>
+    <View
+      style={[
+        styles.container,
+        isMe ? styles.myMessageContainer : styles.theirMessageContainer,
+      ]}
+    >
+      <View
+        style={[styles.bubble, isMe ? styles.myMessage : styles.theirMessage]}
+      >
+        <Text
+          style={[
+            styles.messageText,
+            isMe ? styles.myMessageText : styles.theirMessageText,
+          ]}
+        >
+          {text}
+        </Text>
       </View>
       <Text style={styles.timestamp}>{time(timestamp)}</Text>
     </View>

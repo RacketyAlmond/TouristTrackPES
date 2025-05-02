@@ -1,18 +1,32 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ChatHeader = ({ contactName, contactAvatar, contactDescription, onBackPress }) => {
+const ChatHeader = ({
+  contactName,
+  contactAvatar,
+  contactDescription,
+  onBackPress,
+}) => {
   return (
     <SafeAreaView style={styles.header}>
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#572364" />
+        <Ionicons name='arrow-back' size={24} color='#572364' />
       </TouchableOpacity>
       <Image source={{ uri: contactAvatar }} style={styles.avatar} />
       <View style={styles.nameContainer}>
         <Text style={styles.name}>{contactName}</Text>
-        <Text style ={styles.description} numberOfLines={1}>{contactDescription}</Text>
+        <Text style={styles.description} numberOfLines={1}>
+          {contactDescription}
+        </Text>
       </View>
     </SafeAreaView>
   );

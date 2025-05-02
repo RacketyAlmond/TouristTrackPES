@@ -23,50 +23,50 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-      ///////////////////////////////////////////////////////////////////////////////////
-      <UserProvider>
-          <AuthProvider>
-              ///////////////////////////////////////////////////////////////////////////
-            <NavigationContainer>
-              <Stack.Navigator
-                initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
-                screenOptions={{
-                  gestureEnabled: true,
-                  gestureDirection: 'horizontal',
-                  animation: 'slide_from_right',
-                }}
-              >
-                <Stack.Screen
-                  name='Foros'
-                  component={IndexForos}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name='Forum'
-                  component={Forum}
-                  options={{
-                    headerShown: false, // Ocultar el header
-                    gestureEnabled: true, // Habilitar gestos
-                    gestureDirection: 'horizontal', // Dirección del gesto
-                    animation: 'slide_from_right', // Animación al navegar
-                  }}
-                />
-                <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
-                <Stack.Screen name='Estadisticas' component={Estadisticas} />
-                <Stack.Screen name='Xat' component={Xat} />
-                <Stack.Screen name='PersonalChat' component={PersonalChat} />
-                <Stack.Screen name='AddChat' component={AddChat} />
-                  <Stack.Screen
-                      name="User"
-                      component={UserStack}
-                      options={{ headerShown: false }}
-                  />
-              </Stack.Navigator>
-              <NavBar />
-            </NavigationContainer>
-              ///////////////////////////////////////////////////////////////////////////
-          </AuthProvider>
-      </UserProvider>
-      ///////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+    <UserProvider>
+      <AuthProvider>
+        ///////////////////////////////////////////////////////////////////////////
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
+            screenOptions={{
+              gestureEnabled: true,
+              gestureDirection: 'horizontal',
+              animation: 'slide_from_right',
+            }}
+          >
+            <Stack.Screen
+              name='Foros'
+              component={IndexForos}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='Forum'
+              component={Forum}
+              options={{
+                headerShown: false, // Ocultar el header
+                gestureEnabled: true, // Habilitar gestos
+                gestureDirection: 'horizontal', // Dirección del gesto
+                animation: 'slide_from_right', // Animación al navegar
+              }}
+            />
+            <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
+            <Stack.Screen name='Estadisticas' component={Estadisticas} />
+            <Stack.Screen name='Xat' component={Xat} />
+            <Stack.Screen name='PersonalChat' component={PersonalChat} />
+            <Stack.Screen name='AddChat' component={AddChat} />
+            <Stack.Screen
+              name='User'
+              component={UserStack}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+          <NavBar />
+        </NavigationContainer>
+        ///////////////////////////////////////////////////////////////////////////
+      </AuthProvider>
+    </UserProvider>
+    ///////////////////////////////////////////////////////////////////////////////////
   );
 }

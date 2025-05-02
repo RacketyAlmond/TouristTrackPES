@@ -8,25 +8,36 @@ import ProfileScreen from '../screens/ProfileScreen';
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
-    const [screen, setScreen] = useState<"Auth" | "Birthdate" | "Profile">("Auth");
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [screen, setScreen] =
+    (useState < 'Auth') | 'Birthdate' | ('Profile' > 'Auth');
+  const [currentUser, setCurrentUser] = (useState < User) | (null > null);
 
-    return (
-        <UserProvider>
-            <AuthProvider>
-                <View style={{ flex: 1 }}>
-                    {screen === "Auth" && (
-                        <AuthScreen
-                            onAuthenticated={(user, isNewUser) => {
-                                setCurrentUser(user);
-                                setScreen(isNewUser ? "Birthdate" : "Profile");
-                            }}
-                        />
-                    )}
-                    {screen === "Birthdate" && <BirthdateScreen user={currentUser} onComplete={() => setScreen("Profile")} />}
-                    {screen === "Profile" && <ProfileScreen user={currentUser} onSignOut={() => setScreen("Auth")} />}
-                </View>
-            </AuthProvider>
-        </UserProvider>
-    );
+  return (
+    <UserProvider>
+      <AuthProvider>
+        <View style={{ flex: 1 }}>
+          {screen === 'Auth' && (
+            <AuthScreen
+              onAuthenticated={(user, isNewUser) => {
+                setCurrentUser(user);
+                setScreen(isNewUser ? 'Birthdate' : 'Profile');
+              }}
+            />
+          )}
+          {screen === 'Birthdate' && (
+            <BirthdateScreen
+              user={currentUser}
+              onComplete={() => setScreen('Profile')}
+            />
+          )}
+          {screen === 'Profile' && (
+            <ProfileScreen
+              user={currentUser}
+              onSignOut={() => setScreen('Auth')}
+            />
+          )}
+        </View>
+      </AuthProvider>
+    </UserProvider>
+  );
 }

@@ -5,17 +5,28 @@ import MessageChatBubble from '../atoms/messageChatBubble';
 import MessageChatData from '../atoms/messageChatData';
 
 const MessageChatList = ({ messages }) => {
-
   const formatDate = (timestamp) => {
     const messageDate = new Date(timestamp);
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-    
-    const messageDay = new Date(messageDate.getFullYear(), messageDate.getMonth(), messageDate.getDate());
-    const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const yesterdayDay = new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate());
-        
+
+    const messageDay = new Date(
+      messageDate.getFullYear(),
+      messageDate.getMonth(),
+      messageDate.getDate(),
+    );
+    const todayDay = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+    );
+    const yesterdayDay = new Date(
+      yesterday.getFullYear(),
+      yesterday.getMonth(),
+      yesterday.getDate(),
+    );
+
     if (messageDay.getTime() === todayDay.getTime()) {
       return 'TODAY';
     } else if (messageDay.getTime() === yesterdayDay.getTime()) {
@@ -40,7 +51,7 @@ const MessageChatList = ({ messages }) => {
           groups.push({
             date: currentDate,
             formattedDate: formatDate(currentGroup[0].timestamp),
-            data: currentGroup
+            data: currentGroup,
           });
         }
         currentDate = datePart;
@@ -54,7 +65,7 @@ const MessageChatList = ({ messages }) => {
       groups.push({
         date: currentDate,
         formattedDate: formatDate(currentGroup[0].timestamp),
-        data: currentGroup
+        data: currentGroup,
       });
     }
 
@@ -67,7 +78,7 @@ const MessageChatList = ({ messages }) => {
     return (
       <View>
         <MessageChatData date={item.formattedDate} />
-        {item.data.map(message => (
+        {item.data.map((message) => (
           <MessageChatBubble key={message.id} message={message} />
         ))}
       </View>

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,127 +18,142 @@ import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 
-export default function Chats({currentUser}) {
+export default function Chats({ currentUser }) {
   const idCurrentSession = currentUser.id;
-  const dataJson = UsersJson.find(user => user.idUser === idCurrentSession).friends;
+  const dataJson = UsersJson.find(
+    (user) => user.idUser === idCurrentSession,
+  ).friends;
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState(dataJson);
   const [icon, setIcon] = useState('search');
   const state = 0; // 0 = chat, 1 = requested, 2 = request
 
-
-
   const renderItem = ({ item }) => {
-    const User = dataJson.find(user => user.id === item.id);
+    const User = dataJson.find((user) => user.id === item.id);
 
     return (
       <View style={styles.chatItemContainer}>
-        <TouchableOpacity style={styles.chatItem} onPress={() => navigation.navigate('PersonalChat', { currentUser, User, state})}>
+        <TouchableOpacity
+          style={styles.chatItem}
+          onPress={() =>
+            navigation.navigate('PersonalChat', { currentUser, User, state })
+          }
+        >
           <ChatItem item={item} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteChat(item)}>
-          <Ionicons name="trash-outline" size={22} color="#572364" />
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDeleteChat(item)}
+        >
+          <Ionicons name='trash-outline' size={22} color='#572364' />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const deleteChat = async (user1Id,user2Id) => {
+  const deleteChat = async (user1Id, user2Id) => {
     try {
-      const response = await fetch(`http://ip_personal/messages/between/${user1Id}/${user2Id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `http://ip_personal/messages/between/${user1Id}/${user2Id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      });
-      
+      );
+
       if (!response.ok) {
         throw new Error('Failed to send message');
-      }      
-
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');
-    
     }
   };
 
   const handleDeleteChat = (item) => {
     Alert.alert(
-      "Delete Chat",
+      'Delete Chat',
       `Are you sure you want to delete the conversation with ${item.name}?`,
       [
         {
-          text: "Cancel",
-          style: "cancel"
+          text: 'Cancel',
+          style: 'cancel',
         },
         {
-          text: "Delete",
-          style: "destructive",
+          text: 'Delete',
+          style: 'destructive',
           onPress: () => {
-            const updatedChats = filter.filter(chat => chat.id !== item.id);
+            const updatedChats = filter.filter((chat) => chat.id !== item.id);
             setFilter(updatedChats);
 
             //funció per eliminar els missatges del chat
-            deleteChat(idCurrentSession,item.id);
+            deleteChat(idCurrentSession, item.id);
             //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
 
-            Alert.alert(
-              "Success", 
-              `Chat with ${item.name} has been deleted.`
-            );
-          }
-        }
+            Alert.alert('Success', `Chat with ${item.name} has been deleted.`);
+          },
+        },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
   const handleSearchChange = (text) => {
     setSearchTerm(text);
-    if(text.length > 0) {
-      if(icon === 'search') {
+    if (text.length > 0) {
+      if (icon === 'search') {
         setIcon('arrow-back');
       }
       const normalizedText = text.toLowerCase();
-      const filteredUsers = dataJson.filter(user =>
-        user.name.toLowerCase().includes(normalizedText)
+      const filteredUsers = dataJson.filter((user) =>
+        user.name.toLowerCase().includes(normalizedText),
       );
       setFilter(filteredUsers);
-    }
-    else {
+    } else {
       setFilter(dataJson);
       setIcon('search');
     }
-  }
+  };
 
   const handleSubmit = () => {
     Keyboard.dismiss();
-  }
+  };
 
   const handlebackPress = () => {
     setSearchTerm('');
     setFilter(dataJson);
     setIcon('search');
     Keyboard.dismiss();
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topBar}>
         <TouchableOpacity style={styles.icons} onPress={handlebackPress}>
-          <Ionicons name = {icon} size={30} color="#572364" style={styles.icons} />
-        </TouchableOpacity>
-        <TextInput 
-          style={styles.searchBar} 
-          placeholder = "Search for a Chat..." 
-          onChangeText= {handleSearchChange}
-          onSubmitEditing={handleSubmit}
-          value = {searchTerm}
+          <Ionicons
+            name={icon}
+            size={30}
+            color='#572364'
+            style={styles.icons}
           />
-        <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddChat', { currentUser, dataJson})}>
+        </TouchableOpacity>
+        <TextInput
+          style={styles.searchBar}
+          placeholder='Search for a Chat...'
+          onChangeText={handleSearchChange}
+          onSubmitEditing={handleSubmit}
+          value={searchTerm}
+        />
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
+            navigation.navigate('AddChat', { currentUser, dataJson })
+          }
+        >
           <Text style={styles.textButton}>+</Text>
         </TouchableOpacity>
       </View>
@@ -157,9 +172,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingTop:
-          Platform.OS === 'android'
-            ? Math.min(StatusBar.currentHeight || 30, 30)
-            : 0,
+      Platform.OS === 'android'
+        ? Math.min(StatusBar.currentHeight || 30, 30)
+        : 0,
   },
   listContent: {
     paddingHorizontal: 12,

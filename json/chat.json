@@ -1,212 +1,212 @@
 [
-    {
-        "id": 1,
-        "sendBy": "0",
-        "sendTo": "2",
-        "content": "Hola, ¿cómo estás?",
-        "timestamp": "2023-10-01T10:00:00Z"
-    },
-    {
-        "id": 2,
-        "sendBy": "2",
-        "sendTo": "0",
-        "content": "¡Muy bien! ¿Y tú? ¿Qué lugares has visitado hoy?",
-        "timestamp": "2023-10-01T10:05:23Z"
-    },
-    {
-        "id": 3,
-        "sendBy": "0",
-        "sendTo": "2",
-        "content": "Estuve en la Sagrada Familia, ¡es impresionante!",
-        "timestamp": "2023-10-01T10:10:45Z"
-    },
-    {
-        "id": 4,
-        "sendBy": "2",
-        "sendTo": "0",
-        "content": "¿Compraste la entrada con antelación? Suele estar muy lleno",
-        "timestamp": "2023-10-01T10:15:12Z"
-    },
-    {
-        "id": 5,
-        "sendBy": "0",
-        "sendTo": "2",
-        "content": "Sí, menos mal. Había una cola enorme para comprar en taquilla",
-        "timestamp": "2023-10-01T10:20:30Z"
-    },
-    {
-        "id": 6,
-        "sendBy": "3",
-        "sendTo": "0",
-        "content": "¡Hola María! He visto que estás en Barcelona, ¿alguna recomendación de restaurantes?",
-        "timestamp": "2023-10-02T09:15:00Z"
-    },
-    {
-        "id": 7,
-        "sendBy": "0",
-        "sendTo": "3",
-        "content": "¡Hola Laura! Te recomiendo 'La Paradeta' si te gusta el marisco fresco",
-        "timestamp": "2023-10-02T09:30:45Z"
-    },
-    {
-        "id": 8,
-        "sendBy": "3",
-        "sendTo": "0",
-        "content": "Gracias por la recomendación, iré mañana",
-        "timestamp": "2023-10-02T09:45:12Z"
-    },
-    {
-        "id": 9,
-        "sendBy": "4",
-        "sendTo": "2",
-        "content": "Hey Carlos, ¿sabes si hay algún evento especial este fin de semana en la ciudad?",
-        "timestamp": "2023-10-03T18:05:35Z"
-    },
-    {
-        "id": 10,
-        "sendBy": 2,
-        "sendTo": 4,
-        "content": "Hola Javier, sí, hay un festival de música en el Parc del Fòrum el sábado",
-        "timestamp": "2023-10-03T18:10:22Z"
-    },
-    {
-        "id": 11,
-        "sendBy": 4,
-        "sendTo": 2,
-        "content": "¡Genial! ¿Sabes a qué hora empieza?",
-        "timestamp": "2023-10-03T18:15:47Z"
-    },
-    {
-        "id": 12,
-        "sendBy": 2,
-        "sendTo": 4,
-        "content": "Empieza a las 18:00, pero te recomiendo llegar antes para conseguir buen sitio",
-        "timestamp": "2023-10-03T18:20:15Z"
-    },
-    {
-        "id": 13,
-        "sendBy": 4,
-        "sendTo": 3,
-        "content": "Laura, ¿quieres venir al festival de música este sábado?",
-        "timestamp": "2023-10-04T12:05:30Z"
-    },
-    {
-        "id": 14,
-        "sendBy": 3,
-        "sendTo": 4,
-        "content": "¡Me encantaría! ¿A qué hora quedamos?",
-        "timestamp": "2023-10-04T12:30:45Z"
-    },
-    {
-        "id": 15,
-        "sendBy": 4,
-        "sendTo": 3,
-        "content": "¿Te parece bien a las 17:30 en la estación de metro El Maresme Fòrum?",
-        "timestamp": "2023-10-04T12:35:10Z"
-    },
-    {
-        "id": 16,
-        "sendBy": 3,
-        "sendTo": 4,
-        "content": "Perfecto, allí estaré. ¡Hasta el sábado!",
-        "timestamp": "2023-10-04T12:40:25Z"
-    },
-    {
-        "id": 17,
-        "sendBy": 3,
-        "sendTo": 2,
-        "content": "Carlos, ¿conoces algún buen sitio para ver el atardecer en Barcelona?",
-        "timestamp": "2023-10-05T16:20:10Z"
-    },
-    {
-        "id": 18,
-        "sendBy": 2,
-        "sendTo": 3,
-        "content": "¡Claro! El Bunker del Carmel tiene las mejores vistas de la ciudad",
-        "timestamp": "2023-10-05T16:25:30Z"
-    },
-    {
-        "id": 19,
-        "sendBy": 3,
-        "sendTo": 2,
-        "content": "¿Es fácil llegar en transporte público?",
-        "timestamp": "2023-10-05T16:28:15Z"
-    },
-    {
-        "id": 20,
-        "sendBy": 2,
-        "sendTo": 3,
-        "content": "Puedes tomar el bus V17 o el 119, aunque la última parte es subiendo unas escaleras",
-        "timestamp": "2023-10-05T16:35:40Z"
-    },
-    {
-        "id": 21,
-        "sendBy": 0,
-        "sendTo": 4,
-        "content": "Javier, ¿has probado algún sitio bueno para tapas?",
-        "timestamp": "2023-10-06T14:10:05Z"
-    },
-    {
-        "id": 22,
-        "sendBy": 4,
-        "sendTo": 0,
-        "content": "En El Born hay varios muy buenos, te recomiendo El Xampanyet",
-        "timestamp": "2023-10-06T14:25:30Z"
-    },
-    {
-        "id": 23,
-        "sendBy": 0,
-        "sendTo": 4,
-        "content": "¡Gracias! Iré esta tarde",
-        "timestamp": "2023-10-06T14:30:15Z"
-    },
-    {
-        "id": 24,
-        "sendBy": 4,
-        "sendTo": 0,
-        "content": "Te va a encantar, pide la anchoa en vinagre, es su especialidad",
-        "timestamp": "2023-10-06T14:35:22Z"
-    },
-    {
-        "id": 25,
-        "sendBy": 2,
-        "sendTo": 0,
-        "content": "¿Cómo estuvo la visita a la Sagrada Familia al final?",
-        "timestamp": "2023-10-07T09:05:10Z"
-    },
-    {
-        "id": 26,
-        "sendBy": 0,
-        "sendTo": 2,
-        "content": "¡Increíble! La luz a través de los vitrales es espectacular",
-        "timestamp": "2023-10-07T09:15:45Z"
-    },
-    {
-        "id": 27,
-        "sendBy": 2,
-        "sendTo": 0,
-        "content": "¿Subiste a las torres?",
-        "timestamp": "2023-10-07T09:20:30Z"
-    },
-    {
-        "id": 28,
-        "sendBy": 0,
-        "sendTo": 2,
-        "content": "No, no quedaban tickets. Lo dejaré para la próxima visita",
-        "timestamp": "2023-10-07T09:25:15Z"
-    },
-    {
-        "id": 29,
-        "sendBy": 2,
-        "sendTo": 0,
-        "content": "Buena idea. Las vistas desde allí son increíbles",
-        "timestamp": "2023-10-07T09:30:05Z"
-    },
-    {
-        "id": 30,
-        "sendBy": 3,
-        "sendTo": 0,
-        "content": "¡Fui al restaurante que me recomendaste! El marisco estaba delicioso",
-        "timestamp": "2023-10-08T20:15:30Z"
-    }
+  {
+    "id": 1,
+    "sendBy": "0",
+    "sendTo": "2",
+    "content": "Hola, ¿cómo estás?",
+    "timestamp": "2023-10-01T10:00:00Z"
+  },
+  {
+    "id": 2,
+    "sendBy": "2",
+    "sendTo": "0",
+    "content": "¡Muy bien! ¿Y tú? ¿Qué lugares has visitado hoy?",
+    "timestamp": "2023-10-01T10:05:23Z"
+  },
+  {
+    "id": 3,
+    "sendBy": "0",
+    "sendTo": "2",
+    "content": "Estuve en la Sagrada Familia, ¡es impresionante!",
+    "timestamp": "2023-10-01T10:10:45Z"
+  },
+  {
+    "id": 4,
+    "sendBy": "2",
+    "sendTo": "0",
+    "content": "¿Compraste la entrada con antelación? Suele estar muy lleno",
+    "timestamp": "2023-10-01T10:15:12Z"
+  },
+  {
+    "id": 5,
+    "sendBy": "0",
+    "sendTo": "2",
+    "content": "Sí, menos mal. Había una cola enorme para comprar en taquilla",
+    "timestamp": "2023-10-01T10:20:30Z"
+  },
+  {
+    "id": 6,
+    "sendBy": "3",
+    "sendTo": "0",
+    "content": "¡Hola María! He visto que estás en Barcelona, ¿alguna recomendación de restaurantes?",
+    "timestamp": "2023-10-02T09:15:00Z"
+  },
+  {
+    "id": 7,
+    "sendBy": "0",
+    "sendTo": "3",
+    "content": "¡Hola Laura! Te recomiendo 'La Paradeta' si te gusta el marisco fresco",
+    "timestamp": "2023-10-02T09:30:45Z"
+  },
+  {
+    "id": 8,
+    "sendBy": "3",
+    "sendTo": "0",
+    "content": "Gracias por la recomendación, iré mañana",
+    "timestamp": "2023-10-02T09:45:12Z"
+  },
+  {
+    "id": 9,
+    "sendBy": "4",
+    "sendTo": "2",
+    "content": "Hey Carlos, ¿sabes si hay algún evento especial este fin de semana en la ciudad?",
+    "timestamp": "2023-10-03T18:05:35Z"
+  },
+  {
+    "id": 10,
+    "sendBy": 2,
+    "sendTo": 4,
+    "content": "Hola Javier, sí, hay un festival de música en el Parc del Fòrum el sábado",
+    "timestamp": "2023-10-03T18:10:22Z"
+  },
+  {
+    "id": 11,
+    "sendBy": 4,
+    "sendTo": 2,
+    "content": "¡Genial! ¿Sabes a qué hora empieza?",
+    "timestamp": "2023-10-03T18:15:47Z"
+  },
+  {
+    "id": 12,
+    "sendBy": 2,
+    "sendTo": 4,
+    "content": "Empieza a las 18:00, pero te recomiendo llegar antes para conseguir buen sitio",
+    "timestamp": "2023-10-03T18:20:15Z"
+  },
+  {
+    "id": 13,
+    "sendBy": 4,
+    "sendTo": 3,
+    "content": "Laura, ¿quieres venir al festival de música este sábado?",
+    "timestamp": "2023-10-04T12:05:30Z"
+  },
+  {
+    "id": 14,
+    "sendBy": 3,
+    "sendTo": 4,
+    "content": "¡Me encantaría! ¿A qué hora quedamos?",
+    "timestamp": "2023-10-04T12:30:45Z"
+  },
+  {
+    "id": 15,
+    "sendBy": 4,
+    "sendTo": 3,
+    "content": "¿Te parece bien a las 17:30 en la estación de metro El Maresme Fòrum?",
+    "timestamp": "2023-10-04T12:35:10Z"
+  },
+  {
+    "id": 16,
+    "sendBy": 3,
+    "sendTo": 4,
+    "content": "Perfecto, allí estaré. ¡Hasta el sábado!",
+    "timestamp": "2023-10-04T12:40:25Z"
+  },
+  {
+    "id": 17,
+    "sendBy": 3,
+    "sendTo": 2,
+    "content": "Carlos, ¿conoces algún buen sitio para ver el atardecer en Barcelona?",
+    "timestamp": "2023-10-05T16:20:10Z"
+  },
+  {
+    "id": 18,
+    "sendBy": 2,
+    "sendTo": 3,
+    "content": "¡Claro! El Bunker del Carmel tiene las mejores vistas de la ciudad",
+    "timestamp": "2023-10-05T16:25:30Z"
+  },
+  {
+    "id": 19,
+    "sendBy": 3,
+    "sendTo": 2,
+    "content": "¿Es fácil llegar en transporte público?",
+    "timestamp": "2023-10-05T16:28:15Z"
+  },
+  {
+    "id": 20,
+    "sendBy": 2,
+    "sendTo": 3,
+    "content": "Puedes tomar el bus V17 o el 119, aunque la última parte es subiendo unas escaleras",
+    "timestamp": "2023-10-05T16:35:40Z"
+  },
+  {
+    "id": 21,
+    "sendBy": 0,
+    "sendTo": 4,
+    "content": "Javier, ¿has probado algún sitio bueno para tapas?",
+    "timestamp": "2023-10-06T14:10:05Z"
+  },
+  {
+    "id": 22,
+    "sendBy": 4,
+    "sendTo": 0,
+    "content": "En El Born hay varios muy buenos, te recomiendo El Xampanyet",
+    "timestamp": "2023-10-06T14:25:30Z"
+  },
+  {
+    "id": 23,
+    "sendBy": 0,
+    "sendTo": 4,
+    "content": "¡Gracias! Iré esta tarde",
+    "timestamp": "2023-10-06T14:30:15Z"
+  },
+  {
+    "id": 24,
+    "sendBy": 4,
+    "sendTo": 0,
+    "content": "Te va a encantar, pide la anchoa en vinagre, es su especialidad",
+    "timestamp": "2023-10-06T14:35:22Z"
+  },
+  {
+    "id": 25,
+    "sendBy": 2,
+    "sendTo": 0,
+    "content": "¿Cómo estuvo la visita a la Sagrada Familia al final?",
+    "timestamp": "2023-10-07T09:05:10Z"
+  },
+  {
+    "id": 26,
+    "sendBy": 0,
+    "sendTo": 2,
+    "content": "¡Increíble! La luz a través de los vitrales es espectacular",
+    "timestamp": "2023-10-07T09:15:45Z"
+  },
+  {
+    "id": 27,
+    "sendBy": 2,
+    "sendTo": 0,
+    "content": "¿Subiste a las torres?",
+    "timestamp": "2023-10-07T09:20:30Z"
+  },
+  {
+    "id": 28,
+    "sendBy": 0,
+    "sendTo": 2,
+    "content": "No, no quedaban tickets. Lo dejaré para la próxima visita",
+    "timestamp": "2023-10-07T09:25:15Z"
+  },
+  {
+    "id": 29,
+    "sendBy": 2,
+    "sendTo": 0,
+    "content": "Buena idea. Las vistas desde allí son increíbles",
+    "timestamp": "2023-10-07T09:30:05Z"
+  },
+  {
+    "id": 30,
+    "sendBy": 3,
+    "sendTo": 0,
+    "content": "¡Fui al restaurante que me recomendaste! El marisco estaba delicioso",
+    "timestamp": "2023-10-08T20:15:30Z"
+  }
 ]

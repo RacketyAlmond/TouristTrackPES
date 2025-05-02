@@ -18,13 +18,13 @@ const MessageChatInput = ({ onSendMessage }) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Write a message..."
+          placeholder='Write a message...'
           value={message}
           onChangeText={setMessage}
           multiline
         />
         <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-          <Ionicons name="send" size={24} color="#572364" />
+          <Ionicons name='send' size={24} color='#572364' />
         </TouchableOpacity>
       </View>
     </View>
