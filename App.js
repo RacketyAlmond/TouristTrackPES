@@ -2,20 +2,64 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Map from './components/organisms/map';
+import Forum from './components/organisms/forum';
+import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
+import NavBar from './components/organisms/navBar';
+import Xat from './components/organisms/xatProva';
+import UserStack from './components/navigation/UserStack'; // NUEVO
+
+import { fetchCSV } from './dataestur';
+import { AuthProvider } from 'components/contexts/AuthContext'; // NUEVO
+import { UserProvider } from 'components/contexts/UserContext'; // NUEVO
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Mapa'
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name='Mapa'>{() => <Map />}</Stack.Screen>
-        <Stack.Screen name='Estadisticas' component={Estadisticas} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      ///////////////////////////////////////////////////////////////////////////////////
+      <UserProvider>
+          <AuthProvider>
+              ///////////////////////////////////////////////////////////////////////////
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
+                screenOptions={{
+                  gestureEnabled: true,
+                  gestureDirection: 'horizontal',
+                  animation: 'slide_from_right',
+                }}
+              >
+                <Stack.Screen
+                  name='Foros'
+                  component={IndexForos}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name='Forum'
+                  component={Forum}
+                  options={{
+                    headerShown: false, // Ocultar el header
+                    gestureEnabled: true, // Habilitar gestos
+                    gestureDirection: 'horizontal', // Dirección del gesto
+                    animation: 'slide_from_right', // Animación al navegar
+                  }}
+                />
+                <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
+                <Stack.Screen name='Estadisticas' component={Estadisticas} />
+                <Stack.Screen name='Xat' component={Xat} />
+                  <Stack.Screen
+                      name="User"
+                      component={UserStack}
+                      options={{ headerShown: false }}
+                  />
+              </Stack.Navigator>
+              <NavBar />
+            </NavigationContainer>
+              ///////////////////////////////////////////////////////////////////////////
+          </AuthProvider>
+      </UserProvider>
+      ///////////////////////////////////////////////////////////////////////////////////
   );
 }

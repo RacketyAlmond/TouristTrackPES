@@ -71,7 +71,6 @@ export default function Estadisticas() {
     'Compras',
   ];
 
-  console.log('filteredData.... ');
   const filteredData = dataMunicipality
     ? filterData(
         [parseInt(selectedItemAnos)],
