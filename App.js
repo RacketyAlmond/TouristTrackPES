@@ -48,7 +48,7 @@ export default function App() {
             />
             <Stack.Screen name='Mapa'>{() => <Map/>}</Stack.Screen>
             <Stack.Screen name='Estadisticas' component={Estadisticas} />
-            <Stack.Screen name='Chat' component={Chats} />
+            <Stack.Screen name='Chats' component={Chats} />
             <Stack.Screen name='PersonalChat' component={PersonalChat} />
             <Stack.Screen name='AddChat' component={AddChat} />
             <Stack.Screen
