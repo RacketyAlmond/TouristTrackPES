@@ -17,7 +17,6 @@ export default function IndexForos() {
   const [Localidades, setLocalidades] = useState([]);
   const [newForoName, setNewForoName] = useState(''); // Estado para el nombre del nuevo foro
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const obtenerForos = async () => {
     try {
       const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
@@ -34,7 +33,6 @@ export default function IndexForos() {
       console.error('Error al obtener los foros:', error);
     }
   };
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const crearForo = async () => {
     if (newForoName.trim() === '') {
@@ -67,7 +65,7 @@ export default function IndexForos() {
 
   // Filtrar las localidades cuando cambie el texto de búsqueda
   useEffect(() => {
-    setNewForoName(searchLocalidad);
+    filteredLocalidades.length === 0 && setNewForoName(searchLocalidad);
     if (searchLocalidad) {
       const filtered = Localidades.filter((loc) =>
         loc.localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
@@ -83,7 +81,7 @@ export default function IndexForos() {
   useEffect(() => {
     setFilteredLocalidades(Localidades);
     obtenerForos();
-  }, [Localidades]);
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

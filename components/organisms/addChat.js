@@ -37,7 +37,7 @@ export default function AddChat({ route }) {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `http://ip_personal/pending-requests/received/${idCurrentUser}`,
+        `http://localhost:3001/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch requests');
@@ -162,7 +162,7 @@ export default function AddChat({ route }) {
 
     //petició al backend per fer post
     try {
-      const response = await fetch(`http://ip_personal/allowed-chats`, {
+      const response = await fetch(`http://localhost:3001/allowed-chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ export default function AddChat({ route }) {
     //petició al backend per delete
     try {
       const response = await fetch(
-        `http://ip_personal/allowed-chats/${item.id}`,
+        `http://localhost:3001/allowed-chats/${item.id}`,
         {
           method: 'DELETE',
           headers: {

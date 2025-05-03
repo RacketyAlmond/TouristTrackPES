@@ -27,7 +27,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://ip_personal/messages/between/${idCurrentSession}/${userData.id}`,
+        `http://localhost:3001/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -56,7 +56,7 @@ const PersonalChat = ({ route, navigation }) => {
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`http://ip_personal/pending-requests`, {
+      const response = await fetch(`http://localhost:3001/pending-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`http://ip_personal/messages`, {
+        const response = await fetch(`http://localhost:3001/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

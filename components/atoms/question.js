@@ -93,14 +93,14 @@ export default function Question({
 
   useEffect(() => {
     getAnswers();
-  }, [showAnswers, allAnswers.length, getAnswers]);
+  }, []);
 
   // Función para añadir una nueva respuesta
   const handleAddAnswer = async () => {
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `http://192.168.1.41:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {

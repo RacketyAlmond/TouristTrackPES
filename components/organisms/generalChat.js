@@ -56,7 +56,7 @@ export default function Chats({ currentUser }) {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `http://ip_personal/messages/between/${user1Id}/${user2Id}`,
+        `http://localhost:3001/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {

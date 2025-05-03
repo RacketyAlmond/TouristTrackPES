@@ -110,7 +110,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `http://192.168.1.41:3001/forums/${forumId}/preguntas/`,
+          `http://localhost:3001/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {
