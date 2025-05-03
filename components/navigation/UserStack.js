@@ -6,14 +6,13 @@ import BirthdateScreen from '../screens/BirthdateScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { AuthProvider } from '../contexts/AuthContext'; // NUEVO
 import { UserProvider } from '../contexts/UserContext'; // NUEVO
-import { User } from 'firebase/auth';
 
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
   const [screen, setScreen] =
     (useState < 'Auth') | 'Birthdate' | ('Profile' > 'Auth');
-  const [currentUser, setCurrentUser] = (useState < User) | (null > null);
+    const [currentUser, setCurrentUser] = useState("notSelected");
 
   return (
     <UserProvider>

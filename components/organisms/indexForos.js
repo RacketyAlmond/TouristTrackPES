@@ -17,6 +17,7 @@ export default function IndexForos() {
   const [Localidades, setLocalidades] = useState([]);
   const [newForoName, setNewForoName] = useState(''); // Estado para el nombre del nuevo foro
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const obtenerForos = async () => {
     try {
       const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
@@ -33,6 +34,7 @@ export default function IndexForos() {
       console.error('Error al obtener los foros:', error);
     }
   };
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const crearForo = async () => {
     if (newForoName.trim() === '') {
