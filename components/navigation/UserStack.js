@@ -1,5 +1,6 @@
 // components/navigation/UserStack.js
-import React, { useState, View } from 'react';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthScreen from '../screens/AuthScreen';
 import BirthdateScreen from '../screens/BirthdateScreen';
@@ -10,8 +11,7 @@ import { UserProvider } from '../contexts/UserContext'; // NUEVO
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
-  const [screen, setScreen] =
-    (useState < 'Auth') | 'Birthdate' | ('Profile' > 'Auth');
+  const [screen, setScreen] = useState ('Profile');
     const [currentUser, setCurrentUser] = useState("notSelected");
 
   return (

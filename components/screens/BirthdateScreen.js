@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useUser } from '../contexts/UserContext.js';
 import map from './map.png';
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button } from 'react-native';
 
 const BirthdateScreen = ({ onComplete }) => {
@@ -45,19 +45,23 @@ const BirthdateScreen = ({ onComplete }) => {
       <View style={styles.container}>
         <Text style={styles.title}>Tell us more about yourself</Text>
         <View style={styles.inputContainer}>
-          <DatePicker
-            modal
-            open={open}
-            date={birthdate}
-            mode='date'
-            onConfirm={(date) => {
-              setOpen(false);
-              setBirthdate(date);
-            }}
-            onCancel={() => {
-              setOpen(false);
-            }}
-          />
+          {open && (
+              <DateTimePicker
+                  value={birthdate}
+                  mode="date"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    setOpen(false);
+                    if (selectedDate) setBirthdate(selectedDate);
+                  }}
+              />
+          )}
+
+
+
+
+
+
           <Text style={styles.text}>First name</Text>
 
           <TextInput
@@ -71,6 +75,7 @@ const BirthdateScreen = ({ onComplete }) => {
           <TouchableOpacity onPress={() => setOpen(true)} style={styles.input}>
             <Text>{birthdate.toDateString()}</Text>
           </TouchableOpacity>
+
           <Text style={styles.text}>Where are you from</Text>
 
           <TextInput
