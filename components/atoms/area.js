@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Circle } from 'react-native-maps';
-import { StyleSheet } from 'react-native';
 import { getCoordinatesFromCity } from '../../utils';
 
 export default function Area({ municipi, numTuristes }) {
@@ -41,13 +40,3 @@ export default function Area({ municipi, numTuristes }) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});

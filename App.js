@@ -1,31 +1,65 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable prettier/prettier */
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Chats from './components/organisms/generalChat';
 import Map from './components/organisms/map';
+import Forum from './components/organisms/forum';
+import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
-import { fetchCSV } from './dataestur';
+import NavBar from './components/organisms/navBar';
+
+import AddChat from './components/organisms/addChat';
+import PersonalChat from './components/molecules/personalChat';
+import UserStack from './components/organisms/UserStack'; // NUEVO
+
+import { AuthProvider } from './components/atoms/AuthContext'; // NUEVO
+import { UserProvider } from './components/atoms/UserContext'; // NUEVO
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchCSV(
-      (fetchedData) => setData(fetchedData),
-      (error) => console.error('Error al obtener los datos:', error),
-    );
-  }, []);
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName='Mapa'
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name='Mapa'>{() => <Map data={data} />}</Stack.Screen>
-        <Stack.Screen name='Estadisticas' component={Estadisticas} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
+            screenOptions={{
+              gestureEnabled: true,
+              gestureDirection: 'horizontal',
+              animation: 'slide_from_right',
+            }}
+          >
+            <Stack.Screen
+              name='Foros'
+              component={IndexForos}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='Forum'
+              component={Forum}
+              options={{
+                headerShown: false, // Ocultar el header
+                gestureEnabled: true, // Habilitar gestos
+                gestureDirection: 'horizontal', // Dirección del gesto
+                animation: 'slide_from_right', // Animación al navegar
+              }}
+            />
+            <Stack.Screen name='Mapa'>{() => <Map />}</Stack.Screen>
+            <Stack.Screen name='Estadisticas' component={Estadisticas} />
+            <Stack.Screen name='Chats' component={Chats} />
+            <Stack.Screen name='PersonalChat' component={PersonalChat} />
+            <Stack.Screen name='AddChat' component={AddChat} />
+            <Stack.Screen
+              name='User'
+              component={UserStack}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+          <NavBar />
+        </NavigationContainer>
+      </AuthProvider>
+    </UserProvider>
   );
 }

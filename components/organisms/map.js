@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import SearchBar from '../molecules/searchBar';
@@ -8,32 +8,65 @@ import Area from '../atoms/area';
 import {
   listOriginCountries,
   getTotalTouristsOfMunicipality,
-  getTouristMunicipality,
-  getDataOfMunicipality,
+  getSummaryData,
 } from '../../dataestur';
 
-export default function Map({ data }) {
+export default function Map() {
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
   const [selectedCountries, setSelectedCountries] = useState([]);
+  const [listCountries, setListCountries] = useState([]);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        console.log('listOriginCountries|getSummaryData...');
+        const [list, data] = await Promise.all([
+          listOriginCountries(),
+          getSummaryData(),
+        ]);
+        setListCountries(list);
+        setData(data);
+      } catch (err) {
+        console.error('Error al cargar los datos:', err);
+      }
+    };
+
+    cargarDatos();
+  }, []);
+
+  useEffect(() => {
+    const cargarDatosResumen = async () => {
+      try {
+        const countryNames = selectedCountries.map((c) => c.name);
+        console.log('getSummaryData:', countryNames);
+        const data = await getSummaryData(countryNames);
+        setData(data);
+      } catch (err) {
+        console.error('Error al cargar los datos:', err);
+      }
+    };
+
+    cargarDatosResumen();
+  }, [selectedCountries]); // cada vez que cambia
 
   const mapRef = useRef(null);
-  const dataMunicipality = data ? getDataOfMunicipality(city, data) : [];
+  console.log('getDataOf...');
 
-  const listCountries = data ? listOriginCountries(data) : [];
-  const totalTouristsOfMunicipality =
-    selectedCountries.length > 0
-      ? getTouristMunicipality(
-          city,
-          data,
-          selectedCountries.map((country) => country.name),
-        )
-      : getTotalTouristsOfMunicipality(city, data);
+  console.log('getTourists of: ', city);
+  const totalTouristsOfMunicipality = getTotalTouristsOfMunicipality(
+    city,
+    data,
+  );
+
+  console.log('done............');
 
   const searchCity = async (cityName) => {
     const result = await getCoordinatesFromCity(cityName);
     if (result) {
       setCoords(result);
+      setCity(result.name);
       mapRef.current.animateToRegion(
         {
           latitude: parseFloat(result.lat),
@@ -54,7 +87,7 @@ export default function Map({ data }) {
     <SafeAreaView style={styles.container}>
       <SearchBar
         onSearch={(cityName) => {
-          setCity(cityName);
+          //setCity(cityName);
           searchCity(cityName);
         }}
         availableNacionalities={listCountries}
@@ -98,7 +131,6 @@ export default function Map({ data }) {
           city={city}
           numTourists={totalTouristsOfMunicipality}
           onClose={handleCloseInfoLocalidad}
-          data={dataMunicipality}
         />
       )}
     </SafeAreaView>
