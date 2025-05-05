@@ -13,7 +13,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 //import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
@@ -67,6 +67,13 @@ export default function Chats() {
   useEffect(() => {
     fetchChats();
   }, [fetchChats]);
+
+  // Ejecutar fetchChats cada vez que el componente reciba el foco
+  useFocusEffect(
+    useCallback(() => {
+      fetchChats();
+    }, [fetchChats]),
+  );
 
   useEffect(() => {
     setFilter(chats);
@@ -130,10 +137,10 @@ export default function Chats() {
           },
         },
       );
-
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
+      setChats(chats.filter((chat) => chat.id !== user2Id))
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');
