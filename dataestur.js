@@ -2,7 +2,7 @@ import 'fast-text-encoding';
 
 export const getSummaryData = async (countries = []) => {
   try {
-    const baseUrl = 'http://localhost:3001/tourism/municipalities';
+    const baseUrl = 'http://192.168.1.60:3001/tourism/municipalities';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url =
@@ -23,7 +23,7 @@ export const getSummaryData = async (countries = []) => {
 
 export const getDataOfMunicipality = async (municipality) => {
   try {
-    const baseUrl = 'http://localhost:3001/tourism/municipality';
+    const baseUrl = 'http://192.168.1.60:3001/tourism/municipality';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
@@ -41,7 +41,7 @@ export const getDataOfMunicipality = async (municipality) => {
 
 export const listOriginCountries = async () => {
   try {
-    const resp = await fetch('http://localhost:3001/tourism/originCountries');
+    const resp = await fetch('http://192.168.1.60:3001/tourism/originCountries');
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
     return data;

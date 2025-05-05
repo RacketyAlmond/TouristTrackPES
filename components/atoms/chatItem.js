@@ -12,8 +12,8 @@ export default function ChatItem({ item }) {
       />
       <View>
         <Text style={styles.username}>{item.name}</Text>
-        <Text style={styles.message} numberOfLines={1}>
-          {item.about}
+        <Text style={styles.message} numberOfLines={1} ellipsizeMode="tail">
+          {item.about.length > 28 ? `${item.about.slice(0, 28)}...` : item.about}
         </Text>
       </View>
     </View>
@@ -42,5 +42,8 @@ const styles = {
   message: {
     color: '#555',
     fontSize: 14,
+    flexShrink: 1,  // Permite que el contenedor se reduzca
+    overflow: 'hidden',  // Asegura que el texto no sobresalga del contenedor
+    textOverflow: 'ellipsis',  // Agrega puntos suspensivos si el texto es muy largo
   },
 };
