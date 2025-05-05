@@ -2,17 +2,17 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AuthScreen from '../screens/AuthScreen';
-import BirthdateScreen from '../screens/BirthdateScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { AuthProvider } from '../contexts/AuthContext'; // NUEVO
-import { UserProvider } from '../contexts/UserContext'; // NUEVO
+import AuthScreen from '../molecules/auth';
+import BirthdateScreen from '../molecules/birthdate';
+import ProfileScreen from './profile';
+import { AuthProvider } from '../atoms/AuthContext'; // NUEVO
+import { UserProvider } from '../atoms/UserContext'; // NUEVO
 
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
-  const [screen, setScreen] = useState ('Profile');
-    const [currentUser, setCurrentUser] = useState("notSelected");
+  const [screen, setScreen] = useState('Profile');
+  const [currentUser, setCurrentUser] = useState('notSelected');
 
   return (
     <UserProvider>

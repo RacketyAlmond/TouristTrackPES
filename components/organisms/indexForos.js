@@ -19,7 +19,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('http://192.168.1.60:3001/forums'); // Cambia esto por la URL de tu servidor
+      const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
       const json = await response.json();
 
       if (json.success) {
@@ -41,7 +41,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch('http://192.168.1.60:3001/forums', {
+      const response = await fetch('http://localhost:3001/forums', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

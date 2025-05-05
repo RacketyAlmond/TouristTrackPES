@@ -8,8 +8,8 @@ import {
   StyleSheet,
   ImageBackground,
 } from 'react-native';
-import { useUser } from '../contexts/UserContext.js';
-import map from './map.png';
+import { useUser } from '../atoms/UserContext.js';
+import map from '../../public/mapa.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Button } from 'react-native';
 
@@ -46,21 +46,16 @@ const BirthdateScreen = ({ onComplete }) => {
         <Text style={styles.title}>Tell us more about yourself</Text>
         <View style={styles.inputContainer}>
           {open && (
-              <DateTimePicker
-                  value={birthdate}
-                  mode="date"
-                  display="default"
-                  onChange={(event, selectedDate) => {
-                    setOpen(false);
-                    if (selectedDate) setBirthdate(selectedDate);
-                  }}
-              />
+            <DateTimePicker
+              value={birthdate}
+              mode='date'
+              display='default'
+              onChange={(event, selectedDate) => {
+                setOpen(false);
+                if (selectedDate) setBirthdate(selectedDate);
+              }}
+            />
           )}
-
-
-
-
-
 
           <Text style={styles.text}>First name</Text>
 

@@ -40,7 +40,7 @@ export default function AddChat({ route }) {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.60:3001/pending-requests/received/${idCurrentUser}`,
+        `http://localhost:3001/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch requests');
@@ -63,7 +63,7 @@ export default function AddChat({ route }) {
   const fetchSentRequests = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.60:3001/pending-requests/sent/${idCurrentUser}`,
+        `http://localhost:3001/pending-requests/sent/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch sent requests');
@@ -79,10 +79,12 @@ export default function AddChat({ route }) {
       setSentRequests(formattedRequests);
     } catch (error) {
       console.error('Error fetching sent requests:', error);
-      Alert.alert('Error', 'Could not load sent requests. Please try again later.');
+      Alert.alert(
+        'Error',
+        'Could not load sent requests. Please try again later.',
+      );
     }
   };
-
 
   const handleSubmit = () => {
     if (!searchTerm.trim()) {
@@ -135,18 +137,17 @@ export default function AddChat({ route }) {
     //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
     else if (sentRequests.some((request) => request.id === searchID.id)) {
       Alert.alert(
-        "USER HAS A REQUEST",
+        'USER HAS A REQUEST',
         `You have already sent a request to the user.`,
         [
           {
-            text: "OK", 
-            style: "default",
-          }
+            text: 'OK',
+            style: 'default',
+          },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
-    }
-    else if (requests.some((request) => request.id === searchID.id)) {
+    } else if (requests.some((request) => request.id === searchID.id)) {
       Alert.alert(
         'USER SENT YOU A REQUEST',
         `The user has already sent you a request.`,
@@ -186,10 +187,10 @@ export default function AddChat({ route }) {
       [{ text: 'OK' }],
     );
     setSearchedUser(null);
-  
+
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`http://192.168.1.60:3001/allowed-chats`, {
+      const response = await fetch(`http://localhost:3001/allowed-chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -199,14 +200,14 @@ export default function AddChat({ route }) {
           user2ID: item.id,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to accept chat');
       }
-  
+
       // Eliminar la solicitud aceptada de la lista de solicitudes
       setRequests((prev) => prev.filter((req) => req.id !== item.id));
-      
+
       // Si necesitas también actualizar la lista de usuarios añadidos, puedes hacerlo aquí
       setUserFriend((prevUserFriend) => {
         // Asegurarte de que no haya duplicados
@@ -215,13 +216,11 @@ export default function AddChat({ route }) {
         }
         return prevUserFriend;
       });
-  
     } catch (error) {
       console.error('Error accepting chat:', error);
       Alert.alert('Error', 'Failed to accept chat. Please try again.');
     }
   };
-  
 
   //rejecta el chat de les sol·licituds rebudes
   const rejectChat = async (item) => {
@@ -231,36 +230,31 @@ export default function AddChat({ route }) {
       [{ text: 'OK' }],
     );
     setSearchedUser(null);
-  
+
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(
-        `http://192.168.1.60:3001/pending-requests`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            sentToID: idCurrentUser,
-            sentByID: item.id,
-          }),
+      const response = await fetch(`http://localhost:3001/pending-requests`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
-  
+        body: JSON.stringify({
+          sentToID: idCurrentUser,
+          sentByID: item.id,
+        }),
+      });
+
       if (!response.ok) {
         throw new Error('Failed to reject chat');
       }
-  
+
       // Eliminar la solicitud rechazada de la lista
       setRequests((prev) => prev.filter((req) => req.id !== item.id));
-  
     } catch (error) {
       console.error('Error rejecting chat:', error);
       Alert.alert('Error', 'Failed to reject chat. Please try again.');
     }
   };
-  
 
   const renderItem = ({ item }) => (
     <View style={styles.chatItem}>

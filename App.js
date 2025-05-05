@@ -10,11 +10,11 @@ import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
 
 import AddChat from './components/organisms/addChat';
-import PersonalChat from './components/organisms/personalChat';
-import UserStack from './components/navigation/UserStack'; // NUEVO
+import PersonalChat from './components/molecules/personalChat';
+import UserStack from './components/organisms/UserStack'; // NUEVO
 
-import { AuthProvider } from './components/contexts/AuthContext'; // NUEVO
-import { UserProvider } from './components/contexts/UserContext'; // NUEVO
+import { AuthProvider } from './components/atoms/AuthContext'; // NUEVO
+import { UserProvider } from './components/atoms/UserContext'; // NUEVO
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +46,7 @@ export default function App() {
                 animation: 'slide_from_right', // Animación al navegar
               }}
             />
-            <Stack.Screen name='Mapa'>{() => <Map/>}</Stack.Screen>
+            <Stack.Screen name='Mapa'>{() => <Map />}</Stack.Screen>
             <Stack.Screen name='Estadisticas' component={Estadisticas} />
             <Stack.Screen name='Chats' component={Chats} />
             <Stack.Screen name='PersonalChat' component={PersonalChat} />

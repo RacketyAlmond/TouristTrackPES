@@ -20,14 +20,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 export default function Chats() {
   const currentUser = {
-    "id": "0",
-    "name": "Yo",
-    "avatar": "https://i.pinimg.com/474x/24/0d/b3/asdsaeeedsseed.jpg",
-    "about": "hi"
-  }
+    id: '0',
+    name: 'Yo',
+    avatar: 'https://i.pinimg.com/474x/24/0d/b3/asdsaeeedsseed.jpg',
+    about: 'hi',
+  };
   const idCurrentSession = currentUser.id;
   //const dataJson = UsersJson.find(
-    //(user) => user.idUser === idCurrentSession,
+  //(user) => user.idUser === idCurrentSession,
   //).friends;
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,7 +41,7 @@ export default function Chats() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://192.168.1.60:3001/allowed-chats/users/${idCurrentSession}`,
+        `http://localhost:3001/allowed-chats/users/${idCurrentSession}`,
       );
 
       if (!response.ok) {
@@ -75,7 +75,7 @@ export default function Chats() {
   const deleteAllowedChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `http://192.168.1.60:3001/allowed-chats/between/${user1Id}/${user2Id}`,
+        `http://localhost:3001/allowed-chats/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -83,7 +83,7 @@ export default function Chats() {
           },
         },
       );
-  
+
       if (!response.ok) {
         throw new Error('Failed to delete allowed chat');
       }
@@ -94,13 +94,16 @@ export default function Chats() {
   };
 
   const renderItem = ({ item }) => {
-
     return (
       <View style={styles.chatItemContainer}>
         <TouchableOpacity
           style={styles.chatItem}
           onPress={() =>
-            navigation.navigate('PersonalChat', { currentUser, User: item, state })
+            navigation.navigate('PersonalChat', {
+              currentUser,
+              User: item,
+              state,
+            })
           }
         >
           <ChatItem item={item} />
@@ -119,7 +122,7 @@ export default function Chats() {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `http://192.168.1.60:3001/messages/between/${user1Id}/${user2Id}`,
+        `http://localhost:3001/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {

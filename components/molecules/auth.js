@@ -7,8 +7,8 @@ import {
   StyleSheet,
   ImageBackground,
 } from 'react-native';
-import { AuthContext } from '../contexts/AuthContext.js';
-import map from './map.png';
+import { AuthContext } from '../atoms/AuthContext.js';
+import map from '../../public/mapa.png';
 
 const AuthScreen = ({ onAuthenticated }) => {
   const { signUp, signIn } = useContext(AuthContext);

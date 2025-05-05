@@ -8,9 +8,9 @@ import {
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useUser } from '../contexts/UserContext.js';
-import logo from './logo.png';
-import map from './map.png';
+import { useUser } from '../atoms/UserContext.js';
+import logo from '../../public/logo.png';
+import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
 
