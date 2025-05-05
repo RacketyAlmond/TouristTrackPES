@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,7 +14,7 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import UsersJson from '../../json/userFriends.json';
+//import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -26,24 +26,81 @@ export default function Chats() {
     "about": "hi"
   }
   const idCurrentSession = currentUser.id;
-  const dataJson = UsersJson.find(
-    (user) => user.idUser === idCurrentSession,
-  ).friends;
+  //const dataJson = UsersJson.find(
+    //(user) => user.idUser === idCurrentSession,
+  //).friends;
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState(dataJson);
+  const [filter, setFilter] = useState([]);
   const [icon, setIcon] = useState('search');
+  const [chats, setChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const state = 0; // 0 = chat, 1 = requested, 2 = request
 
+  const fetchChats = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        `http://192.168.1.60:3001/allowed-chats/users/${idCurrentSession}`,
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch chats');
+      }
+      const data = await response.json();
+      const formattedChats = data.map((chat) => ({
+        id: chat.id.toString(),
+        name: chat.firstName,
+        about: chat.about,
+        avatar: chat.avatar,
+      }));
+
+      setChats(formattedChats);
+    } catch (error) {
+      console.error('Error fetching chats:', error);
+      Alert.alert('Error', 'Could not load chats. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [idCurrentSession]);
+
+  useEffect(() => {
+    fetchChats();
+  }, [fetchChats]);
+
+  useEffect(() => {
+    setFilter(chats);
+  }, [chats]);
+
+  const deleteAllowedChat = async (user1Id, user2Id) => {
+    try {
+      const response = await fetch(
+        `http://192.168.1.60:3001/allowed-chats/between/${user1Id}/${user2Id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete allowed chat');
+      }
+    } catch (error) {
+      console.error('Error deleting allowed chat:', error);
+      Alert.alert('Error', 'Could not delete chat. Please try again.');
+    }
+  };
+
   const renderItem = ({ item }) => {
-    const User = dataJson.find((user) => user.id === item.id);
 
     return (
       <View style={styles.chatItemContainer}>
         <TouchableOpacity
           style={styles.chatItem}
           onPress={() =>
-            navigation.navigate('PersonalChat', { currentUser, User, state })
+            navigation.navigate('PersonalChat', { currentUser, User: item, state })
           }
         >
           <ChatItem item={item} />
@@ -62,7 +119,7 @@ export default function Chats() {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/messages/between/${user1Id}/${user2Id}`,
+        `http://192.168.1.60:3001/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -99,6 +156,7 @@ export default function Chats() {
             //funció per eliminar els missatges del chat
             deleteChat(idCurrentSession, item.id);
             //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
+            deleteAllowedChat(idCurrentSession, item.id);
 
             Alert.alert('Success', `Chat with ${item.name} has been deleted.`);
           },
@@ -115,12 +173,12 @@ export default function Chats() {
         setIcon('arrow-back');
       }
       const normalizedText = text.toLowerCase();
-      const filteredUsers = dataJson.filter((user) =>
+      const filteredUsers = chats.filter((user) =>
         user.name.toLowerCase().includes(normalizedText),
       );
       setFilter(filteredUsers);
     } else {
-      setFilter(dataJson);
+      setFilter(chats);
       setIcon('search');
     }
   };
@@ -131,7 +189,7 @@ export default function Chats() {
 
   const handlebackPress = () => {
     setSearchTerm('');
-    setFilter(dataJson);
+    setFilter(chats);
     setIcon('search');
     Keyboard.dismiss();
   };
@@ -157,7 +215,11 @@ export default function Chats() {
         <TouchableOpacity
           style={styles.addButton}
           onPress={() =>
-            navigation.navigate('AddChat', { currentUser, dataJson })
+            navigation.navigate('AddChat', {
+              currentUser,
+              state,
+              dataJson: chats, // <-- Aquí le pasas la lista de chats a AddChat
+            })
           }
         >
           <Text style={styles.textButton}>+</Text>
