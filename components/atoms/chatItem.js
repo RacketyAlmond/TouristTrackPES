@@ -12,11 +12,14 @@ export default function ChatItem({ item }) {
       />
       <View>
         <Text style={styles.username}>{item.name}</Text>
-        <Text style={styles.message} numberOfLines={1} ellipsizeMode='tail'>
-          {item.about.length > 28
-            ? `${item.about.slice(0, 28)}...`
-            : item.about}
-        </Text>
+        {item.about && item.about.trim() !== '' && ( // Verifica si "about" no está vacío
+
+          <Text style={styles.message} numberOfLines={1} ellipsizeMode='tail'>
+            {item.about.length > 28
+              ? `${item.about.slice(0, 28)}...`
+              : item.about}
+          </Text>
+        )}
       </View>
     </View>
   );
