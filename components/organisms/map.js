@@ -6,6 +6,7 @@ import InfoLocalidad from '../molecules/InfoLocalidad';
 import { getCoordinatesFromCity } from '../../utils';
 import Area from '../atoms/area';
 import * as Location from 'expo-location';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   listOriginCountries,
   getTotalTouristsOfMunicipality,
@@ -195,7 +196,7 @@ export default function Map() {
             }}
             title='Mi ubicación'
             description='Ubicación actual'
-            pinColor='blue'
+            pinColor='#572364'
           />
         )}
         {coords && (
@@ -215,16 +216,15 @@ export default function Map() {
 
       {/* Botón fuera del MapView pero superpuesto */}
       <TouchableOpacity
-        style={[
-          styles.myLocationButton,
-          location ? styles.locationAvailable : styles.locationUnavailable,
-        ]}
+        style={[styles.button]}
         onPress={handleGoToMyLocation}
         disabled={!location} // Deshabilitar si no hay ubicación
       >
-        <Text style={styles.buttonText}>
-          {location ? 'Ir a mi ubicación' : 'Ubicación no disponible'}
-        </Text>
+        <Icon
+          name={!location ? 'location-searching' : 'my-location'}
+          size={24}
+          color='#572364'
+        />
       </TouchableOpacity>
 
       {city && (
@@ -264,5 +264,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  button: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    padding: 12,
+    elevation: 5,
   },
 });
