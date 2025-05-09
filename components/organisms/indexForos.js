@@ -10,6 +10,7 @@ import {
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import config from '../../config';
 
 export default function IndexForos() {
   const [searchLocalidad, setSearchLocalidad] = useState('');
@@ -19,7 +20,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
+      const response = await fetch(`${config.BASE_URL}/forums`); // Cambia esto por la URL de tu servidor
       const json = await response.json();
 
       if (json.success) {
@@ -41,7 +42,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/forums', {
+      const response = await fetch(`${config.BASE_URL}:3001/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
+import config from '../../config';
 
 export default function Question({
   forumId,
@@ -25,7 +26,7 @@ export default function Question({
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`);
+      const response = await fetch(`${config.BASE_URL}/users/${userId}`);
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -45,7 +46,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `${config.BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -66,7 +67,7 @@ export default function Question({
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `${config.BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
 
       const json = await response.json();
@@ -100,7 +101,7 @@ export default function Question({
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `http://localhost:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `${config.BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {
