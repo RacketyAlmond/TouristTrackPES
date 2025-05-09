@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,57 +10,109 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert, // Importamos el componente Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
-const reviewsData = [
-  {
-    id: '1',
-    username: 'nataalia',
-    avatar:
-      'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-    rating: 5,
-    text: 'Una ciudad increíble, con muchas posibilidades y cosas que ver. Este texto es muy largo para poder ser recortado correctamente en la interfaz, ¡espero que sea visible correctamente!',
-  },
-  {
-    id: '2',
-    username: 'zuckk_777',
-    avatar:
-      'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-    rating: 5,
-    text: 'Esta ciudad lo tiene TODO. Gente maja, bares con cañas y ¡mucho más! No puedes dejar de visitar todos los monumentos y disfrutar de la vida aquí.',
-  },
-  {
-    id: '3',
-    username: 'eR_xULo_',
-    avatar:
-      'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-    rating: 2,
-    text: 'Buenas',
-  },
-];
-
 const loggedInUser = {
-  username: 'you_user',
+  id: '1',
+  username: 'mgimor',
   avatar:
     'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
 };
 
-const ReviewScreen = () => {
+const ReviewScreen = ({ route, navigation }) => {
   const [newReview, setNewReview] = useState('');
   const [newRating, setNewRating] = useState(0);
   const [inputHeight, setInputHeight] = useState(40);
   const [expandedReviews, setExpandedReviews] = useState({});
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [hasUserReviewed, setHasUserReviewed] = useState(false); // Estado para verificar si el usuario ya ha reseñado
+
+  const { localidad } = route.params;
 
   const isSendDisabled = newReview.trim() === '' || newRating === 0;
 
-  const handleSend = () => {
+  useEffect(() => {
+    fetchReviews(localidad.name);
+  }, []);
+
+  const fetchReviews = async (city) => {
+    try {
+      const response = await fetch(
+        `http://192.168.1.60:3001/ratings/location/${city}`,
+      );
+      if (!response.ok) {
+        throw new Error('Error fetching reviews');
+      }
+      const data = await response.json();
+      setReviews(data);
+
+      // Verificamos si el usuario ya ha dejado una reseña
+      const userReview = data.find(
+        (review) => review.authorID === loggedInUser.id,
+      );
+      setHasUserReviewed(!!userReview); // Si existe una reseña del usuario, cambiamos el estado
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleSend = async () => {
     if (isSendDisabled) return;
-    setNewReview('');
-    setNewRating(0);
-    setInputHeight(40);
+
+    if (hasUserReviewed) {
+      // Si ya existe una reseña del usuario, mostramos una alerta
+      Alert.alert(
+        'Reseña ya existente',
+        'Ya has dejado una reseña para esta localidad.',
+        [{ text: 'OK' }],
+        { cancelable: false },
+      );
+      return;
+    }
+
+    const newReviewData = {
+      authorID: loggedInUser.id,
+      location: city,
+      stars: newRating,
+      content: newReview,
+    };
+
+    try {
+      const response = await fetch('http://192.168.1.60:3001/ratings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReviewData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error posting review');
+      }
+
+      const postedReview = {
+        ...(await response.json()), // Esto obtiene los datos de la respuesta
+        authorAvatar: loggedInUser.avatar, // Añadimos el avatar del autor
+        authorFirstName: loggedInUser.username, // Añadimos el nombre del autor
+      };
+
+      // Actualizar la lista de reseñas con la nueva reseña
+      setReviews((prevReviews) => [postedReview, ...prevReviews]);
+
+      // Limpiar el formulario después de enviar
+      setNewReview('');
+      setNewRating(0);
+      setInputHeight(40);
+
+      // Actualizamos el estado de reseña para el usuario
+      setHasUserReviewed(true);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const renderStars = (rating, editable = false, onRate = () => {}) => {
@@ -109,11 +161,11 @@ const ReviewScreen = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.reviewContainer}>
-      <Image source={{ uri: item.avatar }} style={styles.avatar} />
+      <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
       <View style={{ flex: 1 }}>
         <View style={styles.reviewHeader}>
-          <Text style={styles.username}>{item.username}</Text>
-          <View style={styles.starsRight}>{renderStars(item.rating)}</View>
+          <Text style={styles.username}>{item.authorFirstName}</Text>
+          <View style={styles.starsRight}>{renderStars(item.stars)}</View>
         </View>
         <TouchableOpacity onPress={() => toggleReviewExpand(item.id)}>
           <Text
@@ -121,13 +173,13 @@ const ReviewScreen = () => {
             numberOfLines={expandedReviews[item.id] ? 0 : 2}
             onTextLayout={handleTextLayout}
           >
-            {item.text}
+            {item.content}
           </Text>
         </TouchableOpacity>
         {/* Mostrar "ver más" solo si el texto se recorta */}
         {isTextOverflowing && !expandedReviews[item.id] && (
           <TouchableOpacity onPress={() => toggleReviewExpand(item.id)}>
-            <Text style={styles.expandText}>...ver más</Text>
+            <Text style={styles.expandText}>ver más</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -144,12 +196,12 @@ const ReviewScreen = () => {
         contentContainerStyle={{ padding: 16 }}
         keyboardShouldPersistTaps='handled'
       >
-        <Text style={styles.title}>Barcelona</Text>
-        <Text style={styles.subtitle}>Cataluña</Text>
+        <Text style={styles.title}>{localidad.name}</Text>
+        <Text style={styles.subtitle}>{localidad.comunidad}</Text>
 
         <View style={styles.ratingRow}>
-          {renderStars(4.5)}
-          <Text style={styles.reviewCount}>(16.7k)</Text>
+          {renderStars(localidad.rating)}
+          <Text style={styles.reviewCount}>({localidad.ratingCount})</Text>
         </View>
 
         <View style={styles.divider} />
@@ -188,7 +240,7 @@ const ReviewScreen = () => {
         </View>
 
         <FlatList
-          data={reviewsData}
+          data={reviews}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           scrollEnabled={false}

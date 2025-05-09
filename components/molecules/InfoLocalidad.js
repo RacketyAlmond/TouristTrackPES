@@ -54,7 +54,7 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       <TouchableOpacity
         style={styles.ratingContainer}
         onPress={() =>
-          navigation.navigate('Valoraciones', { city: locality.name })
+          navigation.navigate('Valoraciones', { localidad: locality })
         }
       >
         {renderStars(locality.rating)}
