@@ -22,14 +22,21 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
 
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
-        stars.push(<FontAwesome key={i} name='star' size={20} color='gold' />);
+        stars.push(
+          <FontAwesome key={i} name='star' size={20} color='#F5A623' />,
+        );
       } else if (i === fullStars + 1 && halfStar) {
         stars.push(
-          <FontAwesome key={i} name='star-half-empty' size={20} color='gold' />,
+          <FontAwesome
+            key={i}
+            name='star-half-empty'
+            size={20}
+            color='#F5A623'
+          />,
         );
       } else {
         stars.push(
-          <FontAwesome key={i} name='star-o' size={20} color='gold' />,
+          <FontAwesome key={i} name='star-o' size={20} color='#F5A623' />,
         );
       }
     }
@@ -44,12 +51,17 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       </TouchableOpacity>
       <Text style={styles.title}>{locality.name}</Text>
       <Text style={styles.comunidad}>{locality.comunidad}</Text>
-      <View style={styles.ratingContainer}>
+      <TouchableOpacity
+        style={styles.ratingContainer}
+        onPress={() =>
+          navigation.navigate('Valoraciones', { city: locality.name })
+        }
+      >
         {renderStars(locality.rating)}
         <Text style={styles.ratingText}>
           {locality.rating} ({locality.ratingCount})
         </Text>
-      </View>
+      </TouchableOpacity>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.info}>Número de turistas: </Text>
         <Text style={styles.valueInfo}>{locality.tourists}</Text>
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 0,
-    color: 'rebeccapurple',
+    color: '#572364',
   },
   comunidad: {
     fontSize: 15,
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
   valueInfo: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'rebeccapurple',
+    color: '#572364',
   },
   estadisticasButton: {
     alignItems: 'center',
@@ -146,7 +158,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    backgroundColor: 'rebeccapurple',
+    backgroundColor: '#572364',
   },
   textButton: {
     color: 'white',
