@@ -24,62 +24,32 @@ const loggedInUser = {
     'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
 };
 
-const RatingScreen = ({ route }) => {
-  const [ratingContent, setRatingContent] = useState('');
-  const [ratingStars, setRatingStars] = useState(0);
-  const [inputHeight, setInputHeight] = useState(40);
+const RatingScreen = () => {
   const [expandedRatings, setExpandedRatings] = useState({});
   const [textOverflowMap, setTextOverflowMap] = useState({});
   const [ratings, setRatings] = useState([]);
-  const [hasUserRated, setHasUserRated] = useState(false);
   const [editingRatingId, setEditingRatingId] = useState(null);
   const [editContent, setEditContent] = useState('');
   const [editStars, setEditStars] = useState(0);
 
-  const { localidad } = route.params;
-
-  const [localidadRating, setLocalidadRating] = useState({
-    rating: localidad.rating,
-    ratingCount: localidad.ratingCount,
-  });
-
-  const isSendDisabled = ratingStars === 0;
-
   useEffect(() => {
-    fetchRatings(localidad.name);
+    fetchRatings();
   }, []);
-
-  useEffect(() => {
-    if (ratings.length === 0) {
-      setLocalidadRating({ rating: 0, ratingCount: 0 });
-      return;
-    }
-
-    const totalStars = ratings.reduce((sum, r) => sum + r.stars, 0);
-    const avgRating = totalStars / ratings.length;
-
-    setLocalidadRating({
-      rating: parseFloat(avgRating.toFixed(1)),
-      ratingCount: ratings.length,
-    });
-  }, [ratings]);
 
   useFocusEffect(
     useCallback(() => {
-      fetchRatings(localidad.name);
+      fetchRatings();
     }, []),
   );
 
-  const fetchRatings = async (city) => {
+  const fetchRatings = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.50:3001/ratings/location/${city}`,
+        `http://192.168.1.50:3001/ratings/author/${loggedInUser.id}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
       setRatings(data);
-      const userRating = data.find((r) => r.authorID === loggedInUser.id);
-      setHasUserRated(!!userRating);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -99,7 +69,6 @@ const RatingScreen = ({ route }) => {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
-            setHasUserRated(false);
           },
         },
       ],
@@ -118,7 +87,7 @@ const RatingScreen = ({ route }) => {
 
     const updatedRating = {
       authorID: loggedInUser.id,
-      location: localidad.name,
+      location: ratingToUpdate.location,
       stars: editStars,
       content: editContent,
     };
@@ -157,47 +126,6 @@ const RatingScreen = ({ route }) => {
     setEditingRatingId(null);
     setEditContent('');
     setEditStars(0);
-  };
-
-  const handleSend = async () => {
-    if (hasUserRated) {
-      Alert.alert(
-        'Ya has calificado',
-        'Solo puedes dejar una reseña por lugar.',
-      );
-      return;
-    }
-
-    const newRatingData = {
-      authorID: loggedInUser.id,
-      location: localidad.name,
-      stars: ratingStars,
-      content: ratingContent,
-    };
-
-    try {
-      const response = await fetch('http://192.168.1.50:3001/ratings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newRatingData),
-      });
-
-      if (!response.ok) throw new Error('Error posting rating');
-
-      const postedRating = {
-        ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
-      };
-
-      setRatings((prev) => [postedRating, ...prev]);
-      setRatingContent('');
-      setRatingStars(0);
-      setInputHeight(40);
-      setHasUserRated(true);
-    } catch (error) {
-      console.error('Error:', error);
-    }
   };
 
   const renderStars = (rating, editable = false, onRate = () => {}) => {
@@ -248,93 +176,96 @@ const RatingScreen = ({ route }) => {
       // Convertir el _seconds a un objeto Date
       const postedAtDate = new Date(item.postedAt._seconds * 1000);
 
-      // Si también quieres considerar los nanosegundos, puedes agregar el valor de _nanoseconds
-      // pero normalmente los nanosegundos no son necesarios para mostrar solo la fecha.
-
       // Formatear la fecha
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
       return (
-        <View style={styles.reviewContainer}>
-          <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
-          <View style={{ flex: 1 }}>
-            <View style={styles.reviewHeader}>
-              <Text style={styles.username}>{item.authorFirstName}</Text>
-              <View style={styles.starsRight}>
-                {item.id === editingRatingId
-                  ? renderStars(editStars, true, setEditStars)
-                  : renderStars(item.stars)}
-              </View>
-            </View>
-
-            {item.id === editingRatingId ? (
-              <>
-                <TextInput
-                  value={editContent}
-                  onChangeText={setEditContent}
-                  multiline
-                  style={[
-                    styles.textInput,
-                    { marginTop: 8, backgroundColor: '#f1f1f1' },
-                  ]}
-                />
-                <View style={styles.actionButtons}>
-                  <TouchableOpacity onPress={handleUpdate}>
-                    <Text style={[styles.actionText, { color: '#572364' }]}>
-                      Guardar
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={cancelEdit}>
-                    <Text style={[styles.actionText, { color: '#999' }]}>
-                      Cancelar
-                    </Text>
-                  </TouchableOpacity>
+        <View style={styles.reviewAndLocationContainer}>
+          {/* Nombre de la localidad encima del contenido */}
+          <View style={styles.locationContainer}>
+            <Text style={styles.title}>{item.location}</Text>
+          </View>
+          <View style={styles.reviewContainer}>
+            <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
+            <View style={{ flex: 1 }}>
+              <View style={styles.reviewHeader}>
+                <Text style={styles.username}>{item.authorFirstName}</Text>
+                <View style={styles.starsRight}>
+                  {item.id === editingRatingId
+                    ? renderStars(editStars, true, setEditStars)
+                    : renderStars(item.stars)}
                 </View>
-              </>
-            ) : (
-              <>
-                <TouchableOpacity onPress={() => toggleRatingExpand(item.id)}>
-                  <Text
-                    style={styles.text}
-                    numberOfLines={expandedRatings[item.id] ? 0 : 2}
-                    onTextLayout={(e) => handleTextLayout(item.id, e)}
-                  >
-                    {item.content}
-                  </Text>
-                </TouchableOpacity>
-                <View style={styles.dateAndExpandRow}>
-                  <View style={{ flex: 1 }}>
-                    {textOverflowMap[item.id] && (
-                      <TouchableOpacity
-                        onPress={() => toggleRatingExpand(item.id)}
-                      >
-                        <Text style={styles.expandText}>
-                          {expandedRatings[item.id] ? 'ver menos' : 'ver más'}
+              </View>
+
+              {item.id === editingRatingId ? (
+                <>
+                  <TextInput
+                    value={editContent}
+                    onChangeText={setEditContent}
+                    multiline
+                    style={[
+                      styles.textInput,
+                      { marginTop: 8, backgroundColor: '#f1f1f1' },
+                    ]}
+                  />
+                  <View style={styles.actionButtons}>
+                    <TouchableOpacity onPress={handleUpdate}>
+                      <Text style={[styles.actionText, { color: '#572364' }]}>
+                        Guardar
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={cancelEdit}>
+                      <Text style={[styles.actionText, { color: '#999' }]}>
+                        Cancelar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <TouchableOpacity onPress={() => toggleRatingExpand(item.id)}>
+                    <Text
+                      style={styles.text}
+                      numberOfLines={expandedRatings[item.id] ? 0 : 2}
+                      onTextLayout={(e) => handleTextLayout(item.id, e)}
+                    >
+                      {item.content}
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={styles.dateAndExpandRow}>
+                    <View style={{ flex: 1 }}>
+                      {textOverflowMap[item.id] && (
+                        <TouchableOpacity
+                          onPress={() => toggleRatingExpand(item.id)}
+                        >
+                          <Text style={styles.expandText}>
+                            {expandedRatings[item.id] ? 'ver menos' : 'ver más'}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                    <Text style={styles.dateText}>
+                      Publicado el: {formattedDate}
+                    </Text>
+                  </View>
+
+                  {item.authorID === loggedInUser.id && (
+                    <View style={styles.rightActions}>
+                      <TouchableOpacity onPress={() => handleEdit(item)}>
+                        <Text style={[styles.actionText, { color: '#572364' }]}>
+                          Editar
                         </Text>
                       </TouchableOpacity>
-                    )}
-                  </View>
-                  <Text style={styles.dateText}>
-                    Publicado el: {formattedDate}
-                  </Text>
-                </View>
-
-                {item.authorID === loggedInUser.id && (
-                  <View style={styles.rightActions}>
-                    <TouchableOpacity onPress={() => handleEdit(item)}>
-                      <Text style={[styles.actionText, { color: '#572364' }]}>
-                        Editar
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                      <Text style={[styles.actionText, { color: 'red' }]}>
-                        Eliminar
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </>
-            )}
+                      <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                        <Text style={[styles.actionText, { color: 'red' }]}>
+                          Eliminar
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </>
+              )}
+            </View>
           </View>
         </View>
       );
@@ -354,52 +285,6 @@ const RatingScreen = ({ route }) => {
         contentContainerStyle={{ padding: 16 }}
         keyboardShouldPersistTaps='handled'
       >
-        <Text style={styles.title}>{localidad.name}</Text>
-        <Text style={styles.subtitle}>{localidad.comunidad}</Text>
-
-        <View style={styles.ratingRow}>
-          {renderStars(localidadRating.rating)}
-          <Text style={styles.reviewAverage}>{localidadRating.rating}</Text>
-          <Text style={styles.reviewCount}>
-            ({localidadRating.ratingCount})
-          </Text>
-        </View>
-
-        <View style={styles.divider} />
-
-        <View style={styles.inputContainer}>
-          <View style={styles.inputHeader}>
-            <View style={styles.inputUser}>
-              <Image
-                source={{ uri: loggedInUser.avatar }}
-                style={styles.avatar}
-              />
-              <Text style={styles.username}>{loggedInUser.username}</Text>
-            </View>
-            {renderStars(ratingStars, true, setRatingStars)}
-          </View>
-
-          <View style={styles.textInputWrapper}>
-            <TextInput
-              placeholder='Escribe aquí tu reseña...'
-              style={[styles.textInput, { height: Math.max(40, inputHeight) }]}
-              multiline
-              value={ratingContent}
-              onChangeText={setRatingContent}
-              onContentSizeChange={(e) =>
-                setInputHeight(e.nativeEvent.contentSize.height)
-              }
-            />
-            <TouchableOpacity
-              disabled={isSendDisabled}
-              onPress={handleSend}
-              style={[styles.sendButton, { opacity: isSendDisabled ? 0.5 : 1 }]}
-            >
-              <Ionicons name='send' size={20} color='#fff' />
-            </TouchableOpacity>
-          </View>
-        </View>
-
         <FlatList
           data={ratings}
           keyExtractor={(item) => item.id}
@@ -413,7 +298,12 @@ const RatingScreen = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
-  title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
+  title: {
+    fontSize: 18, // tamaño del texto
+    fontWeight: 'bold', // si quieres que el nombre de la localidad se vea más destacado
+    color: '#572364', // color del texto
+    marginLeft: -10,
+  },
   subtitle: { color: '#999' },
   ratingRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
   reviewAverage: { marginLeft: 4, color: '#572364', fontSize: 16 },
@@ -451,7 +341,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginLeft: 10,
   },
-  reviewContainer: { flexDirection: 'row', marginBottom: 16 },
+  reviewContainer: { flexDirection: 'row', marginBottom: 8 },
   reviewHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -500,6 +390,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#572364',
   },
+  locationContainer: {
+    marginBottom: 8, // espacio entre la localidad y el contenido de la reseña
+    marginLeft: 10, // o el margen que desees
+  },
+  reviewAndLocationContainer: { flexDirection: 'column'},
 });
 
 export default RatingScreen;

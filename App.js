@@ -9,6 +9,7 @@ import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
 import Valoraciones from './components/organisms/ratings';
+import ValoracionesUsuario from './components/organisms/userRatings';
 
 import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/molecules/personalChat';
@@ -50,6 +51,7 @@ export default function App() {
             <Stack.Screen name='Mapa'>{() => <Map />}</Stack.Screen>
             <Stack.Screen name='Estadisticas' component={Estadisticas} />
             <Stack.Screen name='Valoraciones' component={Valoraciones} />
+            <Stack.Screen name='Mis valoraciones' component={ValoracionesUsuario} />
             <Stack.Screen name='Chats' component={Chats} />
             <Stack.Screen name='PersonalChat' component={PersonalChat} />
             <Stack.Screen name='AddChat' component={AddChat} />

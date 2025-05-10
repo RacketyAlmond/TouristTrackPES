@@ -43,7 +43,7 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('User')}
+        onPress={() => navigation.navigate('Mis valoraciones')}
       >
         <Image
           source={require('../../public/user.png')}
