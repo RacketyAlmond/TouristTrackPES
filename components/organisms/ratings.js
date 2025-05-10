@@ -36,11 +36,31 @@ const RatingScreen = ({ route }) => {
 
   const { localidad } = route.params;
 
-  const isSendDisabled = ratingContent.trim() === '' || ratingStars === 0;
+  const [localidadRating, setLocalidadRating] = useState({
+    rating: localidad.rating,
+    ratingCount: localidad.ratingCount,
+  });
+
+  const isSendDisabled = ratingStars === 0;
 
   useEffect(() => {
     fetchRatings(localidad.name);
   }, []);
+
+  useEffect(() => {
+    if (ratings.length === 0) {
+      setLocalidadRating({ rating: 0, ratingCount: 0 });
+      return;
+    }
+
+    const totalStars = ratings.reduce((sum, r) => sum + r.stars, 0);
+    const avgRating = totalStars / ratings.length;
+
+    setLocalidadRating({
+      rating: parseFloat(avgRating.toFixed(1)),
+      ratingCount: ratings.length,
+    });
+  }, [ratings]);
 
   const fetchRatings = async (city) => {
     try {
@@ -307,8 +327,11 @@ const RatingScreen = ({ route }) => {
         <Text style={styles.subtitle}>{localidad.comunidad}</Text>
 
         <View style={styles.ratingRow}>
-          {renderStars(localidad.rating)}
-          <Text style={styles.reviewCount}>({localidad.ratingCount})</Text>
+          {renderStars(localidadRating.rating)}
+          <Text style={styles.reviewAverage}>{localidadRating.rating}</Text>
+          <Text style={styles.reviewCount}>
+            ({localidadRating.ratingCount})
+          </Text>
         </View>
 
         <View style={styles.divider} />
@@ -362,7 +385,8 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
   subtitle: { color: '#999' },
   ratingRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
-  reviewCount: { marginLeft: 8, color: '#999' },
+  reviewAverage: { marginLeft: 4, color: '#572364', fontSize: 16 },
+  reviewCount: { marginLeft: 4, color: '#999', fontSize: 16 },
   divider: { height: 1, backgroundColor: '#ccc', marginVertical: 12 },
   inputContainer: {
     backgroundColor: '#f1f1f1',

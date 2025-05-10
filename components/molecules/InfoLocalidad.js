@@ -1,16 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 export default function InfoLocalidad({ city, numTourists, onClose }) {
   const navigation = useNavigation();
+
+  const [ratingStats, setRatingStats] = useState({ average: 0, count: 0 });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!city) return;
+
+      const fetchRatingStats = async () => {
+        try {
+          const response = await fetch(
+            `http://192.168.1.60:3001/ratings/location/${city}/stats`,
+          );
+          const data = await response.json();
+          setRatingStats({
+            average: data.averageStars || 0,
+            count: data.totalRatings || 0,
+          });
+        } catch (error) {
+          console.error('Error fetching rating stats:', error);
+        }
+      };
+
+      fetchRatingStats();
+    }, [city]),
+  );
+
   if (!city) return null;
   const locality = {
     name: city,
     comunidad: 'Comunidad',
-    rating: 4.5,
-    ratingCount: 1000,
+    rating: ratingStats.average,
+    ratingCount: ratingStats.count,
     tourists: numTourists,
     expenses: 100,
   };
@@ -58,9 +86,8 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
         }
       >
         {renderStars(locality.rating)}
-        <Text style={styles.ratingText}>
-          {locality.rating} ({locality.ratingCount})
-        </Text>
+        <Text style={styles.ratingAverageText}>{locality.rating}</Text>
+        <Text style={styles.ratingCountText}>({locality.ratingCount})</Text>
       </TouchableOpacity>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.info}>Número de turistas: </Text>
@@ -129,9 +156,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  ratingText: {
+  ratingAverageText: {
     fontSize: 16,
     marginLeft: 5,
+    color: '#572364',
+  },
+  ratingCountText: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: 'gray',
   },
   info: {
     fontWeight: 'bold',
