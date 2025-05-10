@@ -234,67 +234,79 @@ const RatingScreen = ({ route }) => {
     setTextOverflowMap((prev) => ({ ...prev, [id]: isOverflowing }));
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.reviewContainer}>
-      <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
-      <View style={{ flex: 1 }}>
-        <View style={styles.reviewHeader}>
-          <Text style={styles.username}>{item.authorFirstName}</Text>
-          <View style={styles.starsRight}>
-            {item.id === editingRatingId
-              ? renderStars(editStars, true, setEditStars)
-              : renderStars(item.stars)}
-          </View>
-        </View>
+  const renderItem = ({ item }) => {
+    // Verifica si item.postedAt es el objeto con _seconds y _nanoseconds
+    if (item.postedAt && item.postedAt._seconds !== undefined) {
+      // Convertir el _seconds a un objeto Date
+      const postedAtDate = new Date(item.postedAt._seconds * 1000);
 
-        {item.id === editingRatingId ? (
-          <>
-            <TextInput
-              value={editContent}
-              onChangeText={setEditContent}
-              multiline
-              style={[
-                styles.textInput,
-                { marginTop: 8, backgroundColor: '#f1f1f1' },
-              ]}
-            />
-            <View style={styles.actionButtons}>
-              <TouchableOpacity onPress={handleUpdate}>
-                <Text style={[styles.actionText, { color: '#572364' }]}>
-                  Guardar
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={cancelEdit}>
-                <Text style={[styles.actionText, { color: '#999' }]}>
-                  Cancelar
-                </Text>
-              </TouchableOpacity>
+      // Si también quieres considerar los nanosegundos, puedes agregar el valor de _nanoseconds
+      // pero normalmente los nanosegundos no son necesarios para mostrar solo la fecha.
+
+      // Formatear la fecha
+      const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
+
+      return (
+        <View style={styles.reviewContainer}>
+          <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
+          <View style={{ flex: 1 }}>
+            <View style={styles.reviewHeader}>
+              <Text style={styles.username}>{item.authorFirstName}</Text>
+              <View style={styles.starsRight}>
+                {item.id === editingRatingId
+                  ? renderStars(editStars, true, setEditStars)
+                  : renderStars(item.stars)}
+              </View>
             </View>
-          </>
-        ) : (
-          <>
-            <TouchableOpacity onPress={() => toggleRatingExpand(item.id)}>
-              <Text
-                style={styles.text}
-                numberOfLines={expandedRatings[item.id] ? 0 : 2}
-                onTextLayout={(e) => handleTextLayout(item.id, e)}
-              >
-                {item.content}
-              </Text>
-            </TouchableOpacity>
-            {(textOverflowMap[item.id] ||
-              item.authorID === loggedInUser.id) && (
-              <View style={styles.actionsRow}>
-                <View style={styles.leftActions}>
+
+            {item.id === editingRatingId ? (
+              <>
+                <TextInput
+                  value={editContent}
+                  onChangeText={setEditContent}
+                  multiline
+                  style={[
+                    styles.textInput,
+                    { marginTop: 8, backgroundColor: '#f1f1f1' },
+                  ]}
+                />
+                <View style={styles.actionButtons}>
+                  <TouchableOpacity onPress={handleUpdate}>
+                    <Text style={[styles.actionText, { color: '#572364' }]}>
+                      Guardar
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={cancelEdit}>
+                    <Text style={[styles.actionText, { color: '#999' }]}>
+                      Cancelar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity onPress={() => toggleRatingExpand(item.id)}>
+                  <Text
+                    style={styles.text}
+                    numberOfLines={expandedRatings[item.id] ? 0 : 2}
+                    onTextLayout={(e) => handleTextLayout(item.id, e)}
+                  >
+                    {item.content}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.dateAndExpandRow}>
                   {textOverflowMap[item.id] && (
                     <TouchableOpacity
                       onPress={() => toggleRatingExpand(item.id)}
                     >
-                      <Text style={[styles.actionText, { color: '#572364' }]}>
+                      <Text style={styles.expandText}>
                         {expandedRatings[item.id] ? 'ver menos' : 'ver más'}
                       </Text>
                     </TouchableOpacity>
                   )}
+                  <Text style={styles.dateText}>
+                    Publicado el: {formattedDate}
+                  </Text>
                 </View>
 
                 {item.authorID === loggedInUser.id && (
@@ -311,13 +323,16 @@ const RatingScreen = ({ route }) => {
                     </TouchableOpacity>
                   </View>
                 )}
-              </View>
+              </>
             )}
-          </>
-        )}
-      </View>
-    </View>
-  );
+          </View>
+        </View>
+      );
+    } else {
+      // Si no está presente o no es válido, no mostramos nada
+      return null;
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -436,7 +451,6 @@ const styles = StyleSheet.create({
   avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
   username: { fontWeight: 'bold', fontSize: 14 },
   text: { color: '#555', marginVertical: 2 },
-  expandText: { color: '#572364', fontSize: 12, marginTop: 4 },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -454,11 +468,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
-  leftActions: {
-    flexDirection: 'row',
-  },
   rightActions: {
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 8,
+  },
+  dateText: {
+    marginTop: 8,
+    fontSize: 12,
+    color: '#999',
+    textAlign: 'right',
+  },
+  dateAndExpandRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  expandText: {
+    fontSize: 12,
+    marginTop: 8,
+    fontWeight: 'bold',
+    color: '#572364',
   },
 });
 
