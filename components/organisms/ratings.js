@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert, // Importamos el componente Alert
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -22,94 +22,145 @@ const loggedInUser = {
     'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
 };
 
-const ReviewScreen = ({ route, navigation }) => {
-  const [newReview, setNewReview] = useState('');
-  const [newRating, setNewRating] = useState(0);
+const RatingScreen = ({ route }) => {
+  const [ratingContent, setRatingContent] = useState('');
+  const [ratingStars, setRatingStars] = useState(0);
   const [inputHeight, setInputHeight] = useState(40);
-  const [expandedReviews, setExpandedReviews] = useState({});
-  const [isTextOverflowing, setIsTextOverflowing] = useState(false);
-  const [reviews, setReviews] = useState([]);
-  const [hasUserReviewed, setHasUserReviewed] = useState(false); // Estado para verificar si el usuario ya ha reseñado
+  const [expandedRatings, setExpandedRatings] = useState({});
+  const [textOverflowMap, setTextOverflowMap] = useState({});
+  const [ratings, setRatings] = useState([]);
+  const [hasUserRated, setHasUserRated] = useState(false);
+  const [editingRatingId, setEditingRatingId] = useState(null);
+  const [editContent, setEditContent] = useState('');
+  const [editStars, setEditStars] = useState(0);
 
   const { localidad } = route.params;
 
-  const isSendDisabled = newReview.trim() === '' || newRating === 0;
+  const isSendDisabled = ratingContent.trim() === '' || ratingStars === 0;
 
   useEffect(() => {
-    fetchReviews(localidad.name);
+    fetchRatings(localidad.name);
   }, []);
 
-  const fetchReviews = async (city) => {
+  const fetchRatings = async (city) => {
     try {
       const response = await fetch(
         `http://192.168.1.60:3001/ratings/location/${city}`,
       );
-      if (!response.ok) {
-        throw new Error('Error fetching reviews');
-      }
+      if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
-      setReviews(data);
-
-      // Verificamos si el usuario ya ha dejado una reseña
-      const userReview = data.find(
-        (review) => review.authorID === loggedInUser.id,
-      );
-      setHasUserReviewed(!!userReview); // Si existe una reseña del usuario, cambiamos el estado
+      setRatings(data);
+      const userRating = data.find((r) => r.authorID === loggedInUser.id);
+      setHasUserRated(!!userRating);
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const handleSend = async () => {
-    if (isSendDisabled) return;
+  const handleDelete = async (id) => {
+    Alert.alert(
+      'Eliminar reseña',
+      '¿Estás seguro de que quieres eliminar esta reseña?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            await fetch(`http://192.168.1.60:3001/ratings/${id}`, {
+              method: 'DELETE',
+            });
+            setRatings((prev) => prev.filter((r) => r.id !== id));
+            setHasUserRated(false);
+          },
+        },
+      ],
+    );
+  };
 
-    if (hasUserReviewed) {
-      // Si ya existe una reseña del usuario, mostramos una alerta
-      Alert.alert(
-        'Reseña ya existente',
-        'Ya has dejado una reseña para esta localidad.',
-        [{ text: 'OK' }],
-        { cancelable: false },
-      );
-      return;
-    }
+  const handleEdit = (rating) => {
+    setEditingRatingId(rating.id);
+    setEditContent(rating.content);
+    setEditStars(rating.stars);
+  };
 
-    const newReviewData = {
+  const handleUpdate = async () => {
+    const ratingToUpdate = ratings.find((r) => r.id === editingRatingId);
+    if (!ratingToUpdate) return;
+
+    const updatedRating = {
       authorID: loggedInUser.id,
-      location: city,
-      stars: newRating,
-      content: newReview,
+      location: localidad.name,
+      stars: editStars,
+      content: editContent,
+    };
+
+    try {
+      const response = await fetch(
+        `http://192.168.1.60:3001/ratings/${ratingToUpdate.id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedRating),
+        },
+      );
+
+      if (!response.ok) throw new Error('Error actualizando reseña');
+
+      const updatedData = {
+        ...(await response.json()),
+        authorAvatar: loggedInUser.avatar,
+        authorFirstName: loggedInUser.username,
+      };
+
+      setRatings((prev) =>
+        prev.map((r) => (r.id === ratingToUpdate.id ? updatedData : r)),
+      );
+
+      setEditingRatingId(null);
+      setEditContent('');
+      setEditStars(0);
+    } catch (error) {
+      console.error('Error al actualizar reseña:', error);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingRatingId(null);
+    setEditContent('');
+    setEditStars(0);
+  };
+
+  const handleSend = async () => {
+    if (isSendDisabled || hasUserRated) return;
+
+    const newRatingData = {
+      authorID: loggedInUser.id,
+      location: localidad.name,
+      stars: ratingStars,
+      content: ratingContent,
     };
 
     try {
       const response = await fetch('http://192.168.1.60:3001/ratings', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newReviewData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRatingData),
       });
 
-      if (!response.ok) {
-        throw new Error('Error posting review');
-      }
+      if (!response.ok) throw new Error('Error posting rating');
 
-      const postedReview = {
-        ...(await response.json()), // Esto obtiene los datos de la respuesta
-        authorAvatar: loggedInUser.avatar, // Añadimos el avatar del autor
-        authorFirstName: loggedInUser.username, // Añadimos el nombre del autor
+      const postedRating = {
+        ...(await response.json()),
+        authorAvatar: loggedInUser.avatar,
+        authorFirstName: loggedInUser.username,
       };
 
-      // Actualizar la lista de reseñas con la nueva reseña
-      setReviews((prevReviews) => [postedReview, ...prevReviews]);
-
-      // Limpiar el formulario después de enviar
-      setNewReview('');
-      setNewRating(0);
+      setRatings((prev) => [postedRating, ...prev]);
+      setRatingContent('');
+      setRatingStars(0);
       setInputHeight(40);
-
-      // Actualizamos el estado de reseña para el usuario
-      setHasUserReviewed(true);
+      setHasUserRated(true);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -147,16 +198,14 @@ const ReviewScreen = ({ route, navigation }) => {
     return <View style={{ flexDirection: 'row' }}>{stars}</View>;
   };
 
-  const toggleReviewExpand = (id) => {
-    setExpandedReviews((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const toggleRatingExpand = (id) => {
+    setExpandedRatings((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleTextLayout = (e) => {
+  const handleTextLayout = (id, e) => {
     const { lines } = e.nativeEvent;
-    setIsTextOverflowing(lines.length > 2);
+    const isOverflowing = lines.length > 2;
+    setTextOverflowMap((prev) => ({ ...prev, [id]: isOverflowing }));
   };
 
   const renderItem = ({ item }) => (
@@ -165,22 +214,80 @@ const ReviewScreen = ({ route, navigation }) => {
       <View style={{ flex: 1 }}>
         <View style={styles.reviewHeader}>
           <Text style={styles.username}>{item.authorFirstName}</Text>
-          <View style={styles.starsRight}>{renderStars(item.stars)}</View>
+          <View style={styles.starsRight}>
+            {item.id === editingRatingId
+              ? renderStars(editStars, true, setEditStars)
+              : renderStars(item.stars)}
+          </View>
         </View>
-        <TouchableOpacity onPress={() => toggleReviewExpand(item.id)}>
-          <Text
-            style={styles.text}
-            numberOfLines={expandedReviews[item.id] ? 0 : 2}
-            onTextLayout={handleTextLayout}
-          >
-            {item.content}
-          </Text>
-        </TouchableOpacity>
-        {/* Mostrar "ver más" solo si el texto se recorta */}
-        {isTextOverflowing && !expandedReviews[item.id] && (
-          <TouchableOpacity onPress={() => toggleReviewExpand(item.id)}>
-            <Text style={styles.expandText}>ver más</Text>
-          </TouchableOpacity>
+
+        {item.id === editingRatingId ? (
+          <>
+            <TextInput
+              value={editContent}
+              onChangeText={setEditContent}
+              multiline
+              style={[
+                styles.textInput,
+                { marginTop: 8, backgroundColor: '#f1f1f1' },
+              ]}
+            />
+            <View style={styles.actionButtons}>
+              <TouchableOpacity onPress={handleUpdate}>
+                <Text style={[styles.actionText, { color: '#572364' }]}>
+                  Guardar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={cancelEdit}>
+                <Text style={[styles.actionText, { color: '#999' }]}>
+                  Cancelar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity onPress={() => toggleRatingExpand(item.id)}>
+              <Text
+                style={styles.text}
+                numberOfLines={expandedRatings[item.id] ? 0 : 2}
+                onTextLayout={(e) => handleTextLayout(item.id, e)}
+              >
+                {item.content}
+              </Text>
+            </TouchableOpacity>
+            {(textOverflowMap[item.id] ||
+              item.authorID === loggedInUser.id) && (
+              <View style={styles.actionsRow}>
+                <View style={styles.leftActions}>
+                  {textOverflowMap[item.id] && (
+                    <TouchableOpacity
+                      onPress={() => toggleRatingExpand(item.id)}
+                    >
+                      <Text style={[styles.actionText, { color: '#572364' }]}>
+                        {expandedRatings[item.id] ? 'ver menos' : 'ver más'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {item.authorID === loggedInUser.id && (
+                  <View style={styles.rightActions}>
+                    <TouchableOpacity onPress={() => handleEdit(item)}>
+                      <Text style={[styles.actionText, { color: '#572364' }]}>
+                        Editar
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                      <Text style={[styles.actionText, { color: 'red' }]}>
+                        Eliminar
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            )}
+          </>
         )}
       </View>
     </View>
@@ -215,7 +322,7 @@ const ReviewScreen = ({ route, navigation }) => {
               />
               <Text style={styles.username}>{loggedInUser.username}</Text>
             </View>
-            {renderStars(newRating, true, setNewRating)}
+            {renderStars(ratingStars, true, setRatingStars)}
           </View>
 
           <View style={styles.textInputWrapper}>
@@ -223,8 +330,8 @@ const ReviewScreen = ({ route, navigation }) => {
               placeholder='Escribe aquí tu reseña...'
               style={[styles.textInput, { height: Math.max(40, inputHeight) }]}
               multiline
-              value={newReview}
-              onChangeText={setNewReview}
+              value={ratingContent}
+              onChangeText={setRatingContent}
               onContentSizeChange={(e) =>
                 setInputHeight(e.nativeEvent.contentSize.height)
               }
@@ -240,7 +347,7 @@ const ReviewScreen = ({ route, navigation }) => {
         </View>
 
         <FlatList
-          data={reviews}
+          data={ratings}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           scrollEnabled={false}
@@ -254,17 +361,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
   subtitle: { color: '#999' },
-  ratingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
+  ratingRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
   reviewCount: { marginLeft: 8, color: '#999' },
-  divider: {
-    height: 1,
-    backgroundColor: '#ccc',
-    marginVertical: 12,
-  },
+  divider: { height: 1, backgroundColor: '#ccc', marginVertical: 12 },
   inputContainer: {
     backgroundColor: '#f1f1f1',
     borderRadius: 12,
@@ -277,10 +376,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  inputUser: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+  inputUser: { flexDirection: 'row', alignItems: 'center' },
   textInputWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
@@ -300,22 +396,40 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginLeft: 10,
   },
-  reviewContainer: {
-    flexDirection: 'row',
-    marginBottom: 16,
-  },
+  reviewContainer: { flexDirection: 'row', marginBottom: 16 },
   reviewHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  starsRight: {
-    flexDirection: 'row',
-  },
+  starsRight: { flexDirection: 'row' },
   avatar: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
   username: { fontWeight: 'bold', fontSize: 14 },
   text: { color: '#555', marginVertical: 2 },
   expandText: { color: '#572364', fontSize: 12, marginTop: 4 },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 8,
+  },
+  actionText: {
+    marginRight: 12,
+    color: '#572364',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  leftActions: {
+    flexDirection: 'row',
+  },
+  rightActions: {
+    flexDirection: 'row',
+  },
 });
 
-export default ReviewScreen;
+export default RatingScreen;
