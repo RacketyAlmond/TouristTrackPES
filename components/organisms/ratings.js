@@ -152,7 +152,13 @@ const RatingScreen = ({ route }) => {
   };
 
   const handleSend = async () => {
-    if (isSendDisabled || hasUserRated) return;
+    if (hasUserRated) {
+      Alert.alert(
+        'Ya has calificado',
+        'Solo puedes dejar una reseña por lugar.',
+      );
+      return;
+    }
 
     const newRatingData = {
       authorID: loggedInUser.id,
