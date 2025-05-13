@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
+import { API_BASE_URL } from '../../utilis/api';
 
 export default function AddChat({ route }) {
   const navigation = useNavigation();
@@ -40,7 +41,7 @@ export default function AddChat({ route }) {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/pending-requests/received/${idCurrentUser}`,
+        `${API_BASE_URL}/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch requests');
@@ -63,7 +64,7 @@ export default function AddChat({ route }) {
   const fetchSentRequests = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/pending-requests/sent/${idCurrentUser}`,
+        `${API_BASE_URL}/pending-requests/sent/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch sent requests');
@@ -190,7 +191,7 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`http://localhost:3001/allowed-chats`, {
+      const response = await fetch(`${API_BASE_URL}/allowed-chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +234,7 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`http://localhost:3001/pending-requests`, {
+      const response = await fetch(`${API_BASE_URL}/pending-requests`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
