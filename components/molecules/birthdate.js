@@ -1,5 +1,5 @@
 // BirthdateScreen.js
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
 import { useUser } from '../atoms/UserContext.js';
 import map from '../../public/mapa.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button } from 'react-native';
 
 const BirthdateScreen = ({ onComplete }) => {
   const { createUserData } = useUser();
@@ -19,15 +18,16 @@ const BirthdateScreen = ({ onComplete }) => {
   const [userLocation, setUserLocation] = useState('');
   const [birthdate, setBirthdate] = useState(new Date());
   const [open, setOpen] = useState(false);
-
+  const points = useRef(10);
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
       await createUserData(
-        fname,
-        birthdate.toDateString(),
-        userLocation,
-        about,
+          fname,
+          birthdate.toDateString(),
+          userLocation,
+          about,
+          points,
       );
       onComplete();
     } catch (error) {

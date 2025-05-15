@@ -45,8 +45,8 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
-  const createUserData = async (fname, birthday, userLocation) => {
+/*
+  const createUserData = async (fname, birthday, userLocation, points) => {
     try {
       const user = auth.currentUser;
 
@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
         firstName: fname,
         birthday: birthday,
         userLocation: userLocation,
+        points: points
       });
 
       console.log('User profile updated successfully!');
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-
+*/
   const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -93,3 +94,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+export const useAuth = () => useContext(AuthContext);

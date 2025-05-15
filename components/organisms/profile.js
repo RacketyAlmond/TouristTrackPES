@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,13 +15,26 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData } = useUser();
+  const { updateUserData, getUserPoints } = useUser();
 
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
+  const [points, setPoints] = useState(null);
 
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        const userPoints = await getUserPoints();
+        setPoints(userPoints);
+      } catch (err) {
+        console.error('Failed to load user points:', err);
+      }
+    };
+
+    fetchPoints();
+  }, []);
   const getter = async () => {
     const user = auth.currentUser;
     console.log(`user = ${user.uid}`);
@@ -67,18 +80,16 @@ const ProfileScreen = ({ onSignOut }) => {
 
   return (
     <View style={styles.container}>
-      {/* Background map image */}
       <Image
-        source={map} // Replace with actual map URL
+        source={map}
         style={styles.mapBackground}
       />
 
-      {/* Back Button */}
       <TouchableOpacity style={styles.backButton}>
         <Icon name='arrow-back' size={24} color='black' />
       </TouchableOpacity>
 
-      {/* Profile Picture with Edit Icon */}
+
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />
         <TouchableOpacity style={styles.editIcon}>
@@ -86,7 +97,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Username */}
       <View style={styles.mainRow}>
         {editingField === 'fname' ? (
           <TextInput
@@ -103,7 +113,16 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Location */}
+      <View style={styles.mainRow}>
+        <Text style={styles.mainRow}>{fname}</Text>
+        <TouchableOpacity onPress={() => setEditingField('fname')}>
+          <Icon name='edit' size={20} color='gray' />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.mainRow}>
+        <Text style={styles.mainRow}>{points}</Text>
+      </View>
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
@@ -122,7 +141,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* About */}
       <Text style={styles.sectionTitle}>Sobre mí</Text>
       <View style={styles.infoRow}>
         {editingField === 'about' ? (
@@ -141,7 +159,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Birthdate */}
       <Text style={styles.sectionTitle}>Fecha de nacimiento</Text>
       <View style={styles.infoRow}>
         {editingField === 'birthdate' ? (
@@ -159,7 +176,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Buttons for Comments & Reviews */}
       <TouchableOpacity style={styles.actionButton}>
         <Icon name='visibility' size={16} color='black' />
         <Text style={styles.actionButtonText}>Ver mis comentarios</Text>
@@ -170,14 +186,12 @@ const ProfileScreen = ({ onSignOut }) => {
         <Text style={styles.actionButtonText}>Ver mis reseñas</Text>
       </TouchableOpacity>
 
-      {/* Save Button (Only visible in edit mode) */}
       {editingField && (
         <TouchableOpacity style={styles.saveButton} onPress={handleSend}>
           <Text style={styles.saveText}>Guardar cambios</Text>
         </TouchableOpacity>
       )}
 
-      {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
         <Text style={styles.logoutText}>Cerrar sesión</Text>
       </TouchableOpacity>

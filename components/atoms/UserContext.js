@@ -8,7 +8,7 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
 
-  const createUserData = async (fname, birthday, userLocation, about) => {
+  const createUserData = async (fname, birthday, userLocation, about, points) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -21,6 +21,8 @@ export const UserProvider = ({ children }) => {
         birthday: birthday,
         userLocation: userLocation,
         about: about,
+        points: points,
+
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -35,7 +37,7 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
-  const updateUserData = async (fname, birthday, userLocation, about) => {
+  const updateUserData = async (fname, birthday, userLocation, about, points) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -49,6 +51,8 @@ export const UserProvider = ({ children }) => {
         birthday: birthday,
         userLocation: userLocation,
         about: about,
+        points: points,
+
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -85,6 +89,26 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const getUserPoints = async () => {
+    const user = auth.currentUser;
+    try {
+      if (!user) {
+        throw new Error('No user is signed in');
+      }
+
+      const userDoc = await getDoc(doc(db, 'Users', user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        return data.points;
+      }
+
+      console.log('User points returned successfully!');
+    } catch (error) {
+      console.error('Error fetching points:', error);
+      throw error;
+    }
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -93,6 +117,7 @@ export const UserProvider = ({ children }) => {
         createUserData,
         updateUserData,
         getUserData,
+        getUserPoints,
       }}
     >
       {children}
