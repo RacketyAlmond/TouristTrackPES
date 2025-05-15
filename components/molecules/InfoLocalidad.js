@@ -17,7 +17,7 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       const fetchRatingStats = async () => {
         try {
           const response = await fetch(
-            `http://192.168.1.50:3001/ratings/location/${city}/stats`,
+            `http://192.168.36.70:3001/ratings/location/${city}/stats`,
           );
           const data = await response.json();
           setRatingStats({

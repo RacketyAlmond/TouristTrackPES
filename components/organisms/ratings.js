@@ -73,7 +73,7 @@ const RatingScreen = ({ route }) => {
   const fetchRatings = async (city) => {
     try {
       const response = await fetch(
-        `http://192.168.1.50:3001/ratings/location/${city}`,
+        `http://192.168.36.70:3001/ratings/location/${city}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -95,7 +95,7 @@ const RatingScreen = ({ route }) => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`http://192.168.1.50:3001/ratings/${id}`, {
+            await fetch(`http://192.168.36.70:3001/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -125,7 +125,7 @@ const RatingScreen = ({ route }) => {
 
     try {
       const response = await fetch(
-        `http://192.168.1.50:3001/ratings/${ratingToUpdate.id}`,
+        `http://192.168.36.70:3001/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -176,7 +176,7 @@ const RatingScreen = ({ route }) => {
     };
 
     try {
-      const response = await fetch('http://192.168.1.50:3001/ratings', {
+      const response = await fetch('http://192.168.36.70:3001/ratings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRatingData),

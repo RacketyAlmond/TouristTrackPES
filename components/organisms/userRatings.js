@@ -45,7 +45,7 @@ const RatingScreen = () => {
   const fetchRatings = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.50:3001/ratings/author/${loggedInUser.id}`,
+        `http://192.168.36.70:3001/ratings/author/${loggedInUser.id}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -65,7 +65,7 @@ const RatingScreen = () => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`http://192.168.1.50:3001/ratings/${id}`, {
+            await fetch(`http://192.168.36.70:3001/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -94,7 +94,7 @@ const RatingScreen = () => {
 
     try {
       const response = await fetch(
-        `http://192.168.1.50:3001/ratings/${ratingToUpdate.id}`,
+        `http://192.168.36.70:3001/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
     marginBottom: 8, // espacio entre la localidad y el contenido de la reseña
     marginLeft: 10, // o el margen que desees
   },
-  reviewAndLocationContainer: { flexDirection: 'column'},
+  reviewAndLocationContainer: { flexDirection: 'column' },
 });
 
 export default RatingScreen;
