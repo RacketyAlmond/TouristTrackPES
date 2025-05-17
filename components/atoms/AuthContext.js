@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
       throw error;
     }
   };
-/*
+  /*
   const createUserData = async (fname, birthday, userLocation, points) => {
     try {
       const user = auth.currentUser;
