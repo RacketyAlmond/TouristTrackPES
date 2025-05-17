@@ -17,8 +17,6 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 //import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
-import { API_BASE_URL } from '../../utilis/api';
-
 
 export default function Chats() {
   const currentUser = {
@@ -43,7 +41,7 @@ export default function Chats() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/allowed-chats/users/${idCurrentSession}`,
+        `https://touristrack.vercel.app/allowed-chats/users/${idCurrentSession}`,
       );
 
       if (!response.ok) {
@@ -84,7 +82,7 @@ export default function Chats() {
   const deleteAllowedChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/allowed-chats/between/${user1Id}/${user2Id}`,
+        `https://touristrack.vercel.app/allowed-chats/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -131,7 +129,7 @@ export default function Chats() {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/messages/between/${user1Id}/${user2Id}`,
+        `https://touristrack.vercel.app/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -142,7 +140,7 @@ export default function Chats() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      setChats(chats.filter((chat) => chat.id !== user2Id))
+      setChats(chats.filter((chat) => chat.id !== user2Id));
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');

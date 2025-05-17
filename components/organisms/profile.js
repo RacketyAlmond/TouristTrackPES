@@ -80,15 +80,11 @@ const ProfileScreen = ({ onSignOut }) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={map}
-        style={styles.mapBackground}
-      />
+      <Image source={map} style={styles.mapBackground} />
 
       <TouchableOpacity style={styles.backButton}>
         <Icon name='arrow-back' size={24} color='black' />
       </TouchableOpacity>
-
 
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />

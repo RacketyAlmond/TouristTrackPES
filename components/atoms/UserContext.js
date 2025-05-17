@@ -8,7 +8,13 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
 
-  const createUserData = async (fname, birthday, userLocation, about, points) => {
+  const createUserData = async (
+    fname,
+    birthday,
+    userLocation,
+    about,
+    points,
+  ) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -22,7 +28,6 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
-
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -37,7 +42,13 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
-  const updateUserData = async (fname, birthday, userLocation, about, points) => {
+  const updateUserData = async (
+    fname,
+    birthday,
+    userLocation,
+    about,
+    points,
+  ) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -52,7 +63,6 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
-
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -107,7 +117,7 @@ export const UserProvider = ({ children }) => {
       console.error('Error fetching points:', error);
       throw error;
     }
-  }
+  };
 
   return (
     <UserContext.Provider

@@ -11,7 +11,6 @@ import Title from '../atoms/title';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { API_BASE_URL } from '../../utilis/api';
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
@@ -23,7 +22,9 @@ export default function Forum({ route }) {
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+      const response = await fetch(
+        `https://touristrack.vercel.app/users/${userId}`,
+      );
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -44,7 +45,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/forums/${forumId}/preguntas`,
+        `https://touristrack.vercel.app/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
@@ -111,7 +112,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/forums/${forumId}/preguntas/`,
+          `https://touristrack.vercel.app/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {

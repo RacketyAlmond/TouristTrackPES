@@ -10,7 +10,6 @@ import {
 import ChatHeader from './chatHeader.js';
 import MessageChatList from './messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
-import { API_BASE_URL } from '../../utilis/api';
 
 const PersonalChat = ({ route, navigation }) => {
   const userData = route.params.User;
@@ -28,7 +27,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/messages/between/${idCurrentSession}/${userData.id}`,
+        `https://touristrack.vercel.app/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -57,7 +56,7 @@ const PersonalChat = ({ route, navigation }) => {
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pending-requests`, {
+      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +121,7 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`${API_BASE_URL}/messages`, {
+        const response = await fetch(`https://touristrack.vercel.app/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
-import { API_BASE_URL } from '../../utilis/api';
 
 export default function Question({
   forumId,
@@ -26,7 +25,9 @@ export default function Question({
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+      const response = await fetch(
+        `https://touristrack.vercel.app/users/${userId}`,
+      );
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -46,7 +47,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -67,7 +68,7 @@ export default function Question({
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
 
       const json = await response.json();
@@ -101,7 +102,7 @@ export default function Question({
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {
