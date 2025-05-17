@@ -8,6 +8,7 @@ import {
   Text,
 } from 'react-native';
 import Title from '../atoms/title';
+import DetailsAct from '../atoms/detailsAct';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,10 +16,30 @@ import config from '../../config';
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
+  const [actDescription, setActDescription] = useState('');
+  const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
+
+  /*obtiene la información de la actividad*/
+  const getForumDetails = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
+      const json = await response.json();
+      if (json.success && json.forum) {
+        const forum = json.forum;
+        const actividad = forum.Actividad?.trim();
+        const descripcion = forum.Descripcion ? forum.Descripcion : '';
+
+        setIsActividad(!!actividad);
+        setActDescription(actividad ? descripcion : '');
+      }
+    } catch (error) {
+      console.error('Error al obtener detalles del foro:', error);
+    }
+  };
 
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
@@ -71,6 +92,7 @@ export default function Forum({ route }) {
   };
 
   useEffect(() => {
+    getForumDetails();
     getQuestions();
   }, []);
 
@@ -189,6 +211,10 @@ export default function Forum({ route }) {
             }}
           >
             <Title title={localityName} />
+
+            {isActividad && actDescription ? (
+              <DetailsAct descriptionText={actDescription} />
+            ) : null}
 
             {/* Campo para escribir una nueva pregunta */}
             <View

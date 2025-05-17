@@ -8,6 +8,7 @@ import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
+import CrearForosActividades from './components/molecules/crearForosActividades';
 
 import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/molecules/personalChat';
@@ -22,6 +23,9 @@ export default function App() {
   return (
     <UserProvider>
       <AuthProvider>
+        {/* Componente para crear foros de actividades y sincronizar cada semana */}
+        <CrearForosActividades />
+
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
