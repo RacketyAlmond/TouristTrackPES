@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { useEffect, useState } from 'react';
 import config from '../../config';
 
-const EXTERNAL_API = config.EXTERNAL_API; // Pon aquí la URL externa real
+const EXTERNAL_API = config.EXTERNAL_API;
 const BASE_URL = config.BASE_URL;
 
-export default function CrearForosActividades() {
+export default function useSyncForosActividades() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /*Obtener actividades de la API externa*/
   const fetchActividades = async () => {
     try {
-      const response = await fetch(`${EXTERNAL_API}`); // Ajusta endpoint real de actividades externas
+      const response = await fetch(EXTERNAL_API);
       const data = await response.json();
-      console.log('📥 Actividades recibidas:', data);
       if (!response.ok) {
         const msg = data?.message || 'Error al obtener actividades';
         throw new Error(msg);
       }
+      console.log('📥 Actividades recibidas:', data);
       return data;
     } catch (err) {
       console.error('Error fetchActividades:', err);
@@ -27,7 +25,6 @@ export default function CrearForosActividades() {
     }
   };
 
-  /*Obtener foros de tu backend*/
   const fetchForos = async () => {
     try {
       const response = await fetch(`${BASE_URL}/forums`);
@@ -42,7 +39,6 @@ export default function CrearForosActividades() {
     }
   };
 
-  /*Crear foro en tu backend*/
   const crearForo = async (actividad) => {
     try {
       const response = await fetch(`${BASE_URL}/forums`, {
@@ -62,6 +58,7 @@ export default function CrearForosActividades() {
       });
       const json = await response.json();
       if (!response.ok) throw new Error(json.message || 'Error al crear foro');
+      console.log('✅ Foro creado:', actividad.nom);
       return true;
     } catch (err) {
       console.error('Error crearForo:', err);
@@ -102,24 +99,14 @@ export default function CrearForosActividades() {
   };
 
   useEffect(() => {
-    console.log('▶️ Ejecutando sincronización de foros...');
     sincronizarForosActividades();
 
     const interval = setInterval(() => {
       sincronizarForosActividades();
-    }, 604800000); // 7 días en milisegundos
+    }, 604800000); // 7 días
 
     return () => clearInterval(interval);
   }, []);
 
-  if (loading) return <ActivityIndicator size='large' color='#572364' />;
-  if (error) return <Text>Error: {error}</Text>;
-
-  return (
-    <View>
-      <Text>
-        Sincronización de Foros de Actividades realizada correctamente.
-      </Text>
-    </View>
-  );
+  return { loading, error };
 }

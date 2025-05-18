@@ -16,7 +16,7 @@ import config from '../../config';
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
-  const [actDescription, setActDescription] = useState('');
+  const [actividadInfo, setActividadInfo] = useState('');
   const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -28,13 +28,28 @@ export default function Forum({ route }) {
     try {
       const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
       const json = await response.json();
+
       if (json.success && json.forum) {
         const forum = json.forum;
-        const actividad = forum.Actividad?.trim();
-        const descripcion = forum.Descripcion ? forum.Descripcion : '';
 
-        setIsActividad(!!actividad);
-        setActDescription(actividad ? descripcion : '');
+        const isActividadForum =
+          forum.Actividad !== undefined && forum.Actividad !== null;
+        setIsActividad(isActividadForum);
+
+        if (isActividadForum) {
+          // Build full actividad object from root fields
+          const actividadData = {
+            Titulo: forum.Actividad,
+            Descripcion: forum.Descripcion ?? '',
+            Ubicacion: forum.Ubicacion ?? { latitud: 0, longitud: 0 },
+            DataIni: forum.DataIni ?? '',
+            DataFi: forum.DataFi ?? '',
+            Creador: forum.Creador ?? '',
+          };
+          setActividadInfo(actividadData);
+        } else {
+          setActividadInfo(null);
+        }
       }
     } catch (error) {
       console.error('Error al obtener detalles del foro:', error);
@@ -182,20 +197,15 @@ export default function Forum({ route }) {
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
         source={require('../../public/mapa.png')}
-        style={{
-          flex: 1,
-          width: '100%',
-          height: '100%',
-        }}
+        style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode='cover'
       >
-        {/* Barra de búsqueda */}
         <View style={{ flex: 1, marginTop: 40, padding: 20 }}>
           <ForoSearchBar
             onSearch={handleSearch}
-            availableNationalities={availableNationalities} // Pasar las nacionalidades únicas
-            selectedCountries={selectedCountries} // Pasar los países seleccionados
-            setSelectedCountries={handleFilterByCountries} // Actualizar los países seleccionados
+            availableNationalities={availableNationalities}
+            selectedCountries={selectedCountries}
+            setSelectedCountries={handleFilterByCountries}
           />
 
           <View
@@ -212,17 +222,51 @@ export default function Forum({ route }) {
           >
             <Title title={localityName} />
 
-            {isActividad && actDescription ? (
-              <DetailsAct descriptionText={actDescription} />
-            ) : null}
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingBottom: 20 }}
+              keyboardShouldPersistTaps='handled'
+            >
+              {isActividad && actividadInfo ? (
+                <>
+                  <DetailsAct actividadInfo={actividadInfo} />
 
-            {/* Campo para escribir una nueva pregunta */}
+                  {/* Separador entre DetailsAct y Preguntas */}
+                  <View style={{ marginVertical: 20, alignItems: 'center' }}>
+                    <View
+                      style={{
+                        marginTop: 5,
+                        height: 2,
+                        width: '1000%',
+                        backgroundColor: '#572364',
+                        borderRadius: 1,
+                      }}
+                    />
+                  </View>
+                </>
+              ) : null}
+
+              {/* Lista de preguntas */}
+              {filteredQuestions.map((question, index) => (
+                <View key={index} style={{ marginVertical: 0 }}>
+                  <Question
+                    forumId={forumId}
+                    questionId={question.id}
+                    userId={question.userId}
+                    text={question.question}
+                    user={question.user}
+                    date={question.date}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+
+            {/* Campo para escribir una nueva pregunta: fuera del ScrollView */}
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: 20,
-                marginBottom: 20,
+                marginTop: 10,
               }}
             >
               <TextInput
@@ -232,6 +276,7 @@ export default function Forum({ route }) {
                   borderColor: '#ccc',
                   borderRadius: 5,
                   padding: 10,
+                  backgroundColor: 'white',
                 }}
                 placeholder='Escribe tu pregunta...'
                 placeholderTextColor='#888'
@@ -250,21 +295,6 @@ export default function Forum({ route }) {
                 <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-              {/* Lista de preguntas */}
-              {filteredQuestions.map((question, index) => (
-                <View key={index} style={{ marginVertical: 0 }}>
-                  <Question
-                    forumId={forumId}
-                    questionId={question.id}
-                    userId={question.userId}
-                    text={question.question}
-                    user={question.user}
-                    date={question.date}
-                  />
-                </View>
-              ))}
-            </ScrollView>
           </View>
         </View>
       </ImageBackground>
