@@ -16,10 +16,10 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.company.touristrack",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "package": "com.company.touristrack"
+        "backgroundColor": "#ffffff"
       }
     },
     "web": {
