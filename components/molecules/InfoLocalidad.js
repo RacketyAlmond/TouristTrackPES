@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function InfoLocalidad({ city, numTourists, onClose }) {
+export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
   if (!city) return null;
   const locality = {
@@ -69,6 +69,17 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
         }
       >
         <Text style={styles.textButton}>Ver más estadísticas</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.estadisticasButton}
+        onPress={() =>
+          navigation.navigate('Forum', {
+            localityName: city,
+            forumId: id,
+          })
+        }
+      >
+        <Text style={styles.textButton}>Ir al foro</Text>
       </TouchableOpacity>
     </View>
   );

@@ -22,6 +22,43 @@ export default function Map() {
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [location, setLocation] = useState(null);
+  const [cityId, setCityId] = useState(null);
+
+  const getIdCity = async () => {
+    try {
+      const response = await fetch(`https://touristrack.vercel.app/forums`);
+      const json = await response.json();
+
+      if (json.success) {
+        // Busca la ciudad que coincida con el nombre almacenado en `city`
+        const cityData = json.forums.find((forum) => forum.Localidad === city);
+
+        if (cityData) {
+          console.log(`ID de la ciudad "${city}":`, cityData.id);
+          return cityData.id; // Devuelve la ID de la ciudad
+        } else {
+          console.log(`No se encontró la ciudad "${city}" en los datos.`);
+          return null; // Si no se encuentra, devuelve null
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener la ID de la ciudad:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCityId = async () => {
+      if (city) {
+        const id = await getIdCity();
+        console.log(`ID de la ciudad "${city}":`, id);
+        setCityId(id);
+      } else {
+        setCityId(null);
+      }
+    };
+
+    fetchCityId();
+  }, [city]);
 
   useEffect(() => {
     let subscription;
@@ -230,6 +267,7 @@ export default function Map() {
       {city && (
         <InfoLocalidad
           city={city}
+          id={cityId}
           numTourists={totalTouristsOfMunicipality}
           onClose={handleCloseInfoLocalidad}
         />
