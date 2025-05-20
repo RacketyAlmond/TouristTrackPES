@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import { useAuth } from '../atoms/AuthContext.js';
 import map from '../../public/mapa.png';
-
 const AuthScreen = ({ onAuthenticated }) => {
-  const { signUp, signIn } = useAuth();
+  const { signUp, signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(true);
@@ -31,6 +30,8 @@ const AuthScreen = ({ onAuthenticated }) => {
       setError(error.message);
     }
   };
+
+
 
   return (
     <ImageBackground source={map} style={styles.backgroundImage}>
@@ -55,9 +56,9 @@ const AuthScreen = ({ onAuthenticated }) => {
           <Text style={styles.buttonText}>
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
-          <Text style={styles.toggleText}>
+          <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
+            <Text style={styles.buttonText}>Sign in with Google</Text>
+          </TouchableOpacity>          <Text style={styles.toggleText}>
             {isSignUp
               ? 'Already have an account? Sign In'
               : 'New user? Sign Up'}

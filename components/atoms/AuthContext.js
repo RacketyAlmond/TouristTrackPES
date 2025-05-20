@@ -1,20 +1,52 @@
-// AuthContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext  } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { setDoc, doc } from 'firebase/firestore'; //En node module si tieneis firebase instalado ;P
 import {
+  signInWithCredential,
+  GoogleAuthProvider,
+  onAuthStateChanged,
+  signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
   updateProfile,
 } from 'firebase/auth';
+
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import * as AuthSession from 'expo-auth-session';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    iosClientId: '1096375029000-bl6bd1lvlji21jfpqdri55ejopbg7j81.apps.googleusercontent.com',
+    webClientId: '***REMOVED***',
+  });
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const signInWithGoogleAsync = async () => {
+      if (response?.type === 'success') {
+        const { id_token } = response.params;
+        const credential = GoogleAuthProvider.credential(id_token);
+        await signInWithCredential(auth, credential);
+      }
+    };
+    signInWithGoogleAsync();
+  }, [response]);
 
   const signUp = async (email, password) => {
     const userCredential = await createUserWithEmailAndPassword(
@@ -86,9 +118,14 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+
+  const signInWithGoogle = async () => {
+    await promptAsync();
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, loading, signUp, updateProfileData, signIn, logout }}
+      value={{ user, loading, signUp, updateProfileData, signIn, logout, signInWithGoogle, }}
     >
       {children}
     </AuthContext.Provider>
