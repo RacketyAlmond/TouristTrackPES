@@ -6,7 +6,37 @@ const ranks = [
     name: 'Viajero Primerizo',
     name_en: 'First Time Traveler',
     minLevel: 1,
-    icon: require('../../public/747274.png'), // reemplaza con tu ruta real
+    icon: require('../../public/download.png'), // reemplaza con tu ruta real
+  },
+  {
+    name: 'Mochilero Curioso',
+    name_en: 'Keen Backpacker',
+    minLevel: 4,
+    icon: require('../../public/download (4).png'),
+  },
+  {
+    name: 'Aventurero Intrépido',
+    name_en: 'Fearless Adventurer',
+    minLevel: 7,
+    icon: require('../../public/download (5).png'),
+  },
+  {
+    name: 'Explorador Nato',
+    name_en: 'Master Explorer',
+    minLevel: 10,
+    icon: require('../../public/download (5).png'),
+  },
+  {
+    name: 'Leyenda Nómada',
+    name_en: 'Nomadic Legend',
+    minLevel: 15,
+    icon: require('../../public/download (5).png'),
+  },
+  {
+    name: 'TROTAMUNDOS',
+    name_en: 'World Wanderer',
+    minLevel: 20,
+    icon: require('../../public/download (5).png'),
   },
 ];
 
@@ -69,6 +99,12 @@ const LevelProgress = ({ points }) => {
   const rank = getRankByLevel(levelInfo.currentLevel);
   return (
     <View style={styles.levelContainer}>
+      {rank && (
+        <View style={styles.rankContainer}>
+          <Image source={rank.icon} style={styles.rankIcon} />
+          <Text style={styles.rankText}>{rank.name}</Text>
+        </View>
+      )}
       <View style={styles.progressRow}>
         <View style={styles.progressBarBackground}>
           <View
@@ -85,13 +121,6 @@ const LevelProgress = ({ points }) => {
         {points} puntos
         {levelInfo.nextLevel ? ` - Próximo nivel: ${levelInfo.nextLevel}` : ''}
       </Text>
-
-      {rank && (
-        <View style={styles.rankContainer}>
-          <Image source={rank.icon} style={styles.rankIcon} />
-          <Text style={styles.rankText}>{rank.name}</Text>
-        </View>
-      )}
     </View>
   );
 };
@@ -139,14 +168,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
     padding: 8,
     borderRadius: 10,
   },
 
   rankIcon: {
-    width: 24,
-    height: 24,
+    width: 48,
+    height: 48,
     marginRight: 8,
   },
 
