@@ -13,6 +13,7 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import LevelProgress from '../molecules/levelProgress.js';
 
 const ProfileScreen = ({ onSignOut }) => {
   const { updateUserData, getUserPoints } = useUser();
@@ -26,15 +27,16 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-        const userPoints = await getUserPoints();
-        setPoints(userPoints);
+        //const userPoints = await getUserPoints();
+        //setPoints(userPoints);
+        setPoints(59999);
       } catch (err) {
         console.error('Failed to load user points:', err);
       }
     };
 
     fetchPoints();
-  }, []);
+  }, [points]);
   const getter = async () => {
     const user = auth.currentUser;
     console.log(`user = ${user.uid}`);
@@ -116,9 +118,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{points}</Text>
-      </View>
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
