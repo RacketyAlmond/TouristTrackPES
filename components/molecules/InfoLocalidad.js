@@ -1,16 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 export default function InfoLocalidad({ city, numTourists, onClose }) {
   const navigation = useNavigation();
+
+  const [ratingStats, setRatingStats] = useState({ average: 0, count: 0 });
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!city) return;
+
+      const fetchRatingStats = async () => {
+        try {
+          const response = await fetch(
+            `http://192.168.36.70:3001/ratings/location/${city}/stats`,
+          );
+          const data = await response.json();
+          setRatingStats({
+            average: data.averageStars || 0,
+            count: data.totalRatings || 0,
+          });
+        } catch (error) {
+          console.error('Error fetching rating stats:', error);
+        }
+      };
+
+      fetchRatingStats();
+    }, [city]),
+  );
+
   if (!city) return null;
   const locality = {
     name: city,
     comunidad: 'Comunidad',
-    rating: 4.5,
-    ratingCount: 1000,
+    rating: ratingStats.average,
+    ratingCount: ratingStats.count,
     tourists: numTourists,
     expenses: 100,
   };
@@ -22,14 +50,21 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
 
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
-        stars.push(<FontAwesome key={i} name='star' size={20} color='gold' />);
+        stars.push(
+          <FontAwesome key={i} name='star' size={20} color='#F5A623' />,
+        );
       } else if (i === fullStars + 1 && halfStar) {
         stars.push(
-          <FontAwesome key={i} name='star-half-empty' size={20} color='gold' />,
+          <FontAwesome
+            key={i}
+            name='star-half-empty'
+            size={20}
+            color='#F5A623'
+          />,
         );
       } else {
         stars.push(
-          <FontAwesome key={i} name='star-o' size={20} color='gold' />,
+          <FontAwesome key={i} name='star-o' size={20} color='#F5A623' />,
         );
       }
     }
@@ -44,12 +79,16 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       </TouchableOpacity>
       <Text style={styles.title}>{locality.name}</Text>
       <Text style={styles.comunidad}>{locality.comunidad}</Text>
-      <View style={styles.ratingContainer}>
+      <TouchableOpacity
+        style={styles.ratingContainer}
+        onPress={() =>
+          navigation.navigate('Valoraciones', { localidad: locality })
+        }
+      >
         {renderStars(locality.rating)}
-        <Text style={styles.ratingText}>
-          {locality.rating} ({locality.ratingCount})
-        </Text>
-      </View>
+        <Text style={styles.ratingAverageText}>{locality.rating}</Text>
+        <Text style={styles.ratingCountText}>({locality.ratingCount})</Text>
+      </TouchableOpacity>
       <View style={{ flexDirection: 'row' }}>
         <Text style={styles.info}>Número de turistas: </Text>
         <Text style={styles.valueInfo}>{locality.tourists}</Text>
@@ -105,7 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 0,
-    color: 'rebeccapurple',
+    color: '#572364',
   },
   comunidad: {
     fontSize: 15,
@@ -117,9 +156,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  ratingText: {
+  ratingAverageText: {
     fontSize: 16,
     marginLeft: 5,
+    color: '#572364',
+  },
+  ratingCountText: {
+    fontSize: 16,
+    marginLeft: 5,
+    color: 'gray',
   },
   info: {
     fontWeight: 'bold',
@@ -134,7 +179,7 @@ const styles = StyleSheet.create({
   valueInfo: {
     fontSize: 16,
     marginBottom: 5,
-    color: 'rebeccapurple',
+    color: '#572364',
   },
   estadisticasButton: {
     alignItems: 'center',
@@ -146,7 +191,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    backgroundColor: 'rebeccapurple',
+    backgroundColor: '#572364',
   },
   textButton: {
     color: 'white',
