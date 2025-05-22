@@ -6,37 +6,37 @@ const ranks = [
     name: 'Viajero Primerizo',
     name_en: 'First Time Traveler',
     minLevel: 1,
-    icon: require('../../public/download.png'), // reemplaza con tu ruta real
+    icon: require('../../public/traveler.png'), // reemplaza con tu ruta real
   },
   {
     name: 'Mochilero Curioso',
     name_en: 'Keen Backpacker',
     minLevel: 4,
-    icon: require('../../public/download (4).png'),
+    icon: require('../../public/backpacker.png'),
   },
   {
     name: 'Aventurero Intrépido',
     name_en: 'Fearless Adventurer',
     minLevel: 7,
-    icon: require('../../public/download (5).png'),
+    icon: require('../../public/adventurer.png'),
   },
   {
     name: 'Explorador Nato',
     name_en: 'Master Explorer',
     minLevel: 10,
-    icon: require('../../public/download (5).png'),
+    icon: require('../../public/explorer.png'),
   },
   {
     name: 'Leyenda Nómada',
     name_en: 'Nomadic Legend',
     minLevel: 15,
-    icon: require('../../public/download (5).png'),
+    icon: require('../../public/legend.png'),
   },
   {
     name: 'TROTAMUNDOS',
     name_en: 'World Wanderer',
     minLevel: 20,
-    icon: require('../../public/download (5).png'),
+    icon: require('../../public/globetrotter.png'),
   },
 ];
 

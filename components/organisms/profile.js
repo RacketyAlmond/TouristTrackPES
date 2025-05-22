@@ -29,7 +29,7 @@ const ProfileScreen = ({ onSignOut }) => {
       try {
         //const userPoints = await getUserPoints();
         //setPoints(userPoints);
-        setPoints(4000);
+        setPoints(2500);
       } catch (err) {
         console.error('Failed to load user points:', err);
       }
