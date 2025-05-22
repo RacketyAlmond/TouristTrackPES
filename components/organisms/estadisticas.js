@@ -18,6 +18,7 @@ import {
   listYearsOfMunicipality,
   listOriginCountriesOfMunicipality,
 } from '../../dataestur';
+import { useTranslation } from 'react-i18next';
 import { getCountryFlag } from '../../utils';
 import SelectorPlataforma from '../molecules/selectorPlataforma';
 import { transformDataForChart } from '../molecules/transformDataForChart';
@@ -25,6 +26,7 @@ import { transformDataForChart } from '../molecules/transformDataForChart';
 export default function Estadisticas() {
   const route = useRoute();
   const { locality } = route.params;
+  const { t } = useTranslation('estadisticas');
 
   const [dataMunicipality, setDataMunicipality] = useState([]);
 
@@ -111,7 +113,7 @@ export default function Estadisticas() {
         <View style={styles.main_container}>
           {/*estadisticas*/}
           <View style={styles.cabecera}>
-            <Text style={styles.textoCabecera}>Estadísticas</Text>
+            <Text style={styles.textoCabecera}>{t('header')}</Text>
           </View>
 
           {/*ciudad*/}
@@ -122,7 +124,7 @@ export default function Estadisticas() {
 
           {/*nº turistas*/}
           <View style={styles.numeroTuristas_container}>
-            <Text style={styles.titulos_morados}>Nº de turistas:</Text>
+            <Text style={styles.titulos_morados}>{t('tourists')}</Text>
             <Text style={styles.titulos_morados}>{locality.tourists}</Text>
           </View>
           <View style={styles.select_container}>
@@ -150,9 +152,7 @@ export default function Estadisticas() {
 
           {/*top paises*/}
           <View style={styles.sub_container}>
-            <Text style={styles.titulos_morados}>
-              Top países de los visitantes
-            </Text>
+            <Text style={styles.titulos_morados}>{t('top')}</Text>
             {topPaises.map((topPais, index) => (
               <View key={index} style={styles.pais_container}>
                 <Text style={styles.pais}>
@@ -168,7 +168,7 @@ export default function Estadisticas() {
 
           {/*gasto*/}
           <View style={styles.numeroTuristas_container}>
-            <Text style={styles.titulos_morados}>Gasto</Text>
+            <Text style={styles.titulos_morados}>{t('expense')}</Text>
           </View>
           <View style={styles.numeroTuristas_container}>
             <SelectorPlataforma

@@ -1,14 +1,20 @@
+// components/molecules/InfoLocalidad.js
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 export default function InfoLocalidad({ city, numTourists, onClose }) {
   const navigation = useNavigation();
+  const { t } = useTranslation('info'); // ahora usamos el namespace "info"
+
   if (!city) return null;
+
+  // Datos de ejemplo; tú puedes reemplazarlos por props o estado real
   const locality = {
     name: city,
-    comunidad: 'Comunidad',
     rating: 4.5,
     ratingCount: 1000,
     tourists: numTourists,
@@ -17,13 +23,12 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
 
   const renderStars = (rating) => {
     const stars = [];
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
-
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
     for (let i = 1; i <= 5; i++) {
-      if (i <= fullStars) {
+      if (i <= full) {
         stars.push(<FontAwesome key={i} name='star' size={20} color='gold' />);
-      } else if (i === fullStars + 1 && halfStar) {
+      } else if (i === full + 1 && half) {
         stars.push(
           <FontAwesome key={i} name='star-half-empty' size={20} color='gold' />,
         );
@@ -33,7 +38,6 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
         );
       }
     }
-
     return stars;
   };
 
@@ -42,33 +46,34 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
         <MaterialIcons name='close' size={20} color='black' />
       </TouchableOpacity>
+
       <Text style={styles.title}>{locality.name}</Text>
-      <Text style={styles.comunidad}>{locality.comunidad}</Text>
+      <Text style={styles.comunidad}>{t('community')}</Text>
+
       <View style={styles.ratingContainer}>
         {renderStars(locality.rating)}
         <Text style={styles.ratingText}>
           {locality.rating} ({locality.ratingCount})
         </Text>
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.info}>Número de turistas: </Text>
+
+      <View style={styles.row}>
+        <Text style={styles.info}>{t('tourists')}:</Text>
         <Text style={styles.valueInfo}>{locality.tourists}</Text>
-        <Text style={styles.parameter}> anuales </Text>
+        <Text style={styles.parameter}> {t('annually')}</Text>
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.info}>Gasto medio: </Text>
+
+      <View style={styles.row}>
+        <Text style={styles.info}>{t('expenses')}:</Text>
         <Text style={styles.valueInfo}>{locality.expenses}€</Text>
-        <Text style={styles.parameter}> por persona y noche </Text>
+        <Text style={styles.parameter}> {t('perNight')}</Text>
       </View>
+
       <TouchableOpacity
         style={styles.estadisticasButton}
-        onPress={() =>
-          navigation.navigate('Estadisticas', {
-            locality: locality,
-          })
-        }
+        onPress={() => navigation.navigate('Estadisticas', { locality })}
       >
-        <Text style={styles.textButton}>Ver más estadísticas</Text>
+        <Text style={styles.textButton}>{t('viewStats')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -88,7 +93,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     elevation: 5,
-    zIndex: 1, // Asegura que el InfoLocalidad esté por encima del mapa
+    zIndex: 1,
   },
   closeButton: {
     position: 'absolute',
@@ -99,18 +104,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'gainsboro',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10, // Asegura que el botón de cerrar esté por encima del InfoLocalidad
+    zIndex: 10,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 0,
     color: 'rebeccapurple',
+    marginBottom: 4,
   },
   comunidad: {
     fontSize: 15,
-    marginBottom: 10,
     color: 'gray',
+    marginBottom: 10,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -121,20 +126,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 5,
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   info: {
     fontWeight: 'bold',
     fontSize: 16,
-    marginBottom: 5,
-  },
-  parameter: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: 'gray',
   },
   valueInfo: {
     fontSize: 16,
-    marginBottom: 5,
     color: 'rebeccapurple',
+    marginHorizontal: 4,
+  },
+  parameter: {
+    fontSize: 16,
+    color: 'gray',
   },
   estadisticasButton: {
     alignItems: 'center',
@@ -142,11 +150,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 55,
     marginVertical: 10,
+    backgroundColor: 'rebeccapurple',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
-    backgroundColor: 'rebeccapurple',
   },
   textButton: {
     color: 'white',

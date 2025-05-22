@@ -11,8 +11,10 @@ import Title from '../atoms/title';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 export default function Forum({ route }) {
+  const { t } = useTranslation('foro');
   const { forumId, localityName } = route.params;
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
@@ -22,7 +24,9 @@ export default function Forum({ route }) {
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`);
+      const response = await fetch(
+        `http://172.20.10.3:3001/users/${userId}`,
+      );
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -43,7 +47,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3001/forums/${forumId}/preguntas`,
+        `http://172.20.10.3:3001/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
@@ -110,7 +114,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `http://localhost:3001/forums/${forumId}/preguntas/`,
+          `http://172.20.10.3:3001/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {
@@ -206,7 +210,7 @@ export default function Forum({ route }) {
                   borderRadius: 5,
                   padding: 10,
                 }}
-                placeholder='Escribe tu pregunta...'
+                placeholder={t('write')} //'Escribe tu pregunta...'
                 placeholderTextColor='#888'
                 value={newQuestion}
                 onChangeText={setNewQuestion}

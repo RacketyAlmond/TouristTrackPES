@@ -10,8 +10,11 @@ import {
 import ChatHeader from './chatHeader.js';
 import MessageChatList from './messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
+import { useTranslation } from 'react-i18next';
+
 
 const PersonalChat = ({ route, navigation }) => {
+  const { t } = useTranslation('foro');
   const userData = route.params.User;
   const currentUser = route.params.currentUser;
   const idCurrentSession = currentUser.id;
@@ -27,7 +30,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `http://localhost:3001/messages/between/${idCurrentSession}/${userData.id}`,
+        `http://172.20.10.3:3001/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -56,7 +59,7 @@ const PersonalChat = ({ route, navigation }) => {
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/pending-requests`, {
+      const response = await fetch(`http://172.20.10.3:3001/pending-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,8 +83,8 @@ const PersonalChat = ({ route, navigation }) => {
     if (text.trim().length === 0) return;
     if (state === 2) {
       Alert.alert(
-        'Friend Request Sent',
-        `A friend request has been sent to ${userData.name}.`,
+        t('friend-request-sent'),
+        `${t('friend-request-sent-text')} ${userData.name}.`,
         [
           {
             text: 'OK',
@@ -98,8 +101,8 @@ const PersonalChat = ({ route, navigation }) => {
 
     if (state === 1) {
       Alert.alert(
-        'Friend Request Received',
-        `Accept the friend request to talk with ${userData.name}.`,
+        t('friend-request-sent'),
+        `${t('friend-request-sent-text')} ${userData.name}.`,
         [
           {
             text: 'OK',
@@ -121,7 +124,7 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`http://localhost:3001/messages`, {
+        const response = await fetch(`http://172.20.10.3:3001/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -138,7 +141,7 @@ const PersonalChat = ({ route, navigation }) => {
         }
       } catch (error) {
         console.error('Error sending message:', error);
-        Alert.alert('Error', 'Failed to send message. Please try again.');
+        Alert.alert('Error', t('error'));
       }
     }
   };

@@ -10,8 +10,10 @@ import {
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 export default function IndexForos() {
+  const { t } = useTranslation('foro');
   const [searchLocalidad, setSearchLocalidad] = useState('');
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
@@ -19,7 +21,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
+      const response = await fetch('http://172.20.10.3:3001/forums'); // Cambia esto por la URL de tu servidor
       const json = await response.json();
 
       if (json.success) {
@@ -41,7 +43,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/forums', {
+      const response = await fetch('http://172.20.10.3:3001/forums', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +109,7 @@ export default function IndexForos() {
             borderRadius: 20,
           }}
         >
-          <Title title='Foros' />
+          <Title title={t('header')} />
 
           {/* Campo para buscar un foro */}
           <View
@@ -126,7 +128,7 @@ export default function IndexForos() {
                 borderRadius: 5,
                 padding: 10,
               }}
-              placeholder='Busca una localidad...'
+              placeholder={t('search')} //'Busca una localidad...'
               placeholderTextColor='#888'
               value={searchLocalidad}
               onChangeText={setSearchLocalidad}

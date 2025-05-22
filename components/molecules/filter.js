@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-//para saber la lista de países en el filtro solo es necesario coger el array countryNames
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -14,22 +13,24 @@ import FilterBar from './filterBar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { AntDesign } from '@expo/vector-icons';
 import { getCountryFlag } from '../../utils';
+import { useTranslation } from 'react-i18next';
 
 export default function Filter({
   countryArray,
   selectedCountries,
   setSelectedCountries,
 }) {
+  const { t } = useTranslation();   // usamos namespace por defecto
   const [isModalVisible, setModalVisible] = useState(false);
   const [tempSelectedCountries, setTempSelectedCountries] = useState([]);
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
 
   useEffect(() => {
-    const countriesWithFlags = countryArray?.map((country) => ({
+    const withFlags = countryArray?.map((country) => ({
       name: country,
       flag: getCountryFlag(country),
     }));
-    setCountriesWithFlags(countriesWithFlags);
+    setCountriesWithFlags(withFlags);
   }, [countryArray]);
 
   const toggleModal = () => {
@@ -37,86 +38,97 @@ export default function Filter({
   };
 
   const applyFilters = () => {
-    /*comprueva que no se repitan los paises pq por alguna razón, si solo pasas un país en tempSelectedCountries,
-    este se duplica en selectedCountries a pesar de que selectedCountries estuviera vacío inicialmente*/
-    const newSelectedCountries = [
+    const newSelected = [
       ...selectedCountries,
       ...tempSelectedCountries.filter(
-        (tempCountry) =>
-          !selectedCountries.some(
-            (selectedCountry) => selectedCountry.name === tempCountry.name,
-          ),
+        (temp) =>
+          !selectedCountries.some((sel) => sel.name === temp.name)
       ),
     ];
-
-    setSelectedCountries(newSelectedCountries);
+    setSelectedCountries(newSelected);
     setTempSelectedCountries([]);
     toggleModal();
   };
 
   const selectCountry = (country) => {
-    if (!tempSelectedCountries.includes(country)) {
+    if (!tempSelectedCountries.some((c) => c.name === country.name)) {
       setTempSelectedCountries([...tempSelectedCountries, country]);
     }
   };
 
   const removeCountry = (country) => {
-    setSelectedCountries(
-      selectedCountries.filter((c) => c.name !== country.name),
+    setSelectedCountries((curr) =>
+      curr.filter((c) => c.name !== country.name)
     );
-    setTempSelectedCountries(
-      tempSelectedCountries.filter((c) => c.name !== country.name),
+    setTempSelectedCountries((curr) =>
+      curr.filter((c) => c.name !== country.name)
     );
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Filter</Text>
-      <Text style={styles.description}>
-        This filter allows you to select the countries you are interested in.
-      </Text>
+      <Text style={styles.title}>{t('filter.header')}</Text>
+      <Text style={styles.description}>{t('filter.description')}</Text>
 
-      <ScrollView horizontal style={styles.selectedCountriesContainer}>
+      <ScrollView
+        horizontal
+        style={styles.selectedCountriesContainer}
+        showsHorizontalScrollIndicator={false}
+      >
         {selectedCountries?.map(({ name, flag }) => (
           <View key={name} style={[styles.countryButton, styles.selected]}>
             <Image source={{ uri: flag }} style={styles.flag} />
-            <Text style={styles.countryName}>{name} </Text>
+            <Text style={styles.countryName}>{name}</Text>
             <TouchableOpacity onPress={() => removeCountry({ name })}>
-              <MaterialIcons name='cancel' size={20} color='white' />
+              <MaterialIcons name="cancel" size={20} color="white" />
             </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
 
       <TouchableOpacity onPress={toggleModal} style={styles.addButton}>
-        <Text style={styles.addButtonText}>Add filter</Text>
+        <Text style={styles.addButtonText}>{t('filter.click')}</Text>
       </TouchableOpacity>
 
-      <Modal visible={isModalVisible} animationType='slide' transparent>
+      <Modal visible={isModalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
-              <AntDesign name='close' size={24} color='black' />
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={toggleModal}
+            >
+              <AntDesign name="close" size={24} color="black" />
             </TouchableOpacity>
 
-            <ScrollView horizontal style={styles.selectedCountriesContainer}>
+            <ScrollView
+              horizontal
+              style={styles.selectedCountriesContainer}
+              showsHorizontalScrollIndicator={false}
+            >
               {tempSelectedCountries.map(({ name, flag }) => (
                 <View
                   key={name}
                   style={[styles.countryButton, styles.selected]}
                 >
                   <Image source={{ uri: flag }} style={styles.flag} />
-                  <Text style={styles.countryName}>{name} </Text>
+                  <Text style={styles.countryName}>{name}</Text>
                 </View>
               ))}
             </ScrollView>
+
             <FilterBar
               countriesWithFlags={countriesWithFlags}
               onSelect={selectCountry}
               selectedCountries={selectedCountries}
             />
-            <TouchableOpacity onPress={applyFilters} style={styles.applyButton}>
-              <Text style={styles.applyButtonText}>Apply Filters</Text>
+
+            <TouchableOpacity
+              onPress={applyFilters}
+              style={styles.applyButton}
+            >
+              <Text style={styles.applyButtonText}>
+                {t('filter.apply')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -142,6 +154,7 @@ const styles = StyleSheet.create({
   },
   description: {
     textAlign: 'justify',
+    marginBottom: 10,
   },
   selectedCountriesContainer: {
     marginTop: 10,
@@ -174,6 +187,12 @@ const styles = StyleSheet.create({
   },
   countryName: {
     fontSize: 16,
+    marginHorizontal: 5,
+  },
+  flag: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
   },
   modalOverlay: {
     flex: 1,
@@ -191,10 +210,6 @@ const styles = StyleSheet.create({
   closeButton: {
     alignSelf: 'flex-end',
   },
-  countryList: {
-    width: '100%',
-    marginTop: 20,
-  },
   applyButton: {
     marginTop: 20,
     backgroundColor: 'rebeccapurple',
@@ -205,10 +220,5 @@ const styles = StyleSheet.create({
   applyButtonText: {
     color: 'white',
     fontSize: 16,
-  },
-  flag: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
   },
 });

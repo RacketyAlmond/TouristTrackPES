@@ -1,3 +1,5 @@
+// ProfileScreen.jsx
+
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -13,49 +15,51 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
+// 1. Importa tu modal de idioma
+import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
+  const { t } = useTranslation('profile');
   const { updateUserData, getUserData } = useUser();
 
+  // Campos de usuario
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
 
+  // Estado para saber qué campo estamos editando
+  const [editingField, setEditingField] = useState(null);
+
+  // 2. Estado para controlar el modal de idioma
+  const [langModalVisible, setLangModalVisible] = useState(false);
+
+  // Función para cargar los datos de Firebase
   const getter = async () => {
     const user = auth.currentUser;
-    console.log(`user = ${user.uid}`);
-
-    if (!user) {
-      return Promise.reject(new Error('No user is signed in'));
+    if (!user) return;
+    try {
+      const userDoc = await getDoc(doc(db, 'Users', user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setFname(data.firstName);
+        setBirthdate(data.birthday);
+        setUserLocation(data.userLocation);
+        setAbout(data.about);
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
     }
-
-    return getDoc(doc(db, 'Users', user.uid))
-      .then((userDoc) => {
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          // console.log(`data = ${data.firstName}`);
-          // console.log(`userData.firstName = ${data.firstName}`);
-          // console.log(`userData.birthday = ${data.birthday}`);
-
-          setFname(data.firstName);
-          setBirthdate(data.birthday);
-          setUserLocation(data.userLocation);
-          setAbout(data.about);
-        }
-        console.log('User profile created successfully!');
-      })
-      .catch((error) => {
-        console.error('Error updating profile:', error);
-      });
   };
 
   useEffect(() => {
     getter();
   }, []);
 
-  const [editingField, setEditingField] = useState(null);
-
+  // Guarda los cambios en Firebase
   const handleSend = async () => {
     try {
       await updateUserData(fname, birthdate, userLocation, about);
@@ -68,10 +72,7 @@ const ProfileScreen = ({ onSignOut }) => {
   return (
     <View style={styles.container}>
       {/* Background map image */}
-      <Image
-        source={map} // Replace with actual map URL
-        style={styles.mapBackground}
-      />
+      <Image source={map} style={styles.mapBackground} />
 
       {/* Back Button */}
       <TouchableOpacity style={styles.backButton}>
@@ -86,7 +87,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Username */}
+      {/* Nombre */}
       <View style={styles.mainRow}>
         {editingField === 'fname' ? (
           <TextInput
@@ -103,8 +104,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Location */}
-
+      {/* Ubicación */}
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
         {editingField === 'userLocation' ? (
@@ -122,8 +122,8 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* About */}
-      <Text style={styles.sectionTitle}>Sobre mí</Text>
+      {/* About me */}
+      <Text style={styles.sectionTitle}>{t('about-me')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'about' ? (
           <TextInput
@@ -142,7 +142,7 @@ const ProfileScreen = ({ onSignOut }) => {
       </View>
 
       {/* Birthdate */}
-      <Text style={styles.sectionTitle}>Fecha de nacimiento</Text>
+      <Text style={styles.sectionTitle}>{t('birthdate')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'birthdate' ? (
           <TextInput
@@ -159,48 +159,52 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Buttons for Comments & Reviews */}
+      {/* --- Botones de acción --- */}
       <TouchableOpacity style={styles.actionButton}>
         <Icon name='visibility' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis comentarios</Text>
+        <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.actionButton}>
         <Icon name='star-border' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis reseñas</Text>
+        <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>
 
-      {/* Save Button (Only visible in edit mode) */}
+      {/* 3. Botón “Change Language” */}
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => setLangModalVisible(true)}
+      >
+        <MaterialCommunityIcons
+          name='translate' // o "translate-variant" si lo prefieres
+          size={16}
+          color='black'
+        />
+        <Text style={styles.actionButtonText}>{t('change-language')}</Text>
+      </TouchableOpacity>
+
+      {/* Save (solo en edición) */}
       {editingField && (
         <TouchableOpacity style={styles.saveButton} onPress={handleSend}>
-          <Text style={styles.saveText}>Guardar cambios</Text>
+          <Text style={styles.saveText}>{t('save-changes')}</Text>
         </TouchableOpacity>
       )}
 
-      {/* Logout Button */}
+      {/* Logout */}
       <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
-        <Text style={styles.logoutText}>Cerrar sesión</Text>
+        <Text style={styles.logoutText}>{t('log-out')}</Text>
       </TouchableOpacity>
+
+      {/* 4. Renderiza el modal de idioma */}
+      <LanguageModal
+        visible={langModalVisible}
+        onClose={() => setLangModalVisible(false)}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  mainRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    marginTop: 10,
-    fontSize: 20,
-  },
-  secoundRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    color: 'grey',
-    gap: 7,
-    fontSize: 15,
-    marginTop: 2,
-  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -238,6 +242,21 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 5,
   },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    marginTop: 10,
+    fontSize: 20,
+  },
+  secoundRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: 'grey',
+    gap: 7,
+    fontSize: 15,
+    marginTop: 2,
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -267,7 +286,7 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 12,
   },
   actionButtonText: {
     fontSize: 16,
