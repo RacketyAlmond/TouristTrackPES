@@ -12,9 +12,11 @@ import DetailsAct from '../atoms/detailsAct';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import config from '../../config';
 
 export default function Forum({ route }) {
+  const { t } = useTranslation('foro');
   const { forumId, localityName } = route.params;
   const [actividadInfo, setActividadInfo] = useState('');
   const [isActividad, setIsActividad] = useState(false);
@@ -280,7 +282,7 @@ export default function Forum({ route }) {
                   padding: 10,
                   backgroundColor: 'white',
                 }}
-                placeholder='Escribe tu pregunta...'
+                placeholder={t('write')} //'Escribe tu pregunta...'
                 placeholderTextColor='#888'
                 value={newQuestion}
                 onChangeText={setNewQuestion}

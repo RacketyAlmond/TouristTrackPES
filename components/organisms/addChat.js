@@ -17,8 +17,10 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
+import { useTranslation } from 'react-i18next';
 
 export default function AddChat({ route }) {
+  const { t } = useTranslation('chats');
   const navigation = useNavigation();
   const currentUser = route.params.currentUser;
   const idCurrentUser = currentUser.id;
@@ -97,8 +99,8 @@ export default function AddChat({ route }) {
     );
     if (!searchID) {
       Alert.alert(
-        'USER NOT FOUND',
-        `The id doesn't belong to any user.`,
+        t('not-found'),
+        t('not-found-text'),
         [
           {
             text: 'OK',
@@ -287,21 +289,21 @@ export default function AddChat({ route }) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name='arrow-back' style={styles.icon} size={24} />
           </TouchableOpacity>
-          <Text style={styles.title}>Add Chat</Text>
+          <Text style={styles.title}>{t('add')}</Text>
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.description}>
-            You can open new chats with users with their ID.
+            {t('text1')}
           </Text>
           <Text style={styles.description}>
-            A confirmation message will be sent to the user.
+            {t('text2')}
           </Text>
         </View>
         <TextInput
           style={styles.searchBar}
           onSubmitEditing={handleSubmit}
           onChangeText={handleChangeText}
-          placeholder='Enter the ID of the user'
+          placeholder={t('create')}
           value={searchTerm}
         />
 
@@ -334,7 +336,7 @@ export default function AddChat({ route }) {
       </View>
 
       <View style={styles.requestsContainer}>
-        <Text style={styles.title}>New Chat Requests</Text>
+        <Text style={styles.title}>{t('new-request')}</Text>
         <FlatList
           data={requests}
           keyExtractor={(item) => item.id.toString()}

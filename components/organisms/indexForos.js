@@ -10,9 +10,11 @@ import {
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import config from '../../config';
 
 export default function IndexForos() {
+  const { t } = useTranslation('foro');
   const [searchLocalidad, setSearchLocalidad] = useState('');
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
@@ -116,7 +118,7 @@ export default function IndexForos() {
             borderRadius: 20,
           }}
         >
-          <Title title='Foros' />
+          <Title title={t('header')} />
 
           {/* Campo para buscar un foro */}
           <View
@@ -135,7 +137,7 @@ export default function IndexForos() {
                 borderRadius: 5,
                 padding: 10,
               }}
-              placeholder='Busca una localidad...'
+              placeholder={t('search')} //'Busca una localidad...'
               placeholderTextColor='#888'
               value={searchLocalidad}
               onChangeText={setSearchLocalidad}

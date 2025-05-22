@@ -1,5 +1,6 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -15,10 +16,10 @@ import ValoracionesUsuario from './components/organisms/userRatings';
 
 import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/molecules/personalChat';
-import UserStack from './components/organisms/UserStack'; // NUEVO
-
-import { AuthProvider } from './components/atoms/AuthContext'; // NUEVO
-import { UserProvider } from './components/atoms/UserContext'; // NUEVO
+import UserStack from './components/organisms/UserStack';
+import SettingsScreen from './components/organisms/SettingsScreen';
+import { AuthProvider } from './components/atoms/AuthContext';
+import { UserProvider } from './components/atoms/UserContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,48 +27,54 @@ export default function App() {
   const { loading, error } = useSyncForosActividades();
 
   return (
-    <UserProvider>
-      <AuthProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName='Mapa' // Establecer el mapa como pantalla inicial
-            screenOptions={{
-              gestureEnabled: true,
-              gestureDirection: 'horizontal',
-              animation: 'slide_from_right',
-            }}
-          >
-            <Stack.Screen
-              name='Foros'
-              component={IndexForos}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='Forum'
-              component={Forum}
-              options={{
-                headerShown: false, // Ocultar el header
-                gestureEnabled: true, // Habilitar gestos
-                gestureDirection: 'horizontal', // Dirección del gesto
-                animation: 'slide_from_right', // Animación al navegar
+    <I18nextProvider i18n={i18n}>
+      <UserProvider>
+        <AuthProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName='Mapa'
+              screenOptions={{
+                gestureEnabled: true,
+                gestureDirection: 'horizontal',
+                animation: 'slide_from_right',
               }}
-            />
-            <Stack.Screen name='Mapa'>{() => <Map />}</Stack.Screen>
-            <Stack.Screen name='Estadisticas' component={Estadisticas} />
-            <Stack.Screen name='Valoraciones' component={Valoraciones} />
+            >
+              <Stack.Screen
+                name='Foros'
+                component={IndexForos}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name='Forum'
+                component={Forum}
+                options={{
+                  headerShown: false,
+                  gestureEnabled: true,
+                  gestureDirection: 'horizontal',
+                  animation: 'slide_from_right',
+                }}
+              />
+              <Stack.Screen name='Mapa' component={Map} />
+              <Stack.Screen name='Estadisticas' component={Estadisticas} />
+              <Stack.Screen name='Chats' component={Chats} />
+              <Stack.Screen name='PersonalChat' component={PersonalChat} />
+              <Stack.Screen name='AddChat' component={AddChat} />
+                            <Stack.Screen name='Valoraciones' component={Valoraciones} />
             <Stack.Screen name='Mis valoraciones' component={ValoracionesUsuario} />
-            <Stack.Screen name='Chats' component={Chats} />
-            <Stack.Screen name='PersonalChat' component={PersonalChat} />
-            <Stack.Screen name='AddChat' component={AddChat} />
-            <Stack.Screen
-              name='User'
-              component={UserStack}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-          <NavBar />
-        </NavigationContainer>
-        {loading && (
+              <Stack.Screen
+                name='Settings'
+                component={SettingsScreen}
+                options={{ title: 'Settings' }}
+              />
+              <Stack.Screen
+                name='User'
+                component={UserStack}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
+            <NavBar />
+          </NavigationContainer>
+          {loading && (
           <View style={{ position: 'absolute', top: 50 }}>
             <Text>⏳ Sincronizando actividades...</Text>
           </View>
@@ -77,7 +84,8 @@ export default function App() {
             <Text>❌ Error: {error}</Text>
           </View>
         )}
-      </AuthProvider>
-    </UserProvider>
+        </AuthProvider>
+      </UserProvider>
+    </I18nextProvider>
   );
 }

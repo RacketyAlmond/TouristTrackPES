@@ -1,0 +1,13 @@
+{ 
+    "header": "Map",
+    "search": {
+        "placeholder": "Search for a locality in Spain"
+    },
+    "filter": {
+        "header": "Filter",
+        "description": "This filter allows you to select the countries you are interested in.",
+        "click": "Add filters",
+        "open": "Search country...",
+        "apply": "Apply Filters"
+    }
+}
