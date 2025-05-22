@@ -7,6 +7,7 @@ import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
 import { useTranslation } from 'react-i18next';
+import config from '../../config';
 
 export default function Question({
   forumId,
@@ -35,7 +36,9 @@ export default function Question({
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
-      const response = await fetch(`http://172.20.10.3:3001/users/${userId}`);
+      const response = await fetch(
+        `https://touristrack.vercel.app/users/${userId}`,
+      );
       const json = await response.json();
 
       if (json.success && json.usuario) {
@@ -55,7 +58,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `http://172.20.10.3:3001/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -75,7 +78,7 @@ export default function Question({
   const getAnswers = useCallback(async () => {
     try {
       const response = await fetch(
-        `http://172.20.10.3:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
       const json = await response.json();
       if (json.success) {
@@ -105,34 +108,48 @@ export default function Question({
 
   // Añadir nueva respuesta
   const handleAddAnswer = async () => {
-    if (newAnswer.trim() === '') return;
-    try {
-      const response = await fetch(
-        `http://172.20.10.3:3001/forums/${forumId}/preguntas/${questionId}/respuestas`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            Author: userId,
-            text: newAnswer,
-          }),
-        },
-      );
-      const json = await response.json();
-      if (json.success) {
-        const { user, nationality } = await getUserInfo(userId);
-        const newAnswerObject = {
-          id: json.preguntaId,
-          userId,
-          answer: newAnswer,
-          date: new Date().toISOString(),
-          user,
-          nationality,
-        };
-        setAllAnswers((prev) => [...prev, newAnswerObject]);
-        setNewAnswer('');
-      } else {
-        console.error('Error al enviar la respuesta:', json.message);
+    if (newAnswer.trim() !== '') {
+      try {
+        const response = await fetch(
+          `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              text: newAnswer,
+            }),
+          },
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+          console.error('Error al enviar la pregunta:', json);
+          return;
+        }
+
+        if (json.success) {
+          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+
+          const newAnswerObject = {
+            id: json.preguntaId,
+            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            answer: newAnswer,
+            date: new Date().toISOString(),
+            user,
+            nationality,
+          };
+
+          setAllAnswers([...allAnswers, newAnswerObject]);
+          setNewAnswer('');
+        } else {
+          console.error('Error al enviar la pregunta:', json.message);
+        }
+      } catch (error) {
+        console.error('Error en la solicitud POST:', error);
       }
     } catch (error) {
       console.error('Error en la solicitud POST:', error);

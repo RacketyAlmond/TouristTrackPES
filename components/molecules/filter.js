@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   selected: {
-    backgroundColor: 'rebeccapurple',
+    backgroundColor: '#572364',
   },
   countryName: {
     fontSize: 16,
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   },
   applyButton: {
     marginTop: 20,
-    backgroundColor: 'rebeccapurple',
+    backgroundColor: '#572364',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,

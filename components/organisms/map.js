@@ -1,15 +1,16 @@
 // components/organisms/map.js
 
 import React, { useState, useRef, useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
-
+import MapView, { Marker } from 'react-native-maps';
+import { SafeAreaView, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import SearchBar from '../molecules/searchBar';
 import InfoLocalidad from '../molecules/InfoLocalidad';
 import Area from '../atoms/area';
 import { getCoordinatesFromCity } from '../../utils';
+import * as Location from 'expo-location';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   listOriginCountries,
   getTotalTouristsOfMunicipality,
@@ -27,7 +28,75 @@ export default function Map() {
   const [data, setData] = useState([]);
   const mapRef = useRef(null);
 
-  // Actualiza el título del header cada vez que cambia el idioma
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [location, setLocation] = useState(null);
+
+  useEffect(() => {
+    let subscription;
+    let interval;
+
+    const startWatchingLocation = async () => {
+      const servicesEnabled = await Location.hasServicesEnabledAsync();
+      if (!servicesEnabled) {
+        setErrorMsg('Location services are disabled');
+        setLocation(null); // Limpia la ubicación si los servicios están desactivados
+        return;
+      }
+
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        setLocation(null); // Limpia la ubicación si no hay permisos
+        return;
+      }
+
+      // Observa los cambios en la ubicación
+      subscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 1000, // Actualiza cada 1 segundo
+          distanceInterval: 1, // Actualiza si el usuario se mueve al menos 1 metro
+        },
+        (newLocation) => {
+          setLocation(newLocation.coords); // Actualiza el estado con la nueva ubicación
+        },
+      );
+    };
+
+    const checkLocationServices = async () => {
+      const servicesEnabled = await Location.hasServicesEnabledAsync();
+      if (!servicesEnabled) {
+        setErrorMsg('Location services are disabled');
+        setLocation(null); // Limpia la ubicación si los servicios están desactivados
+      } else {
+        setErrorMsg(null); // Limpia el mensaje de error si los servicios están habilitados
+      }
+    };
+
+    startWatchingLocation();
+
+    // Verifica periódicamente si los servicios de ubicación están habilitados
+    interval = setInterval(checkLocationServices, 5000); // Verifica cada 5 segundos
+
+    // Limpia la suscripción y el intervalo cuando el componente se desmonte
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, []);
+
+  if (errorMsg) {
+    console.log('Error: ', errorMsg);
+  }
+
+  if (!location) {
+    console.log('Loading location...');
+  }
+
   useEffect(() => {
     navigation.setOptions({ title: t('header') });
   }, [t, navigation]);
@@ -86,10 +155,30 @@ export default function Map() {
     }
   };
 
+  const handleCloseInfoLocalidad = () => {
+    setCity('');
+  };
+
+  const handleGoToMyLocation = () => {
+    if (location && mapRef.current) {
+      mapRef.current.animateToRegion(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.1,
+          longitudeDelta: 0.1,
+        },
+        1000,
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
-        onSearch={searchCity}
+        onSearch={(cityName) => {
+          searchCity(cityName);
+        }}
         availableNacionalities={listCountries}
         selectedCountries={selectedCountries}
         setSelectedCountries={setSelectedCountries}
@@ -105,6 +194,17 @@ export default function Map() {
           longitudeDelta: 5.5,
         }}
       >
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.latitude,
+              longitude: location.longitude,
+            }}
+            title='Mi ubicación'
+            description='Ubicación actual'
+            pinColor='#572364'
+          />
+        )}
         {coords && (
           <>
             <Marker
@@ -120,6 +220,19 @@ export default function Map() {
           </>
         )}
       </MapView>
+
+      {/* Botón fuera del MapView pero superpuesto */}
+      <TouchableOpacity
+        style={[styles.button]}
+        onPress={handleGoToMyLocation}
+        disabled={!location} // Deshabilitar si no hay ubicación
+      >
+        <Icon
+          name={!location ? 'location-searching' : 'my-location'}
+          size={24}
+          color='#572364'
+        />
+      </TouchableOpacity>
 
       {city && (
         <InfoLocalidad
@@ -139,5 +252,33 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
     width: '100%',
+  },
+  myLocationButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    padding: 10,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationAvailable: {
+    backgroundColor: '#4CAF50', // Verde si la ubicación está disponible
+  },
+  locationUnavailable: {
+    backgroundColor: '#D32F2F', // Rojo si la ubicación no está disponible
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  button: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    padding: 12,
+    elevation: 5,
   },
 });

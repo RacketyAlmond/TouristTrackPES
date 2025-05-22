@@ -1,6 +1,7 @@
 import React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
+import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/generalChat';
@@ -9,6 +10,10 @@ import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
+import useSyncForosActividades from './components/hooks/crearForosActividades';
+import Valoraciones from './components/organisms/ratings';
+import ValoracionesUsuario from './components/organisms/userRatings';
+
 import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/molecules/personalChat';
 import UserStack from './components/organisms/UserStack';
@@ -19,6 +24,8 @@ import { UserProvider } from './components/atoms/UserContext';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const { loading, error } = useSyncForosActividades();
+
   return (
     <I18nextProvider i18n={i18n}>
       <UserProvider>
@@ -52,6 +59,8 @@ export default function App() {
               <Stack.Screen name='Chats' component={Chats} />
               <Stack.Screen name='PersonalChat' component={PersonalChat} />
               <Stack.Screen name='AddChat' component={AddChat} />
+                            <Stack.Screen name='Valoraciones' component={Valoraciones} />
+            <Stack.Screen name='Mis valoraciones' component={ValoracionesUsuario} />
               <Stack.Screen
                 name='Settings'
                 component={SettingsScreen}
@@ -65,6 +74,16 @@ export default function App() {
             </Stack.Navigator>
             <NavBar />
           </NavigationContainer>
+          {loading && (
+          <View style={{ position: 'absolute', top: 50 }}>
+            <Text>⏳ Sincronizando actividades...</Text>
+          </View>
+        )}
+        {error && (
+          <View style={{ position: 'absolute', top: 80 }}>
+            <Text>❌ Error: {error}</Text>
+          </View>
+        )}
         </AuthProvider>
       </UserProvider>
     </I18nextProvider>
