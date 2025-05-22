@@ -59,8 +59,11 @@ export default function App() {
               <Stack.Screen name='Chats' component={Chats} />
               <Stack.Screen name='PersonalChat' component={PersonalChat} />
               <Stack.Screen name='AddChat' component={AddChat} />
-                            <Stack.Screen name='Valoraciones' component={Valoraciones} />
-            <Stack.Screen name='Mis valoraciones' component={ValoracionesUsuario} />
+              <Stack.Screen name='Valoraciones' component={Valoraciones} />
+              <Stack.Screen
+                name='Mis valoraciones'
+                component={ValoracionesUsuario}
+              />
               <Stack.Screen
                 name='Settings'
                 component={SettingsScreen}
@@ -75,15 +78,15 @@ export default function App() {
             <NavBar />
           </NavigationContainer>
           {loading && (
-          <View style={{ position: 'absolute', top: 50 }}>
-            <Text>⏳ Sincronizando actividades...</Text>
-          </View>
-        )}
-        {error && (
-          <View style={{ position: 'absolute', top: 80 }}>
-            <Text>❌ Error: {error}</Text>
-          </View>
-        )}
+            <View style={{ position: 'absolute', top: 50 }}>
+              <Text>⏳ Sincronizando actividades...</Text>
+            </View>
+          )}
+          {error && (
+            <View style={{ position: 'absolute', top: 80 }}>
+              <Text>❌ Error: {error}</Text>
+            </View>
+          )}
         </AuthProvider>
       </UserProvider>
     </I18nextProvider>

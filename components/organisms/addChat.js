@@ -192,16 +192,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`https://touristrack.vercel.app/allowed-chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://touristrack.vercel.app/allowed-chats`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user1ID: idCurrentUser,
+            user2ID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          user1ID: idCurrentUser,
-          user2ID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to accept chat');
@@ -235,16 +238,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://touristrack.vercel.app/pending-requests`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentToID: idCurrentUser,
+            sentByID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          sentToID: idCurrentUser,
-          sentByID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to reject chat');
@@ -292,12 +298,8 @@ export default function AddChat({ route }) {
           <Text style={styles.title}>{t('add')}</Text>
         </View>
         <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            {t('text1')}
-          </Text>
-          <Text style={styles.description}>
-            {t('text2')}
-          </Text>
+          <Text style={styles.description}>{t('text1')}</Text>
+          <Text style={styles.description}>{t('text2')}</Text>
         </View>
         <TextInput
           style={styles.searchBar}

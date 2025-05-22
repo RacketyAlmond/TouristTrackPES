@@ -19,7 +19,6 @@ import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
-
 export default function Chats() {
   const { t } = useTranslation('chats');
   const currentUser = {
@@ -171,7 +170,10 @@ export default function Chats() {
             //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
             deleteAllowedChat(idCurrentSession, item.id);
 
-            Alert.alert(t('success'), `${t('final1')} ${item.name} ${t('final2')}`);
+            Alert.alert(
+              t('success'),
+              `${t('final1')} ${item.name} ${t('final2')}`,
+            );
           },
         },
       ],

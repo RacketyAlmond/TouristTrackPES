@@ -151,8 +151,6 @@ export default function Question({
       } catch (error) {
         console.error('Error en la solicitud POST:', error);
       }
-    } catch (error) {
-      console.error('Error en la solicitud POST:', error);
     }
   };
 

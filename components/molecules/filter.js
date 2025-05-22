@@ -20,7 +20,7 @@ export default function Filter({
   selectedCountries,
   setSelectedCountries,
 }) {
-  const { t } = useTranslation();   // usamos namespace por defecto
+  const { t } = useTranslation(); // usamos namespace por defecto
   const [isModalVisible, setModalVisible] = useState(false);
   const [tempSelectedCountries, setTempSelectedCountries] = useState([]);
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);
@@ -41,8 +41,7 @@ export default function Filter({
     const newSelected = [
       ...selectedCountries,
       ...tempSelectedCountries.filter(
-        (temp) =>
-          !selectedCountries.some((sel) => sel.name === temp.name)
+        (temp) => !selectedCountries.some((sel) => sel.name === temp.name),
       ),
     ];
     setSelectedCountries(newSelected);
@@ -57,11 +56,9 @@ export default function Filter({
   };
 
   const removeCountry = (country) => {
-    setSelectedCountries((curr) =>
-      curr.filter((c) => c.name !== country.name)
-    );
+    setSelectedCountries((curr) => curr.filter((c) => c.name !== country.name));
     setTempSelectedCountries((curr) =>
-      curr.filter((c) => c.name !== country.name)
+      curr.filter((c) => c.name !== country.name),
     );
   };
 
@@ -80,7 +77,7 @@ export default function Filter({
             <Image source={{ uri: flag }} style={styles.flag} />
             <Text style={styles.countryName}>{name}</Text>
             <TouchableOpacity onPress={() => removeCountry({ name })}>
-              <MaterialIcons name="cancel" size={20} color="white" />
+              <MaterialIcons name='cancel' size={20} color='white' />
             </TouchableOpacity>
           </View>
         ))}
@@ -90,14 +87,11 @@ export default function Filter({
         <Text style={styles.addButtonText}>{t('filter.click')}</Text>
       </TouchableOpacity>
 
-      <Modal visible={isModalVisible} animationType="slide" transparent>
+      <Modal visible={isModalVisible} animationType='slide' transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={toggleModal}
-            >
-              <AntDesign name="close" size={24} color="black" />
+            <TouchableOpacity style={styles.closeButton} onPress={toggleModal}>
+              <AntDesign name='close' size={24} color='black' />
             </TouchableOpacity>
 
             <ScrollView
@@ -122,13 +116,8 @@ export default function Filter({
               selectedCountries={selectedCountries}
             />
 
-            <TouchableOpacity
-              onPress={applyFilters}
-              style={styles.applyButton}
-            >
-              <Text style={styles.applyButtonText}>
-                {t('filter.apply')}
-              </Text>
+            <TouchableOpacity onPress={applyFilters} style={styles.applyButton}>
+              <Text style={styles.applyButtonText}>{t('filter.apply')}</Text>
             </TouchableOpacity>
           </View>
         </View>

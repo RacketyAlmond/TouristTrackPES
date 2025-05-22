@@ -31,46 +31,42 @@ const AuthScreen = ({ onAuthenticated }) => {
     }
   };
 
-
-
   return (
-      <ImageBackground source={map} style={styles.backgroundImage}>
-        <View style={styles.overlay} />
-        <View style={styles.container}>
-          <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <TextInput
-              placeholder='Email'
-              value={email}
-              onChangeText={setEmail}
-              style={styles.input}
-          />
-          <TextInput
-              placeholder='Password'
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleAuth}>
-            <Text style={styles.buttonText}>
-              {isSignUp ? 'Sign Up' : 'Sign In'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
-            <Text style={styles.toggleText}>
-              {isSignUp
-                  ? 'Already have an account? Sign In'
-                  : 'New user? Sign Up'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
-            <Text style={styles.buttonText}>Sign in with Google</Text>
-          </TouchableOpacity>
-
-        </View>
-      </ImageBackground>
-
+    <ImageBackground source={map} style={styles.backgroundImage}>
+      <View style={styles.overlay} />
+      <View style={styles.container}>
+        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TextInput
+          placeholder='Email'
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Password'
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleAuth}>
+          <Text style={styles.buttonText}>
+            {isSignUp ? 'Sign Up' : 'Sign In'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
+          <Text style={styles.toggleText}>
+            {isSignUp
+              ? 'Already have an account? Sign In'
+              : 'New user? Sign Up'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
+          <Text style={styles.buttonText}>Sign in with Google</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 

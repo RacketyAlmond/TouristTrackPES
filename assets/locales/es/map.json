@@ -1,13 +1,13 @@
-{ 
-    "header": "Mapa",
-    "search": {
-        "placeholder": "Buscar localidad en España"
-    },
-    "filter": {
-        "header": "Filtro",
-        "description": "Este filtro te permite seleccionar los países que te interesan.",
-        "click": "Añadir filtros",
-        "open": "Buscar pais...",
-        "apply": "Aplicar Filtros"
-    }
+{
+  "header": "Mapa",
+  "search": {
+    "placeholder": "Buscar localidad en España"
+  },
+  "filter": {
+    "header": "Filtro",
+    "description": "Este filtro te permite seleccionar los países que te interesan.",
+    "click": "Añadir filtros",
+    "open": "Buscar pais...",
+    "apply": "Aplicar Filtros"
+  }
 }

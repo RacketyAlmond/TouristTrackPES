@@ -1,79 +1,74 @@
 {
-    "value":  [
-                  {
-                      "id":  190,
-                      "nom":  "hoy",
-                      "descripcio":  "hoy",
-                      "ubicacio":  {
-                                       "latitud":  41.38909,
-                                       "longitud":  2.1625853
-                                   },
-                      "dataInici":  "2025-05-04T19:35",
-                      "dataFi":  "2025-05-05T16:26",
-                      "creador":  "pedrooo",
-                      "participants":  [
-                                           "pedrooo",
-                                           "a"
-                                       ],
-                      "valoracions":  [
-
-                                      ],
-                      "qualityAire":  {
-                                          "station":  "Barcelona (Eixample)",
-                                          "distance":  0.009562797721389453,
-                                          "readings":  [
-                                                           {
-                                                               "formattedText":  "SO2: Excellent (1.0 Âµg/m3)",
-                                                               "contaminant":  "SO2",
-                                                               "value":  1.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "excelent"
-                                                           },
-                                                           {
-                                                               "formattedText":  "O3: Good (61.0 Âµg/m3)",
-                                                               "contaminant":  "O3",
-                                                               "value":  61.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "bona"
-                                                           },
-                                                           {
-                                                               "formattedText":  "NO2: Excellent (13.0 Âµg/m3)",
-                                                               "contaminant":  "NO2",
-                                                               "value":  13.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "excelent"
-                                                           },
-                                                           {
-                                                               "formattedText":  "PM10: Good (28.0 Âµg/m3)",
-                                                               "contaminant":  "PM10",
-                                                               "value":  28.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "bona"
-                                                           },
-                                                           {
-                                                               "formattedText":  "PM2.5: Good (17.0 Âµg/m3)",
-                                                               "contaminant":  "PM2.5",
-                                                               "value":  17.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "bona"
-                                                           },
-                                                           {
-                                                               "formattedText":  "NO: Excellent (2.0 Âµg/m3)",
-                                                               "contaminant":  "NO",
-                                                               "value":  2.0,
-                                                               "units":  "Âµg/m3",
-                                                               "qualityLevel":  "excelent"
-                                                           },
-                                                           {
-                                                               "formattedText":  "CO: Excellent (0.2 mg/m3)",
-                                                               "contaminant":  "CO",
-                                                               "value":  0.2,
-                                                               "units":  "mg/m3",
-                                                               "qualityLevel":  "excelent"
-                                                           }
-                                                       ]
-                                      }
-                  }
-              ],
-    "Count":  1
+  "value": [
+    {
+      "id": 190,
+      "nom": "hoy",
+      "descripcio": "hoy",
+      "ubicacio": {
+        "latitud": 41.38909,
+        "longitud": 2.1625853
+      },
+      "dataInici": "2025-05-04T19:35",
+      "dataFi": "2025-05-05T16:26",
+      "creador": "pedrooo",
+      "participants": ["pedrooo", "a"],
+      "valoracions": [],
+      "qualityAire": {
+        "station": "Barcelona (Eixample)",
+        "distance": 0.009562797721389453,
+        "readings": [
+          {
+            "formattedText": "SO2: Excellent (1.0 Âµg/m3)",
+            "contaminant": "SO2",
+            "value": 1.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "excelent"
+          },
+          {
+            "formattedText": "O3: Good (61.0 Âµg/m3)",
+            "contaminant": "O3",
+            "value": 61.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "bona"
+          },
+          {
+            "formattedText": "NO2: Excellent (13.0 Âµg/m3)",
+            "contaminant": "NO2",
+            "value": 13.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "excelent"
+          },
+          {
+            "formattedText": "PM10: Good (28.0 Âµg/m3)",
+            "contaminant": "PM10",
+            "value": 28.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "bona"
+          },
+          {
+            "formattedText": "PM2.5: Good (17.0 Âµg/m3)",
+            "contaminant": "PM2.5",
+            "value": 17.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "bona"
+          },
+          {
+            "formattedText": "NO: Excellent (2.0 Âµg/m3)",
+            "contaminant": "NO",
+            "value": 2.0,
+            "units": "Âµg/m3",
+            "qualityLevel": "excelent"
+          },
+          {
+            "formattedText": "CO: Excellent (0.2 mg/m3)",
+            "contaminant": "CO",
+            "value": 0.2,
+            "units": "mg/m3",
+            "qualityLevel": "excelent"
+          }
+        ]
+      }
+    }
+  ],
+  "Count": 1
 }
