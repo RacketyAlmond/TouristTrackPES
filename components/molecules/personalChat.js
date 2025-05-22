@@ -29,7 +29,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://touristrack.vercel.app/messages/between/${idCurrentSession}/${userData.id}`,
+        `***REMOVED***/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -59,7 +59,7 @@ const PersonalChat = ({ route, navigation }) => {
   const sendRequest = async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/pending-requests`,
+        `***REMOVED***/pending-requests`,
         {
           method: 'POST',
           headers: {
@@ -127,7 +127,7 @@ const PersonalChat = ({ route, navigation }) => {
 
       try {
         const response = await fetch(
-          `https://touristrack.vercel.app/messages`,
+          `***REMOVED***/messages`,
           {
             method: 'POST',
             headers: {

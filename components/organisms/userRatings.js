@@ -45,7 +45,7 @@ const RatingScreen = () => {
   const fetchRatings = async () => {
     try {
       const response = await fetch(
-        `http://192.168.36.70:3001/ratings/author/${loggedInUser.id}`,
+        `***REMOVED***/ratings/author/${loggedInUser.id}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -65,7 +65,7 @@ const RatingScreen = () => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`http://192.168.36.70:3001/ratings/${id}`, {
+            await fetch(`***REMOVED***/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -94,7 +94,7 @@ const RatingScreen = () => {
 
     try {
       const response = await fetch(
-        `http://192.168.36.70:3001/ratings/${ratingToUpdate.id}`,
+        `***REMOVED***/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

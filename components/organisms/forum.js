@@ -62,7 +62,7 @@ export default function Forum({ route }) {
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/users/${userId}`,
+        `***REMOVED***/users/${userId}`,
       );
       const json = await response.json();
 
@@ -84,7 +84,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas`,
+        `***REMOVED***/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
@@ -152,7 +152,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `https://touristrack.vercel.app/forums/${forumId}/preguntas/`,
+          `***REMOVED***/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {

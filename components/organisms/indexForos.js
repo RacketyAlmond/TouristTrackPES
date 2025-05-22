@@ -22,7 +22,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch(`https://touristrack.vercel.app/forums`); // Cambia esto por la URL de tu servidor
+      const response = await fetch(`***REMOVED***/forums`); // Cambia esto por la URL de tu servidor
       const json = await response.json();
 
       if (json.success) {
@@ -52,7 +52,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch(`https://touristrack.vercel.app/forums`, {
+      const response = await fetch(`***REMOVED***/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

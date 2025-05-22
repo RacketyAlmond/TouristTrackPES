@@ -2,11 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +20,7 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       const fetchRatingStats = async () => {
         try {
           const response = await fetch(
-            `http://192.168.36.70:3001/ratings/location/${city}/stats`,
+            `***REMOVED***/ratings/location/${city}/stats`,
           );
           const data = await response.json();
           setRatingStats({
@@ -54,8 +50,8 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
 
   const renderStars = (rating) => {
     const stars = [];
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5;
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
     for (let i = 1; i <= 5; i++) {
       if (i <= fullStars) {
         stars.push(
