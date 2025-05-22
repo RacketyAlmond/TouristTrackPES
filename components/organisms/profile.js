@@ -109,15 +109,10 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{fname}</Text>
-        <TouchableOpacity onPress={() => setEditingField('fname')}>
-          <Icon name='edit' size={20} color='gray' />
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{points}</Text>
+
+      <View style={styles.secoundRow}>
+        <Text style={styles.secoundRow} color='gray'>{points}</Text>
       </View>
 
       <View style={styles.secoundRow}>

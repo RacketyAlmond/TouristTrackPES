@@ -11,14 +11,22 @@ import Title from '../atoms/title';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../atoms/UserContext.js';
+import {auth, db} from '../../firebaseConfig.js';
+import {doc, getDoc} from "firebase/firestore";
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
+  const {getUserData} = useUser();
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
-  const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
-
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [fname, setFname] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [userLocation, setUserLocation] = useState('');
+  const [about, setAbout] = useState('');
+  const [points, setPoints] = useState(null);
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
@@ -58,8 +66,8 @@ export default function Forum({ route }) {
               userId: q.Author,
               question: q.text,
               date: new Date(q.date._seconds * 1000).toISOString(),
-              nationality,
               user,
+              nationality,
             };
           }),
         );
@@ -92,26 +100,53 @@ export default function Forum({ route }) {
   const filterQuestions = (query, countries, questionsToFilter = questions) => {
     let filtered = questionsToFilter;
 
-    // Filtrar por texto de búsqueda
     if (query.trim() !== '') {
       filtered = filtered.filter((q) =>
         q.question.toLowerCase().includes(query.toLowerCase()),
       );
     }
 
-    // Filtrar por países seleccionados
     if (countries.length > 0) {
-      const countryNames = countries.map((country) => country.name); // Extraer nombres de los países
+      const countryNames = countries.map((country) => country.name);
       filtered = filtered.filter((q) => countryNames.includes(q.nationality));
     }
 
     setFilteredQuestions(filtered);
   };
+    const getter = async () => {
+        const currentUser = auth.currentUser;
+        console.log(`user = ${currentUser.uid}`);
 
+        if (!currentUser) {
+            return Promise.reject(new Error('No user is signed in'));
+        }
+
+        return getDoc(doc(db, 'Users', currentUser.uid))
+            .then((userDoc) => {
+                if (userDoc.exists()) {
+                    const data = userDoc.data();
+
+                    setFname(data.firstName);
+                    setBirthdate(data.birthday);
+
+                }
+                console.log('User profile created successfully!');
+            })
+            .catch((error) => {
+                console.error('Error updating profile:', error);
+            });
+    };
+
+    useEffect(() => {
+        getter();
+    }, []);
   const handleAddQuestion = async () => {
     if (newQuestion.trim() !== '') {
       try {
-        const response = await fetch(
+          const currentUser = auth.currentUser;
+
+
+          const response = await fetch(
           `https://touristrack.vercel.app/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
@@ -119,7 +154,7 @@ export default function Forum({ route }) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: currentUser.uid, // Reemplaza con el ID del usuario autenticado
               text: newQuestion,
             }),
           },
@@ -133,15 +168,14 @@ export default function Forum({ route }) {
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
 
           const newQuestionObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: currentUser.uid, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-            user,
-            nationality,
+              fname,
+              birthdate,
           };
 
           const updatedQuestions = [...questions, newQuestionObject];

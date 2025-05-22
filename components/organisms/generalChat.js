@@ -19,12 +19,7 @@ import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Chats() {
-  const currentUser = {
-    id: '0',
-    name: 'Yo',
-    avatar: 'https://i.pinimg.com/474x/24/0d/b3/asdsaeeedsseed.jpg',
-    about: 'hi',
-  };
+  const currentUser = auth.currentUser;
   const idCurrentSession = currentUser.id;
   //const dataJson = UsersJson.find(
   //(user) => user.idUser === idCurrentSession,
