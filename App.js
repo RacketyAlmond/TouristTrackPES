@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
+import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/generalChat';
@@ -8,6 +9,7 @@ import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
+import useSyncForosActividades from './components/hooks/crearForosActividades';
 import Valoraciones from './components/organisms/ratings';
 import ValoracionesUsuario from './components/organisms/userRatings';
 
@@ -21,6 +23,8 @@ import { UserProvider } from './components/atoms/UserContext'; // NUEVO
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const { loading, error } = useSyncForosActividades();
+
   return (
     <UserProvider>
       <AuthProvider>
@@ -63,6 +67,16 @@ export default function App() {
           </Stack.Navigator>
           <NavBar />
         </NavigationContainer>
+        {loading && (
+          <View style={{ position: 'absolute', top: 50 }}>
+            <Text>⏳ Sincronizando actividades...</Text>
+          </View>
+        )}
+        {error && (
+          <View style={{ position: 'absolute', top: 80 }}>
+            <Text>❌ Error: {error}</Text>
+          </View>
+        )}
       </AuthProvider>
     </UserProvider>
   );
