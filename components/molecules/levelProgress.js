@@ -5,38 +5,44 @@ const ranks = [
   {
     name: 'Viajero Primerizo',
     name_en: 'First Time Traveler',
-    minLevel: 1,
-    icon: require('../../public/traveler.png'), // reemplaza con tu ruta real
+    minLevel: 3,
+    icon: require('../../public/traveler.png'),
+    thickIcon: require('../../public/traveler_thick.png'),
   },
   {
     name: 'Mochilero Curioso',
     name_en: 'Keen Backpacker',
-    minLevel: 4,
+    minLevel: 5,
     icon: require('../../public/backpacker.png'),
+    thickIcon: require('../../public/backpacker_thick.png'),
   },
   {
     name: 'Aventurero Intrépido',
     name_en: 'Fearless Adventurer',
     minLevel: 7,
     icon: require('../../public/adventurer.png'),
+    thickIcon: require('../../public/adventurer_thick.png'),
   },
   {
     name: 'Explorador Nato',
     name_en: 'Master Explorer',
     minLevel: 10,
     icon: require('../../public/explorer.png'),
+    thickIcon: require('../../public/explorer_thick.png'),
   },
   {
     name: 'Leyenda Nómada',
     name_en: 'Nomadic Legend',
     minLevel: 15,
     icon: require('../../public/legend.png'),
+    thickIcon: require('../../public/legend_thick.png'),
   },
   {
     name: 'TROTAMUNDOS',
     name_en: 'World Wanderer',
     minLevel: 20,
     icon: require('../../public/globetrotter.png'),
+    thickIcon: require('../../public/globetrotter_thick.png'),
   },
 ];
 
@@ -85,11 +91,20 @@ const getLevelInfo = (points) => {
   };
 };
 
-const getRankByLevel = (level) => {
-  return ranks
+export const getRankByLevel = (level, thick = false) => {
+  const rank = ranks
     .slice()
     .reverse()
     .find((rank) => level >= rank.minLevel);
+
+  if (rank) {
+    return {
+      ...rank,
+      icon: thick ? rank.thickIcon : rank.icon,
+    };
+  }
+
+  return null;
 };
 
 const LevelProgress = ({ points }) => {

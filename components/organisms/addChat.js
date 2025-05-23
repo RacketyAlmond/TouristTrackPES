@@ -40,7 +40,7 @@ export default function AddChat({ route }) {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/pending-requests/received/${idCurrentUser}`,
+        `***REMOVED***/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch requests');
@@ -63,7 +63,7 @@ export default function AddChat({ route }) {
   const fetchSentRequests = async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/pending-requests/sent/${idCurrentUser}`,
+        `***REMOVED***/pending-requests/sent/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error('Failed to fetch sent requests');
@@ -190,7 +190,7 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`https://touristrack.vercel.app/allowed-chats`, {
+      const response = await fetch(`***REMOVED***/allowed-chats`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
+      const response = await fetch(`***REMOVED***/pending-requests`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
+import { getRankByLevel } from '../molecules/levelProgress.js'; // Importa la función de rangos
 
 export default function Question({
   forumId,
@@ -16,6 +17,7 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
+  const [userRank, setUserRank] = useState(getRankByLevel(20, true)); //hardcoded rank for now
 
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
@@ -26,7 +28,7 @@ export default function Question({
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/users/${userId}`,
+        `***REMOVED***/users/${userId}`,
       );
       const json = await response.json();
 
@@ -47,7 +49,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -68,7 +70,7 @@ export default function Question({
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
 
       const json = await response.json();
@@ -102,7 +104,7 @@ export default function Question({
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {
@@ -154,8 +156,23 @@ export default function Question({
       }}
     >
       <View style={{ flex: 1 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={{ fontWeight: 'bold' }}>{user}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold' }}>{user}</Text>
+            {userRank && (
+              <Image
+                source={userRank.icon}
+                style={{ width: 20, height: 20, marginLeft: 5 }}
+                resizeMode='contain'
+              />
+            )}
+          </View>
           <Text style={{ color: 'gray' }}>{relativeTime}</Text>
         </View>
         <Text>{text}</Text>
