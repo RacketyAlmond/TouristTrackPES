@@ -1,5 +1,5 @@
 // AuthContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { setDoc, doc } from 'firebase/firestore'; //En node module si tieneis firebase instalado ;P
 import {
