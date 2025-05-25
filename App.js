@@ -15,7 +15,7 @@ import Valoraciones from './components/organisms/ratings';
 import ValoracionesUsuario from './components/organisms/userRatings';
 
 import AddChat from './components/organisms/addChat';
-import PersonalChat from './components/molecules/personalChat';
+import PersonalChat from './components/organisms/personalChat';
 import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
 import { AuthProvider } from './components/atoms/AuthContext';
