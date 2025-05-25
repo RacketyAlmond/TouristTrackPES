@@ -1,15 +1,19 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   Platform,
   StatusBar,
   Alert,
+  AppState,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
-import ChatHeader from './chatHeader.js';
-import MessageChatList from './messageChatList.js';
+import ChatHeader from '../molecules/chatHeader.js';
+import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
+import  socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
@@ -20,6 +24,7 @@ const PersonalChat = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState(route.params.state); // 0 = chat, 1 = requested, 2 = request
+  const AppStateRef = useRef(AppState.currentState);
 
   const transformFirebaseTimestamp = (timestamp) => {
     return new Date(timestamp._seconds * 1000).toISOString();
@@ -52,9 +57,39 @@ const PersonalChat = ({ route, navigation }) => {
     }
   }, [idCurrentSession, userData.id]);
 
+  const handleNewMessage = (msg) => {
+    if (
+      (msg.sentByID === userData.id && msg.sentToID === idCurrentSession) ||
+      (msg.sentByID === idCurrentSession && msg.sentToID === userData.id)
+    ) {
+      const formattedMessage = {
+        id: msg.id.toString(),
+        text: msg.content,
+        timestamp: transformFirebaseTimestamp(msg.timestamp),
+        isMe: msg.sentByID === idCurrentSession,
+      };
+
+      setMessages((prevMessages) => {
+        const exists = prevMessages.some((m) => m.id === formattedMessage.id);
+        if (exists) return prevMessages;
+        return [...prevMessages, formattedMessage];
+      });
+    }
+  };
+
   useEffect(() => {
+    socketService.connect(idCurrentSession);
+    const unsubscribeMessage = socketService.on(
+      'new_message',
+      handleNewMessage,
+    );
     fetchMessages();
-  }, [fetchMessages]);
+
+    return () => {
+      unsubscribeMessage();
+      socketService.disconnect();
+    }
+  }, [fetchMessages, idCurrentSession, userData.id]);
 
   const sendRequest = async () => {
     try {
@@ -151,6 +186,21 @@ const PersonalChat = ({ route, navigation }) => {
     }
   };
 
+  const simulateIncomingMessage = async () => {
+    console.log('Simulando mensaje entrante de:', userData.name);
+
+    const response = await fetch('***REMOVED***/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sentByID: userData.id,
+        sentToID: idCurrentSession,
+        content: `Mensaje nuevo`,
+      }),
+    });
+  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -165,6 +215,12 @@ const PersonalChat = ({ route, navigation }) => {
       />
       <MessageChatList messages={messages} isLoading={isLoading} />
       <MessageChatInput onSendMessage={handleSendMessage} />
+      <TouchableOpacity
+        style={styles.testButton}
+        onPress={simulateIncomingMessage}
+      >
+        <Text style={styles.testButtonText}>Simular mensaje</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

@@ -25,7 +25,7 @@ export default function AddChat({ route }) {
   const currentUser = route.params.currentUser;
   const idCurrentUser = currentUser.id;
   const UserFriends = route.params.dataJson || [];
-  const data = UsersAppJson;
+  const data = UsersAppJson; //TODO: Cambiar por la data de la app
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState([]);
   const [searchedUser, setSearchedUser] = useState(null);
@@ -267,7 +267,15 @@ export default function AddChat({ route }) {
   const renderItem = ({ item }) => (
     <View style={styles.chatItem}>
       {/* hacer que este boton acceda al personalChat con un navigate y con el state a 1, de manera que este no pueda escribir mensajes*/}
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PersonalChat', {
+            currentUser,
+            User: item,
+            state: 1,
+          })
+        }
+      >
         <ChatItem item={item} />
         <View style={styles.newChatButtonContainer}>
           <TouchableOpacity
