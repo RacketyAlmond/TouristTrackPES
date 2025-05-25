@@ -26,7 +26,7 @@ export default function Question({
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/users/${userId}`,
+        `***REMOVED***/users/${userId}`,
       );
       const json = await response.json();
 
@@ -47,7 +47,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -68,7 +68,7 @@ export default function Question({
   const getAnswers = React.useCallback(async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
 
       const json = await response.json();
@@ -102,7 +102,7 @@ export default function Question({
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {

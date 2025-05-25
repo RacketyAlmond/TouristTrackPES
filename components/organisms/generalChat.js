@@ -41,7 +41,7 @@ export default function Chats() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://touristrack.vercel.app/allowed-chats/users/${idCurrentSession}`,
+        `***REMOVED***/allowed-chats/users/${idCurrentSession}`,
       );
 
       if (!response.ok) {
@@ -82,7 +82,7 @@ export default function Chats() {
   const deleteAllowedChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/allowed-chats/between/${user1Id}/${user2Id}`,
+        `***REMOVED***/allowed-chats/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -129,7 +129,7 @@ export default function Chats() {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/messages/between/${user1Id}/${user2Id}`,
+        `***REMOVED***/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {

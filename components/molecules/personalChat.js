@@ -27,7 +27,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://touristrack.vercel.app/messages/between/${idCurrentSession}/${userData.id}`,
+        `***REMOVED***/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -56,7 +56,7 @@ const PersonalChat = ({ route, navigation }) => {
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
+      const response = await fetch(`***REMOVED***/pending-requests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`https://touristrack.vercel.app/messages`, {
+        const response = await fetch(`***REMOVED***/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

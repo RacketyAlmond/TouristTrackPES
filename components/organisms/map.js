@@ -26,10 +26,12 @@ export default function Map() {
 
   const getIdCity = async () => {
     try {
-      const response = await fetch(`https://touristrack.vercel.app/forums`);
+      const response = await fetch(
+        `http://localhost:3001/forums/localidad/${city}`,
+      );
       const json = await response.json();
-
       if (json.success) {
+        console.log(1);
         // Busca la ciudad que coincida con el nombre almacenado en `city`
         const cityData = json.forums.find((forum) => forum.Localidad === city);
 
@@ -42,6 +44,7 @@ export default function Map() {
         }
       }
     } catch (error) {
+      console.log(error);
       console.error('Error al obtener la ID de la ciudad:', error);
     }
   };
