@@ -13,7 +13,7 @@ import {
 import ChatHeader from '../molecules/chatHeader.js';
 import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
-import  socketSevice from '../../socketio.js';
+import  socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
@@ -189,7 +189,7 @@ const PersonalChat = ({ route, navigation }) => {
   const simulateIncomingMessage = async () => {
     console.log('Simulando mensaje entrante de:', userData.name);
 
-    const response = await fetch(`${API_BASE_URL}/messages`, {
+    const response = await fetch('***REMOVED***/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

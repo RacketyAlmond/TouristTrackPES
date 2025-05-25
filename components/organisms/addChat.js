@@ -25,7 +25,7 @@ export default function AddChat({ route }) {
   const currentUser = route.params.currentUser;
   const idCurrentUser = currentUser.id;
   const UserFriends = route.params.dataJson || [];
-  const data = UsersAppJson;
+  const data = UsersAppJson; //TODO: Cambiar por la data de la app
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState([]);
   const [searchedUser, setSearchedUser] = useState(null);
