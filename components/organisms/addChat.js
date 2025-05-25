@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
 import { useTranslation } from 'react-i18next';
 
@@ -24,10 +23,11 @@ export default function AddChat({ route }) {
   const navigation = useNavigation();
   const currentUser = route.params.currentUser;
   const idCurrentUser = currentUser.id;
+  const nameCurrentUser = currentUser.name;
   const UserFriends = route.params.dataJson || [];
-  const data = UsersAppJson; //TODO: Cambiar por la data de la app
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState([]);
+  const [Users, setUsers] = useState([]);
   const [searchedUser, setSearchedUser] = useState(null);
   const [isUserFound, setIsUserFound] = useState(false);
   const [sentRequests, setSentRequests] = useState([]);
@@ -35,9 +35,32 @@ export default function AddChat({ route }) {
 
   useEffect(() => {
     setIsUserFound(searchedUser && searchedUser.id);
+    fetchUsers();
     fetchRequests();
     fetchSentRequests();
   }, [searchedUser, idCurrentUser]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(
+        `***REMOVED***/users/`,
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const data = await response.json();
+      const formattedUsers = data.usuarios.map((user) => ({
+        id: user.id.toString(),
+        name: user.firstName,
+        about: user.about,
+        avatar: user.avatar,
+      }));
+      setUsers(formattedUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      Alert.alert('Error', 'Could not load users. Please try again later.');
+    }
+  }
 
   const fetchRequests = async () => {
     try {
@@ -94,8 +117,8 @@ export default function AddChat({ route }) {
       return;
     }
     const normalizedUser = searchTerm.toLowerCase();
-    const searchID = data.find(
-      (user) => user.id.toLowerCase() === normalizedUser,
+    const searchID = Users.find(
+      (user) => user.name && user.name.toLowerCase() === normalizedUser,
     );
     if (!searchID) {
       Alert.alert(
@@ -110,7 +133,7 @@ export default function AddChat({ route }) {
         { cancelable: false },
       );
       setSearchedUser(null);
-    } else if (UserFriend.some((friend) => friend.id === searchID.id)) {
+    } else if (UserFriend.some((friend) => friend.name === searchID.name)) {
       Alert.alert(
         'USER ALREADY ADDED',
         `The user of the id is part of the added chats.`,
@@ -123,7 +146,7 @@ export default function AddChat({ route }) {
         { cancelable: false },
       );
       setSearchedUser(null);
-    } else if (searchID.id === idCurrentUser) {
+    } else if (searchID.name === nameCurrentUser) {
       Alert.alert(
         'USER IS YOURSELF',
         `The user of the id is yourself.`,
@@ -137,7 +160,7 @@ export default function AddChat({ route }) {
       );
     }
     //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
-    else if (sentRequests.some((request) => request.id === searchID.id)) {
+    else if (sentRequests.some((request) => request.name === searchID.id)) {
       Alert.alert(
         'USER HAS A REQUEST',
         `You have already sent a request to the user.`,
@@ -149,7 +172,7 @@ export default function AddChat({ route }) {
         ],
         { cancelable: false },
       );
-    } else if (requests.some((request) => request.id === searchID.id)) {
+    } else if (requests.some((request) => request.name === searchID.name)) {
       Alert.alert(
         'USER SENT YOU A REQUEST',
         `The user has already sent you a request.`,
