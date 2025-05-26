@@ -17,6 +17,10 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 //import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../../firebaseConfig.js';
+
+export default function Chats() {
+  const currentUser = auth.currentUser;
 import { useTranslation } from 'react-i18next';
 
 export default function Chats() {
@@ -319,3 +323,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+}
