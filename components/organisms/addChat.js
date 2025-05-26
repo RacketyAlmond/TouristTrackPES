@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
-import {auth} from '../../firebaseConfig.js';
+import { auth } from '../../firebaseConfig.js';
 export default function AddChat({ route }) {
   const navigation = useNavigation();
   const currentUser = auth.currentUser;
@@ -190,16 +190,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`https://touristrack.vercel.app/allowed-chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://touristrack.vercel.app/allowed-chats`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user1ID: idCurrentUser,
+            user2ID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          user1ID: idCurrentUser,
-          user2ID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to accept chat');
@@ -233,16 +236,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://touristrack.vercel.app/pending-requests`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentToID: idCurrentUser,
+            sentByID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          sentToID: idCurrentUser,
-          sentByID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to reject chat');

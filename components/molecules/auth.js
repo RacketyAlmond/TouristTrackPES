@@ -12,7 +12,6 @@ import map from '../../public/mapa.png';
 import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 
-
 const AuthScreen = ({ onAuthenticated }) => {
   const { signUp, signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
@@ -33,7 +32,6 @@ const AuthScreen = ({ onAuthenticated }) => {
     } catch (error) {
       setError(error.message);
     }
-
   };
   const redirectUri = AuthSession.makeRedirectUri({
     scheme: 'yourapp',
@@ -41,15 +39,16 @@ const AuthScreen = ({ onAuthenticated }) => {
   });
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: '***REMOVED***',
+    clientId:
+      '***REMOVED***',
     scopes: ['profile', 'email'],
-    redirectUri: '***REMOVED***'
-    });
+    redirectUri: '***REMOVED***',
+  });
 
   useEffect(() => {
-    console.log("Jest w response");
+    console.log('Jest w response');
     if (response?.type === 'success') {
-      console.log("WESZLO");
+      console.log('WESZLO');
       const { authentication } = response;
 
       (async () => {
@@ -57,53 +56,48 @@ const AuthScreen = ({ onAuthenticated }) => {
           const user = await signInWithGoogle(authentication.accessToken);
           onAuthenticated(user, true);
         } catch (error) {
-          console.error("Google Sign-in failed", error);
+          console.error('Google Sign-in failed', error);
         }
       })();
     }
   }, [response]);
 
   return (
-      <ImageBackground source={map} style={styles.backgroundImage}>
-        <View style={styles.overlay} />
-        <View style={styles.container}>
-          <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <TextInput
-              placeholder='Email'
-              value={email}
-              onChangeText={setEmail}
-              style={styles.input}
-          />
-          <TextInput
-              placeholder='Password'
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleAuth}>
-            <Text style={styles.buttonText}>
-              {isSignUp ? 'Sign Up' : 'Sign In'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
-            <Text style={styles.toggleText}>
-              {isSignUp
-                  ? 'Already have an account? Sign In'
-                  : 'New user? Sign Up'}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => promptAsync()}>
-            <Text style={styles.toggleText}>
-              {`Google ID`}
-            </Text>
-          </TouchableOpacity>
-
-
-        </View>
-      </ImageBackground>
-
+    <ImageBackground source={map} style={styles.backgroundImage}>
+      <View style={styles.overlay} />
+      <View style={styles.container}>
+        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
+        {error ? <Text style={styles.error}>{error}</Text> : null}
+        <TextInput
+          placeholder='Email'
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Password'
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleAuth}>
+          <Text style={styles.buttonText}>
+            {isSignUp ? 'Sign Up' : 'Sign In'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
+          <Text style={styles.toggleText}>
+            {isSignUp
+              ? 'Already have an account? Sign In'
+              : 'New user? Sign Up'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => promptAsync()}>
+          <Text style={styles.toggleText}>{`Google ID`}</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 

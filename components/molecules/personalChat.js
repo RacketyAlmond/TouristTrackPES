@@ -56,16 +56,19 @@ const PersonalChat = ({ route, navigation }) => {
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`https://touristrack.vercel.app/pending-requests`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://touristrack.vercel.app/pending-requests`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentByID: idCurrentSession,
+            sentToID: userData.id,
+          }),
         },
-        body: JSON.stringify({
-          sentByID: idCurrentSession,
-          sentToID: userData.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to send request');
@@ -121,17 +124,20 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`https://touristrack.vercel.app/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `https://touristrack.vercel.app/messages`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sentByID: idCurrentSession,
+              sentToID: userData.id,
+              content: text,
+            }),
           },
-          body: JSON.stringify({
-            sentByID: idCurrentSession,
-            sentToID: userData.id,
-            content: text,
-          }),
-        });
+        );
 
         if (!response.ok) {
           throw new Error('Failed to send message');

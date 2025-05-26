@@ -8,7 +8,13 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
 
-  const createUserData = async (fname, birthday, userLocation, about, points) => {
+  const createUserData = async (
+    fname,
+    birthday,
+    userLocation,
+    about,
+    points,
+  ) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -36,7 +42,13 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
-  const updateUserData = async (fname, birthday, userLocation, about, points) => {
+  const updateUserData = async (
+    fname,
+    birthday,
+    userLocation,
+    about,
+    points,
+  ) => {
     const user = auth.currentUser;
 
     if (!user) {
@@ -51,7 +63,6 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
-
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -78,7 +89,7 @@ export const UserProvider = ({ children }) => {
         const data = userDoc.data();
         const rawPoints = data.points;
 
-        console.log("Raw Points:", rawPoints);
+        console.log('Raw Points:', rawPoints);
 
         if (typeof rawPoints === 'object' && rawPoints?.current !== undefined) {
           return rawPoints.current;
@@ -96,7 +107,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-
   const updateUserPoints = async (numberOfPoints) => {
     const user = auth.currentUser;
     try {
@@ -109,15 +119,15 @@ export const UserProvider = ({ children }) => {
         const data = userDoc.data();
         let rawPoints = data.points;
 
-        console.log("Raw Points:", rawPoints);
+        console.log('Raw Points:', rawPoints);
 
         if (typeof rawPoints === 'object' && rawPoints?.current !== undefined) {
-          rawPoints.current+=numberOfPoints;
+          rawPoints.current += numberOfPoints;
           return rawPoints.current;
         }
 
-        if (typeof rawPoints === 'number'){
-          rawPoints+=numberOfPoints;
+        if (typeof rawPoints === 'number') {
+          rawPoints += numberOfPoints;
           return rawPoints;
         }
 
@@ -150,19 +160,19 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-      <UserContext.Provider
-          value={{
-            userData,
-            setUserData,
-            createUserData,
-            updateUserData,
-            getUserData,
-            getUserPoints,
-            updateUserPoints,
-          }}
-      >
-        {children}
-      </UserContext.Provider>
+    <UserContext.Provider
+      value={{
+        userData,
+        setUserData,
+        createUserData,
+        updateUserData,
+        getUserData,
+        getUserPoints,
+        updateUserPoints,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 

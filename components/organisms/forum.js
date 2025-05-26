@@ -12,8 +12,8 @@ import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser } from '../atoms/UserContext.js';
-import {auth, db} from '../../firebaseConfig.js';
-import {doc, getDoc} from "firebase/firestore";
+import { auth, db } from '../../firebaseConfig.js';
+import { doc, getDoc } from 'firebase/firestore';
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
@@ -27,8 +27,7 @@ export default function Forum({ route }) {
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
-
-    /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
+  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -114,38 +113,35 @@ export default function Forum({ route }) {
 
     setFilteredQuestions(filtered);
   };
-    const getter = async () => {
-        console.log(`user = ${idCurrentUser}`);
+  const getter = async () => {
+    console.log(`user = ${idCurrentUser}`);
 
-        if (!currentUser) {
-            return Promise.reject(new Error('No user is signed in'));
+    if (!currentUser) {
+      return Promise.reject(new Error('No user is signed in'));
+    }
+
+    return getDoc(doc(db, 'Users', idCurrentUser))
+      .then((userDoc) => {
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+
+          setFname(data.firstName);
+          setUserLocation(data.userLocation);
         }
+        console.log('User profile created successfully!');
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
+  };
 
-        return getDoc(doc(db, 'Users', idCurrentUser))
-            .then((userDoc) => {
-                if (userDoc.exists()) {
-                    const data = userDoc.data();
-
-                    setFname(data.firstName);
-                    setUserLocation(data.userLocation);
-
-                }
-                console.log('User profile created successfully!');
-            })
-            .catch((error) => {
-                console.error('Error updating profile:', error);
-            });
-    };
-
-    useEffect(() => {
-        getter();
-    }, []);
+  useEffect(() => {
+    getter();
+  }, []);
   const handleAddQuestion = async () => {
     if (newQuestion.trim() !== '') {
       try {
-
-
-          const response = await fetch(
+        const response = await fetch(
           `https://touristrack.vercel.app/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
@@ -167,16 +163,15 @@ export default function Forum({ route }) {
         }
 
         if (json.success) {
-            updateUserPoints(10);
+          updateUserPoints(10);
           const newQuestionObject = {
             id: json.preguntaId,
-              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
+            Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-              fname,
-              userLocation,
+            fname,
+            userLocation,
           };
-
 
           const updatedQuestions = [...questions, newQuestionObject];
           setQuestions(updatedQuestions);

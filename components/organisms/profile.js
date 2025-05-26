@@ -109,10 +109,10 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-
-
       <View style={styles.secoundRow}>
-        <Text style={styles.secoundRow} color='gray'>{points}</Text>
+        <Text style={styles.secoundRow} color='gray'>
+          {points}
+        </Text>
       </View>
 
       <View style={styles.secoundRow}>

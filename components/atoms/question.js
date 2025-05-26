@@ -19,7 +19,6 @@ export default function Question({
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
-
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
@@ -47,7 +46,6 @@ export default function Question({
   };
 
   const deleteAnswer = async (answerId) => {
-
     try {
       const response = await fetch(
         `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
@@ -229,15 +227,15 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
               />
-              {answer.user === idCurrentUser ?
-                  <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
-                    <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
-                      Eliminar
-                    </Text>
-                  </TouchableOpacity>
-                  : ''
-              }
-
+              {answer.user === idCurrentUser ? (
+                <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                  <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
+                    Eliminar
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )}
             </View>
           ))}
         </View>
