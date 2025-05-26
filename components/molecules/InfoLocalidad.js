@@ -7,7 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function InfoLocalidad({ city, numTourists, onClose }) {
+export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
   const { t } = useTranslation('info'); // ahora usamos el namespace "info"
 
@@ -110,6 +110,17 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
         onPress={() => navigation.navigate('Estadisticas', { locality })}
       >
         <Text style={styles.textButton}>{t('viewStats')}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.estadisticasButton}
+        onPress={() =>
+          navigation.navigate('Forum', {
+            localityName: city,
+            forumId: id,
+          })
+        }
+      >
+        <Text style={styles.textButton}>Ir al foro</Text>
       </TouchableOpacity>
     </View>
   );
