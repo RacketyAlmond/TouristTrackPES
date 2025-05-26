@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Filter from './filter';
+import { useTranslation } from 'react-i18next';
 
 export default function ForoSearchBar({
   onSearch,
@@ -15,6 +16,7 @@ export default function ForoSearchBar({
   selectedCountries,
   setSelectedCountries,
 }) {
+  const { t } = useTranslation('foro');
   const [searchText, setSearchText] = useState('');
   const [filterVisible, setFilterVisible] = useState(false);
 
@@ -37,7 +39,7 @@ export default function ForoSearchBar({
         <FontAwesome name='search' size={20} color='#333' />
         <TextInput
           style={styles.input}
-          placeholder='Buscar pregunta...'
+          placeholder={t('question')} //'Buscar pregunta...'
           value={searchText}
           onChangeText={handleSearch}
         />

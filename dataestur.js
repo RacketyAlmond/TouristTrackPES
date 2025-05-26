@@ -2,7 +2,7 @@ import 'fast-text-encoding';
 
 export const getSummaryData = async (countries = []) => {
   try {
-    const baseUrl = 'https://touristrack.vercel.app/tourism/municipalities';
+    const baseUrl = '***REMOVED***/tourism/municipalities';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url =
@@ -23,7 +23,7 @@ export const getSummaryData = async (countries = []) => {
 
 export const getDataOfMunicipality = async (municipality) => {
   try {
-    const baseUrl = 'https://touristrack.vercel.app/tourism/municipality';
+    const baseUrl = '***REMOVED***/tourism/municipality';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
@@ -42,7 +42,7 @@ export const getDataOfMunicipality = async (municipality) => {
 export const listOriginCountries = async () => {
   try {
     const resp = await fetch(
-      'https://touristrack.vercel.app/tourism/originCountries',
+      '***REMOVED***/tourism/originCountries',
     );
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();

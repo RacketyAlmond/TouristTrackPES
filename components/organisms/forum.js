@@ -8,22 +8,61 @@ import {
   Text,
 } from 'react-native';
 import Title from '../atoms/title';
+import DetailsAct from '../atoms/detailsAct';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import config from '../../config';
 
 export default function Forum({ route }) {
+  const { t } = useTranslation('foro');
   const { forumId, localityName } = route.params;
+  const [actividadInfo, setActividadInfo] = useState('');
+  const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
 
+  /*obtiene la información de la actividad*/
+  const getForumDetails = async () => {
+    try {
+      const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
+      const json = await response.json();
+
+      if (json.success && json.forum) {
+        const forum = json.forum;
+
+        const isActividadForum =
+          forum.Actividad !== undefined && forum.Actividad !== null;
+        setIsActividad(isActividadForum);
+
+        if (isActividadForum) {
+          // Build full actividad object from root fields
+          const actividadData = {
+            Titulo: forum.Actividad,
+            Descripcion: forum.Descripcion ?? '',
+            Ubicacion: forum.Ubicacion ?? { latitud: 0, longitud: 0 },
+            DataIni: forum.DataIni ?? '',
+            DataFi: forum.DataFi ?? '',
+            Creador: forum.Creador ?? '',
+          };
+          setActividadInfo(actividadData);
+        } else {
+          setActividadInfo(null);
+        }
+      }
+    } catch (error) {
+      console.error('Error al obtener detalles del foro:', error);
+    }
+  };
+
   /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/users/${userId}`,
+        `***REMOVED***/users/${userId}`,
       );
       const json = await response.json();
 
@@ -45,7 +84,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `https://touristrack.vercel.app/forums/${forumId}/preguntas`,
+        `***REMOVED***/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
@@ -72,6 +111,7 @@ export default function Forum({ route }) {
   };
 
   useEffect(() => {
+    getForumDetails();
     getQuestions();
   }, []);
 
@@ -112,7 +152,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `https://touristrack.vercel.app/forums/${forumId}/preguntas/`,
+          `***REMOVED***/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {
@@ -161,20 +201,15 @@ export default function Forum({ route }) {
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
         source={require('../../public/mapa.png')}
-        style={{
-          flex: 1,
-          width: '100%',
-          height: '100%',
-        }}
+        style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode='cover'
       >
-        {/* Barra de búsqueda */}
         <View style={{ flex: 1, marginTop: 40, padding: 20 }}>
           <ForoSearchBar
             onSearch={handleSearch}
-            availableNationalities={availableNationalities} // Pasar las nacionalidades únicas
-            selectedCountries={selectedCountries} // Pasar los países seleccionados
-            setSelectedCountries={handleFilterByCountries} // Actualizar los países seleccionados
+            availableNationalities={availableNationalities}
+            selectedCountries={selectedCountries}
+            setSelectedCountries={handleFilterByCountries}
           />
 
           <View
@@ -191,13 +226,51 @@ export default function Forum({ route }) {
           >
             <Title title={localityName} />
 
-            {/* Campo para escribir una nueva pregunta */}
+            <ScrollView
+              style={{ flex: 1 }}
+              contentContainerStyle={{ paddingBottom: 20 }}
+              keyboardShouldPersistTaps='handled'
+            >
+              {isActividad && actividadInfo ? (
+                <>
+                  <DetailsAct actividadInfo={actividadInfo} />
+
+                  {/* Separador entre DetailsAct y Preguntas */}
+                  <View style={{ marginVertical: 20, alignItems: 'center' }}>
+                    <View
+                      style={{
+                        marginTop: 5,
+                        height: 2,
+                        width: '1000%',
+                        backgroundColor: '#572364',
+                        borderRadius: 1,
+                      }}
+                    />
+                  </View>
+                </>
+              ) : null}
+
+              {/* Lista de preguntas */}
+              {filteredQuestions.map((question, index) => (
+                <View key={index} style={{ marginVertical: 0 }}>
+                  <Question
+                    forumId={forumId}
+                    questionId={question.id}
+                    userId={question.userId}
+                    text={question.question}
+                    user={question.user}
+                    date={question.date}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+
+            {/* Campo para escribir una nueva pregunta: fuera del ScrollView */}
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: 20,
-                marginBottom: 20,
+                marginTop: 10,
               }}
             >
               <TextInput
@@ -207,8 +280,9 @@ export default function Forum({ route }) {
                   borderColor: '#ccc',
                   borderRadius: 5,
                   padding: 10,
+                  backgroundColor: 'white',
                 }}
-                placeholder='Escribe tu pregunta...'
+                placeholder={t('write')} //'Escribe tu pregunta...'
                 placeholderTextColor='#888'
                 value={newQuestion}
                 onChangeText={setNewQuestion}
@@ -225,21 +299,6 @@ export default function Forum({ route }) {
                 <Text style={{ color: 'white', fontWeight: 'bold' }}>→</Text>
               </TouchableOpacity>
             </View>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-              {/* Lista de preguntas */}
-              {filteredQuestions.map((question, index) => (
-                <View key={index} style={{ marginVertical: 0 }}>
-                  <Question
-                    forumId={forumId}
-                    questionId={question.id}
-                    userId={question.userId}
-                    text={question.question}
-                    user={question.user}
-                    date={question.date}
-                  />
-                </View>
-              ))}
-            </ScrollView>
           </View>
         </View>
       </ImageBackground>
