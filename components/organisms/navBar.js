@@ -2,10 +2,10 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {auth} from "../../firebaseConfig.js";
 
 export default function NavBar() {
   const navigation = useNavigation();
-
   return (
     <View style={styles.navbar}>
       <TouchableOpacity
@@ -21,7 +21,13 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Foros')}
+        onPress={() => {
+            (auth.currentUser != null ?
+            navigation.navigate('Foros')
+                    : navigation.navigate('User')
+            )
+        }
+      }
       >
         <Image
           source={require('../../public/forum.png')}
@@ -32,7 +38,12 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Chats')}
+        onPress={() => {
+            (auth.currentUser != null ?
+                    navigation.navigate('Chats')
+                    : navigation.navigate('User')
+            )        }
+        }
       >
         <Image
           source={require('../../public/chat.png')}

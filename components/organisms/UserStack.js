@@ -1,20 +1,30 @@
 // components/navigation/UserStack.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthScreen from '../molecules/auth';
 import BirthdateScreen from '../molecules/birthdate';
 import ProfileScreen from './profile';
 import { AuthProvider } from '../atoms/AuthContext'; // NUEVO
-import { UserProvider } from '../atoms/UserContext'; // NUEVO
+import { UserProvider } from '../atoms/UserContext';
+import {auth} from "../../firebaseConfig.js"; // NUEVO
 
 const Stack = createNativeStackNavigator();
 
 export default function UserStack() {
   const [screen, setScreen] = useState('Profile');
   const [currentUser, setCurrentUser] = useState('notSelected');
+  const getAuthenticated = () => {
+    (auth.currentUser == null) ?
+    setScreen('Auth') :
+        console.log(`user authenticated = ${auth.currentUser}`)
+    return auth.currentUser
+  }
+  useEffect(() => {
+    getAuthenticated();
+  }, []);
 
-  return (
+    return (
     <UserProvider>
       <AuthProvider>
         <View style={{ flex: 1 }}>

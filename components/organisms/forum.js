@@ -17,17 +17,18 @@ import {doc, getDoc} from "firebase/firestore";
 
 export default function Forum({ route }) {
   const { forumId, localityName } = route.params;
-  const {getUserData} = useUser();
+  const { updateUserPoints } = useUser();
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [fname, setFname] = useState('');
-  const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
-  const [about, setAbout] = useState('');
-  const [points, setPoints] = useState(null);
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
+
+
+    /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -114,20 +115,19 @@ export default function Forum({ route }) {
     setFilteredQuestions(filtered);
   };
     const getter = async () => {
-        const currentUser = auth.currentUser;
-        console.log(`user = ${currentUser.uid}`);
+        console.log(`user = ${idCurrentUser}`);
 
         if (!currentUser) {
             return Promise.reject(new Error('No user is signed in'));
         }
 
-        return getDoc(doc(db, 'Users', currentUser.uid))
+        return getDoc(doc(db, 'Users', idCurrentUser))
             .then((userDoc) => {
                 if (userDoc.exists()) {
                     const data = userDoc.data();
 
                     setFname(data.firstName);
-                    setBirthdate(data.birthday);
+                    setUserLocation(data.userLocation);
 
                 }
                 console.log('User profile created successfully!');
@@ -143,7 +143,6 @@ export default function Forum({ route }) {
   const handleAddQuestion = async () => {
     if (newQuestion.trim() !== '') {
       try {
-          const currentUser = auth.currentUser;
 
 
           const response = await fetch(
@@ -154,7 +153,7 @@ export default function Forum({ route }) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: currentUser.uid, // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newQuestion,
             }),
           },
@@ -168,15 +167,16 @@ export default function Forum({ route }) {
         }
 
         if (json.success) {
-
+            updateUserPoints(10);
           const newQuestionObject = {
             id: json.preguntaId,
-              Author: currentUser.uid, // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
               fname,
-              birthdate,
+              userLocation,
           };
+
 
           const updatedQuestions = [...questions, newQuestionObject];
           setQuestions(updatedQuestions);

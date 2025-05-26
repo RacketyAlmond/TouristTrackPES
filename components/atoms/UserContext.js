@@ -96,6 +96,38 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+
+  const updateUserPoints = async (numberOfPoints) => {
+    const user = auth.currentUser;
+    try {
+      if (!user) {
+        throw new Error('No user is signed in');
+      }
+
+      const userDoc = await getDoc(doc(db, 'Users', user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        let rawPoints = data.points;
+
+        console.log("Raw Points:", rawPoints);
+
+        if (typeof rawPoints === 'object' && rawPoints?.current !== undefined) {
+          rawPoints.current+=numberOfPoints;
+          return rawPoints.current;
+        }
+
+        if (typeof rawPoints === 'number'){
+          rawPoints+=numberOfPoints;
+          return rawPoints;
+        }
+
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error fetching points:', error);
+      throw error;
+    }
+  };
   const getUserData = async () => {
     const user = auth.currentUser;
 
@@ -126,6 +158,7 @@ export const UserProvider = ({ children }) => {
             updateUserData,
             getUserData,
             getUserPoints,
+            updateUserPoints,
           }}
       >
         {children}

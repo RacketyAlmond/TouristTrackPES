@@ -33,6 +33,7 @@ const AuthScreen = ({ onAuthenticated }) => {
     } catch (error) {
       setError(error.message);
     }
+
   };
   const redirectUri = AuthSession.makeRedirectUri({
     scheme: 'yourapp',

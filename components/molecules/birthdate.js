@@ -29,6 +29,7 @@ const BirthdateScreen = ({ onComplete }) => {
         about,
         points,
       );
+
       onComplete();
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -82,6 +83,7 @@ const BirthdateScreen = ({ onComplete }) => {
           <TouchableOpacity style={styles.button} onPress={handleSend}>
             <Text style={styles.buttonText}>Save Data</Text>
           </TouchableOpacity>
+
         </View>
       </View>
     </ImageBackground>

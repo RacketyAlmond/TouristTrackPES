@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import Comment from './comment';
-
+import { auth } from '../../firebaseConfig.js';
 export default function Question({
   forumId,
   questionId,
@@ -16,13 +16,15 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
+
 
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
   });
 
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -45,6 +47,7 @@ export default function Question({
   };
 
   const deleteAnswer = async (answerId) => {
+
     try {
       const response = await fetch(
         `https://touristrack.vercel.app/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
@@ -99,6 +102,8 @@ export default function Question({
 
   // Función para añadir una nueva respuesta
   const handleAddAnswer = async () => {
+    console.log(`user = ${idCurrentUser}`);
+
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -109,7 +114,7 @@ export default function Question({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newAnswer,
             }),
           },
@@ -123,11 +128,11 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
             user,
@@ -224,11 +229,15 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
               />
-              <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
-                <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
-                  Eliminar
-                </Text>
-              </TouchableOpacity>
+              {answer.user === idCurrentUser ?
+                  <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                    <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
+                      Eliminar
+                    </Text>
+                  </TouchableOpacity>
+                  : ''
+              }
+
             </View>
           ))}
         </View>
