@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../../firebaseConfig.js';
@@ -62,7 +61,6 @@ export default function NavBar() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
@@ -71,14 +69,6 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#f0f0f0',
   },
-  navButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  navImage: {
-    width: 30,
-    height: 30,
-    tintColor: '#572364',
-  },
+  navButton: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  navImage: { width: 30, height: 30, tintColor: '#572364' },
 });
