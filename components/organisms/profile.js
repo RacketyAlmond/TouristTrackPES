@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -100,7 +101,14 @@ const ProfileScreen = ({ onSignOut }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: 20,
+        flex: 1,
+        backgroundColor: 'white',
+      }} // Mueve aquí los estilos relacionados con el contenido
+    >
       <Image source={map} style={styles.mapBackground} />
 
       <TouchableOpacity style={styles.backButton}>
@@ -226,7 +234,7 @@ const ProfileScreen = ({ onSignOut }) => {
         visible={langModalVisible}
         onClose={() => setLangModalVisible(false)}
       />
-    </View>
+    </ScrollView>
   );
 };
 
