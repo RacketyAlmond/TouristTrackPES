@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext  } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { setDoc, doc } from 'firebase/firestore'; //En node module si tieneis firebase instalado ;P
 import {
@@ -24,12 +24,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: '1096375029000-bl6bd1lvlji21jfpqdri55ejopbg7j81.apps.googleusercontent.com',
-    webClientId: '***REMOVED***',
-    androidClientId: '1096375029000-7vfrm90mbcftgqinj4klh1lnpfeclff9.apps.googleusercontent.com',
-
+    clientId:
+      '***REMOVED***',
+    scopes: ['profile', 'email'],
+    redirectUri: '***REMOVED***',
   });
-
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -120,14 +119,23 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-
-  const signInWithGoogle = async () => {
-    await promptAsync();
+  const signInWithGoogle = async (accessToken) => {
+    const credential = GoogleAuthProvider.credential(null, accessToken);
+    const userCredential = await signInWithCredential(auth, credential);
+    return userCredential.user;
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signUp, updateProfileData, signIn, logout, signInWithGoogle, }}
+      value={{
+        user,
+        loading,
+        signUp,
+        updateProfileData,
+        signIn,
+        logout,
+        signInWithGoogle,
+      }}
     >
       {children}
     </AuthContext.Provider>

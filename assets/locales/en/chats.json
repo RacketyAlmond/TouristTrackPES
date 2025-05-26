@@ -1,0 +1,20 @@
+{
+  "search": "Search for a Chat",
+  "delete-chat": "Delete chat",
+  "sure": "Are you sure you want to delete the conversation with",
+  "cancel": "CANCEL",
+  "delete": "DELETE",
+  "success": "Success",
+  "final1": "Chat with",
+  "final2": "has been deleted.",
+  "add": "Add Chat",
+  "text1": "You can open new chats with users with their ID.",
+  "text2": "A confirmation message will be sent to the user.",
+  "create": "Enter the ID of the user",
+  "not-found": "USER NOT FOUND",
+  "not-found-text": "The id doesn't belong to any user.",
+  "new-request": "New Chat Requests",
+  "friend-request-sent": "Friend Request Sent",
+  "friend-request-sent-text": "A friend request has been sent to",
+  "error": "Failed to send message. Please try again."
+}

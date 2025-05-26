@@ -19,6 +19,7 @@ const BirthdateScreen = ({ onComplete }) => {
   const [birthdate, setBirthdate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const points = useRef(10);
+  let authStatus = false;
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
@@ -29,7 +30,10 @@ const BirthdateScreen = ({ onComplete }) => {
         about,
         points,
       );
-      onComplete();
+      authStatus = true;
+      console.log('Wchodzi tutaj a ma nie');
+
+      onComplete(authStatus);
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -79,9 +83,13 @@ const BirthdateScreen = ({ onComplete }) => {
             onChangeText={setUserLocation}
             style={styles.input}
           />
-          <TouchableOpacity style={styles.button} onPress={handleSend}>
-            <Text style={styles.buttonText}>Save Data</Text>
-          </TouchableOpacity>
+          {fname.length > 3 && userLocation.length > 5 ? (
+            <TouchableOpacity style={styles.button} onPress={handleSend}>
+              <Text style={styles.buttonText}>Save Data</Text>
+            </TouchableOpacity>
+          ) : (
+            ''
+          )}
         </View>
       </View>
     </ImageBackground>

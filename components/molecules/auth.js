@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import { useAuth } from '../atoms/AuthContext.js';
 import map from '../../public/mapa.png';
+import * as AuthSession from 'expo-auth-session';
+import * as Google from 'expo-auth-session/providers/google';
+
 const AuthScreen = ({ onAuthenticated }) => {
   const { signUp, signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
@@ -30,8 +33,34 @@ const AuthScreen = ({ onAuthenticated }) => {
       setError(error.message);
     }
   };
+  const redirectUri = AuthSession.makeRedirectUri({
+    scheme: 'yourapp',
+    useProxy: false,
+  });
 
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId:
+      '***REMOVED***',
+    scopes: ['profile', 'email'],
+    redirectUri: '***REMOVED***',
+  });
 
+  useEffect(() => {
+    console.log('Jest w response');
+    if (response?.type === 'success') {
+      console.log('WESZLO');
+      const { authentication } = response;
+
+      (async () => {
+        try {
+          const user = await signInWithGoogle(authentication.accessToken);
+          onAuthenticated(user, true);
+        } catch (error) {
+          console.error('Google Sign-in failed', error);
+        }
+      })();
+    }
+  }, [response]);
 
   return (
     <ImageBackground source={map} style={styles.backgroundImage}>
@@ -56,13 +85,16 @@ const AuthScreen = ({ onAuthenticated }) => {
           <Text style={styles.buttonText}>
             {isSignUp ? 'Sign Up' : 'Sign In'}
           </Text>
-          <TouchableOpacity style={styles.button} onPress={signInWithGoogle}>
-            <Text style={styles.buttonText}>Sign in with Google</Text>
-          </TouchableOpacity>          <Text style={styles.toggleText}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
+          <Text style={styles.toggleText}>
             {isSignUp
               ? 'Already have an account? Sign In'
               : 'New user? Sign Up'}
           </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => promptAsync()}>
+          <Text style={styles.toggleText}>{`Google ID`}</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

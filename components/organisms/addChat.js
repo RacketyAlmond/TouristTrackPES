@@ -17,13 +17,16 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
+import { auth } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
 
 export default function AddChat({ route }) {
+  const { t } = useTranslation('chats');
   const navigation = useNavigation();
-  const currentUser = route.params.currentUser;
-  const idCurrentUser = currentUser.id;
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
   const UserFriends = route.params.dataJson || [];
-  const data = UsersAppJson;
+  const data = UsersAppJson; //TODO: Cambiar por la data de la app
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState([]);
   const [searchedUser, setSearchedUser] = useState(null);
@@ -97,8 +100,8 @@ export default function AddChat({ route }) {
     );
     if (!searchID) {
       Alert.alert(
-        'USER NOT FOUND',
-        `The id doesn't belong to any user.`,
+        t('not-found'),
+        t('not-found-text'),
         [
           {
             text: 'OK',
@@ -190,16 +193,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`***REMOVED***/allowed-chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `***REMOVED***/allowed-chats`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user1ID: idCurrentUser,
+            user2ID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          user1ID: idCurrentUser,
-          user2ID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to accept chat');
@@ -233,16 +239,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`***REMOVED***/pending-requests`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `***REMOVED***/pending-requests`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentToID: idCurrentUser,
+            sentByID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          sentToID: idCurrentUser,
-          sentByID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to reject chat');
@@ -259,7 +268,15 @@ export default function AddChat({ route }) {
   const renderItem = ({ item }) => (
     <View style={styles.chatItem}>
       {/* hacer que este boton acceda al personalChat con un navigate y con el state a 1, de manera que este no pueda escribir mensajes*/}
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PersonalChat', {
+            currentUser,
+            User: item,
+            state: 1,
+          })
+        }
+      >
         <ChatItem item={item} />
         <View style={styles.newChatButtonContainer}>
           <TouchableOpacity
@@ -287,21 +304,17 @@ export default function AddChat({ route }) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name='arrow-back' style={styles.icon} size={24} />
           </TouchableOpacity>
-          <Text style={styles.title}>Add Chat</Text>
+          <Text style={styles.title}>{t('add')}</Text>
         </View>
         <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            You can open new chats with users with their ID.
-          </Text>
-          <Text style={styles.description}>
-            A confirmation message will be sent to the user.
-          </Text>
+          <Text style={styles.description}>{t('text1')}</Text>
+          <Text style={styles.description}>{t('text2')}</Text>
         </View>
         <TextInput
           style={styles.searchBar}
           onSubmitEditing={handleSubmit}
           onChangeText={handleChangeText}
-          placeholder='Enter the ID of the user'
+          placeholder={t('create')}
           value={searchTerm}
         />
 
@@ -334,7 +347,7 @@ export default function AddChat({ route }) {
       </View>
 
       <View style={styles.requestsContainer}>
-        <Text style={styles.title}>New Chat Requests</Text>
+        <Text style={styles.title}>{t('new-request')}</Text>
         <FlatList
           data={requests}
           keyExtractor={(item) => item.id.toString()}
