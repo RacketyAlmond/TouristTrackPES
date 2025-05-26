@@ -56,7 +56,7 @@ const ProfileScreen = ({ onSignOut }) => {
           setUserLocation(data.userLocation);
           setAbout(data.about);
         }
-        console.log('User profile created successfully!');
+        console.log('User profile fetched successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);

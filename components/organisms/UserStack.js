@@ -39,7 +39,8 @@ export default function UserStack() {
           {screen === 'Birthdate' && (
             <BirthdateScreen
               user={currentUser}
-              onComplete={() => setScreen('Profile')}
+              onComplete={(status) =>
+                  setScreen(status ? 'Profile' : 'Birthdate')}
             />
           )}
           {screen === 'Profile' && (
