@@ -37,7 +37,7 @@ describe('Test component Area que renderiza Circle según municipi y numTuristes
     // when
     await act(async () => {
       tree = renderer.create(
-        <Area municipi={municipi} numTuristes={numTuristes} />
+        <Area municipi={municipi} numTuristes={numTuristes} />,
       );
     });
 
@@ -50,7 +50,7 @@ describe('Test component Area que renderiza Circle según municipi y numTuristes
     });
     const expectedOpacity = numTuristes / 1000000;
     expect(circle.props.fillColor).toBe(
-      `rgba(250, 185, 140, ${expectedOpacity})`
+      `rgba(250, 185, 140, ${expectedOpacity})`,
     );
     expect(circle.props.radius).toBe(5000);
     expect(circle.props.strokeWidth).toBe(0);
@@ -66,7 +66,7 @@ describe('Test component Area que renderiza Circle según municipi y numTuristes
     // when
     await act(async () => {
       tree = renderer.create(
-        <Area municipi={municipi} numTuristes={numTuristes} />
+        <Area municipi={municipi} numTuristes={numTuristes} />,
       );
     });
 
@@ -81,7 +81,7 @@ describe('Test component Area que renderiza Circle según municipi y numTuristes
 
     // when
     const tree = renderer.create(
-      <Area municipi={municipi} numTuristes={numTuristes} />
+      <Area municipi={municipi} numTuristes={numTuristes} />,
     );
 
     // then
@@ -99,7 +99,7 @@ describe('Test component Area que renderiza Circle según municipi y numTuristes
     // when
     await act(async () => {
       tree = renderer.create(
-        <Area municipi={municipi} numTuristes={numTuristes} />
+        <Area municipi={municipi} numTuristes={numTuristes} />,
       );
     });
 

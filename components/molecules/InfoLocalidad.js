@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 55,
     marginVertical: 10,
-    backgroundColor: 'rebeccapurple',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,

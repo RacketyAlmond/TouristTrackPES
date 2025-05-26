@@ -7,7 +7,7 @@
 // --- Imports después de los mocks ---
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
-import PersonalChat from '../components/molecules/personalChat.js';
+import PersonalChat from '../components/organisms/personalChat.js';
 
 jest.mock('../components/molecules/chatHeader.js', () => {
   const React = require('react');
@@ -75,7 +75,7 @@ describe('PersonalChat component', () => {
     const list = tree.root.findByType('MessageChatListMock');
     expect(list.props.messages).toHaveLength(1);
     expect(fetch).toHaveBeenCalledWith(
-      'https://touristrack.vercel.app/messages/between/u1/u2',
+      '***REMOVED***/messages/between/u1/u2',
     );
   });
 
@@ -100,7 +100,7 @@ describe('PersonalChat component', () => {
     expect(list.props.messages).toHaveLength(1);
 
     expect(fetch.mock.calls[1][0]).toBe(
-      'https://touristrack.vercel.app/messages',
+      '***REMOVED***/messages',
     );
     expect(fetch.mock.calls[1][1].method).toBe('POST');
   });

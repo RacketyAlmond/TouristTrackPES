@@ -13,7 +13,7 @@ import {
 import ChatHeader from '../molecules/chatHeader.js';
 import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
-import  socketService from '../../socketio.js';
+import socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
@@ -88,7 +88,7 @@ const PersonalChat = ({ route, navigation }) => {
     return () => {
       unsubscribeMessage();
       socketService.disconnect();
-    }
+    };
   }, [fetchMessages, idCurrentSession, userData.id]);
 
   const sendRequest = async () => {
