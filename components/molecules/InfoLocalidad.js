@@ -82,7 +82,6 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
       </TouchableOpacity>
 
       <Text style={styles.title}>{locality.name}</Text>
-      <Text style={styles.comunidad}>{t('community')}</Text>
       <TouchableOpacity
         style={styles.ratingContainer}
         onPress={() =>
@@ -97,12 +96,6 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
         <Text style={styles.info}>Número de turistas: </Text>
         <Text style={styles.valueInfo}>{locality.tourists}</Text>
         <Text style={styles.parameter}> {t('annually')}</Text>
-      </View>
-
-      <View style={styles.row}>
-        <Text style={styles.info}>{t('expenses')}:</Text>
-        <Text style={styles.valueInfo}>{locality.expenses}€</Text>
-        <Text style={styles.parameter}> {t('perNight')}</Text>
       </View>
 
       <TouchableOpacity
