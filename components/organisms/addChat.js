@@ -17,12 +17,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
-<<<<<<< HEAD
 import { auth } from '../../firebaseConfig.js';
-=======
 import { useTranslation } from 'react-i18next';
 
->>>>>>> dev
 export default function AddChat({ route }) {
   const { t } = useTranslation('chats');
   const navigation = useNavigation();
