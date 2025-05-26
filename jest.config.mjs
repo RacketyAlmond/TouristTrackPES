@@ -1,4 +1,3 @@
-// jest.config.mjs
 export default {
   preset: 'react-native',
   testEnvironment: 'node',
@@ -8,7 +7,13 @@ export default {
     '^.+\\.cjs$': 'babel-jest',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|react-native-maps|firebase|@testing-library/react-native|date-fns)/)',
+    'node_modules/(?!(react-native' +
+      '|@react-native' +
+      '|@react-navigation' + // ⬅️ añade esto
+      '|react-native-maps' +
+      '|firebase' +
+      '|@testing-library/react-native' +
+      '|date-fns)/)',
   ],
   moduleFileExtensions: [
     'js',
