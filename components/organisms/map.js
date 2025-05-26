@@ -26,26 +26,42 @@ export default function Map() {
 
   const getIdCity = async () => {
     try {
+      // Primer intento: buscar el foro por ciudad
       const response = await fetch(
-        `http://localhost:3001/forums/localidad/${city}`,
+        `***REMOVED***/forums/localidad/${city}`,
       );
       const json = await response.json();
-      if (json.success) {
-        console.log(1);
-        // Busca la ciudad que coincida con el nombre almacenado en `city`
-        const cityData = json.forums.find((forum) => forum.Localidad === city);
 
-        if (cityData) {
+      if (json.success) {
+        // Si el foro existe, devuelve su ID
+        const cityData = json.forum;
+        if (cityData && cityData.id) {
           console.log(`ID de la ciudad "${city}":`, cityData.id);
-          return cityData.id; // Devuelve la ID de la ciudad
-        } else {
-          console.log(`No se encontró la ciudad "${city}" en los datos.`);
-          return null; // Si no se encuentra, devuelve null
+          return cityData.id;
         }
       }
+
+      // Si no existe, intenta crearlo
+      console.log(`No se encontró la ciudad "${city}". Creando el foro...`);
+      const response2 = await fetch(`***REMOVED***/forums`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ Localidad: city }),
+      });
+      const json2 = await response2.json();
+      if (json2.success) {
+        console.log(`Foro creado para la ciudad "${city}". ID:`, json2.forumId);
+        return json2.forumId;
+      } else {
+        console.error(`Error al crear el foro para la ciudad "${city}".`);
+      }
+
+      return null; // Si no se pudo crear el foro, devuelve null
     } catch (error) {
-      console.log(error);
-      console.error('Error al obtener la ID de la ciudad:', error);
+      console.error('Error al obtener o crear la ID de la ciudad:', error);
+      return null;
     }
   };
 
