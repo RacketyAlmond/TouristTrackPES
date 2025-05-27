@@ -1,11 +1,10 @@
-// components/molecules/Question.js
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
+import { getRankByLevel } from '../molecules/levelProgress.js'; // Importa la función de rangos
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
@@ -25,6 +24,7 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
+  const [userRank, setUserRank] = useState(getRankByLevel(20, true)); //hardcoded rank for now
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
@@ -162,9 +162,27 @@ export default function Question({
     <View
       style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ fontWeight: 'bold' }}>{user}</Text>
-        <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold' }}>{user}</Text>
+            {userRank && (
+              <Image
+                source={userRank.icon}
+                style={{ width: 20, height: 20, marginLeft: 5 }}
+                resizeMode='contain'
+              />
+            )}
+          </View>
+          <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+        </View>
+        <Text>{text}</Text>
       </View>
 
       <Text style={{ marginVertical: 8 }}>{text}</Text>

@@ -16,8 +16,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LevelProgress from '../molecules/levelProgress';
 
-// 1. Importa tu modal de idioma
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
@@ -41,15 +41,16 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-        const userPoints = await getUserPoints();
-        setPoints(userPoints);
+        //const userPoints = await getUserPoints();
+        //setPoints(userPoints);
+        setPoints(2500);
       } catch (err) {
         console.error('Failed to load user points:', err);
       }
     };
 
     fetchPoints();
-  }, []);
+  }, [points]);
   const getter = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -138,11 +139,14 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.secoundRow}>
-        <Text style={styles.secoundRow} color='gray'>
-          {points}
-        </Text>
+      <View style={styles.mainRow}>
+        <Text style={styles.mainRow}>{fname}</Text>
+        <TouchableOpacity onPress={() => setEditingField('fname')}>
+          <Icon name='edit' size={20} color='gray' />
+        </TouchableOpacity>
       </View>
+
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
