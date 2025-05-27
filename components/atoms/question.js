@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
@@ -186,7 +187,6 @@ export default function Question({
           </View>
           <Text style={{ color: 'gray' }}>{relativeTime}</Text>
         </View>
-        <Text>{text}</Text>
       </View>
 
       <Text style={{ marginVertical: 8 }}>{text}</Text>
@@ -201,7 +201,7 @@ export default function Question({
         <TouchableOpacity onPress={() => setShowAnswers((v) => !v)}>
           <Text style={{ color: '#572364' }}>
             {showAnswers
-              ? t('hideAnswers')
+              ? t('hide')
               : `${allAnswers.length} ${t('answers')}`}
           </Text>
         </TouchableOpacity>
@@ -250,6 +250,7 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
                 points={answer.points}
+                locale={locale}
               />
               {answer.userId === idCurrentUser ? (
                 <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
