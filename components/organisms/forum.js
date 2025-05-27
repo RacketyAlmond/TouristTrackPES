@@ -12,18 +12,26 @@ import DetailsAct from '../atoms/detailsAct';
 import Question from '../atoms/question';
 import ForoSearchBar from '../molecules/foroSearchBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useUser } from '../atoms/UserContext.js';
+import { auth, db } from '../../firebaseConfig.js';
+import { doc, getDoc } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
 
 export default function Forum({ route }) {
   const { t } = useTranslation('foro');
   const { forumId, localityName } = route.params;
+  const { updateUserPoints } = useUser();
   const [actividadInfo, setActividadInfo] = useState('');
   const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [newQuestion, setNewQuestion] = useState('');
-  const [selectedCountries, setSelectedCountries] = useState([]); // Estado para los países seleccionados
+  const [selectedCountries, setSelectedCountries] = useState([]);
+  const [fname, setFname] = useState('');
+  const [userLocation, setUserLocation] = useState('');
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
 
   /*obtiene la información de la actividad*/
   const getForumDetails = async () => {
@@ -97,8 +105,8 @@ export default function Forum({ route }) {
               userId: q.Author,
               question: q.text,
               date: new Date(q.date._seconds * 1000).toISOString(),
-              nationality,
               user,
+              nationality,
             };
           }),
         );
@@ -132,22 +140,44 @@ export default function Forum({ route }) {
   const filterQuestions = (query, countries, questionsToFilter = questions) => {
     let filtered = questionsToFilter;
 
-    // Filtrar por texto de búsqueda
     if (query.trim() !== '') {
       filtered = filtered.filter((q) =>
         q.question.toLowerCase().includes(query.toLowerCase()),
       );
     }
 
-    // Filtrar por países seleccionados
     if (countries.length > 0) {
-      const countryNames = countries.map((country) => country.name); // Extraer nombres de los países
+      const countryNames = countries.map((country) => country.name);
       filtered = filtered.filter((q) => countryNames.includes(q.nationality));
     }
 
     setFilteredQuestions(filtered);
   };
+  const getter = async () => {
+    console.log(`user = ${idCurrentUser}`);
 
+    if (!currentUser) {
+      return Promise.reject(new Error('No user is signed in'));
+    }
+
+    return getDoc(doc(db, 'Users', idCurrentUser))
+      .then((userDoc) => {
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+
+          setFname(data.firstName);
+          setUserLocation(data.userLocation);
+        }
+        console.log('User profile created successfully!');
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
+  };
+
+  useEffect(() => {
+    getter();
+  }, []);
   const handleAddQuestion = async () => {
     if (newQuestion.trim() !== '') {
       try {
@@ -159,7 +189,7 @@ export default function Forum({ route }) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newQuestion,
             }),
           },
@@ -173,15 +203,14 @@ export default function Forum({ route }) {
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
-
+          updateUserPoints(10);
           const newQuestionObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-            user,
-            nationality,
+            fname,
+            userLocation,
           };
 
           const updatedQuestions = [...questions, newQuestionObject];

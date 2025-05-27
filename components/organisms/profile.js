@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -64,6 +65,25 @@ const ProfileScreen = ({ onSignOut }) => {
     } catch (err) {
       console.error('Error fetching user:', err);
     }
+
+    return getDoc(doc(db, 'Users', user.uid))
+      .then((userDoc) => {
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          // console.log(`data = ${data.firstName}`);
+          // console.log(`userData.firstName = ${data.firstName}`);
+          // console.log(`userData.birthday = ${data.birthday}`);
+
+          setFname(data.firstName);
+          setBirthdate(data.birthday);
+          setUserLocation(data.userLocation);
+          setAbout(data.about);
+        }
+        console.log('User profile fetched successfully!');
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
   };
 
   useEffect(() => {
@@ -81,7 +101,14 @@ const ProfileScreen = ({ onSignOut }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: 20,
+        flex: 1,
+        backgroundColor: 'white',
+      }} // Mueve aquí los estilos relacionados con el contenido
+    >
       <Image source={map} style={styles.mapBackground} />
 
       <TouchableOpacity style={styles.backButton}>
@@ -111,15 +138,10 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{fname}</Text>
-        <TouchableOpacity onPress={() => setEditingField('fname')}>
-          <Icon name='edit' size={20} color='gray' />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{points}</Text>
+      <View style={styles.secoundRow}>
+        <Text style={styles.secoundRow} color='gray'>
+          {points}
+        </Text>
       </View>
 
       <View style={styles.secoundRow}>
@@ -212,7 +234,7 @@ const ProfileScreen = ({ onSignOut }) => {
         visible={langModalVisible}
         onClose={() => setLangModalVisible(false)}
       />
-    </View>
+    </ScrollView>
   );
 };
 

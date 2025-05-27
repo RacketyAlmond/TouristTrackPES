@@ -17,16 +17,14 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 //import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 
+
 export default function Chats() {
+
+  const currentUser = auth.currentUser;
   const { t } = useTranslation('chats');
-  const currentUser = {
-    id: '0',
-    name: 'Yo',
-    avatar: 'https://i.pinimg.com/474x/24/0d/b3/asdsaeeedsseed.jpg',
-    about: 'hi',
-  };
   const idCurrentSession = currentUser.id;
   //const dataJson = UsersJson.find(
   //(user) => user.idUser === idCurrentSession,

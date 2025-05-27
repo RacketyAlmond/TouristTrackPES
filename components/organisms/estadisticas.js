@@ -165,41 +165,6 @@ export default function Estadisticas() {
               </View>
             ))}
           </View>
-
-          {/*gasto*/}
-          <View style={styles.numeroTuristas_container}>
-            <Text style={styles.titulos_morados}>{t('expense')}</Text>
-          </View>
-          <View style={styles.numeroTuristas_container}>
-            <SelectorPlataforma
-              selectedValue={selectedItemAnos2}
-              onValueChange={(item) => setSelectedItemAnos2(item)}
-              options={opcionesAnos}
-              style={styles.pickerAno}
-            />
-
-            <SelectorPlataforma
-              selectedValue={selectedItemPaises2}
-              onValueChange={(item) => setSelectedItemPaises2(item)}
-              options={opcionesPaises}
-              style={styles.pickerPais}
-            />
-
-            <SelectorPlataforma
-              selectedValue={selectedItemGasto}
-              onValueChange={(item) => setSelectedItemGasto(item)}
-              options={opcionesGastos}
-              style={styles.pickerPais}
-            />
-          </View>
-          <View>
-            {filteredData.length > 0 ? (
-              <Grafica data={data} title='Gasto Turistas' />
-            ) : (
-              <></>
-            )}
-          </View>
-          {/*<StatusBar style='auto' />*/}
         </View>
       </SafeAreaView>
     </ScrollView>
