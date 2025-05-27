@@ -23,12 +23,7 @@ import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
-import { UserContext } from './components/atoms/UserContext';
-
-
-
-import NotificationTester from './components/organisms/test';
-
+import { UserContext } from './components/atoms/UserContext'; 
 
 
 
@@ -76,11 +71,6 @@ export default function App() {
                 animation: 'slide_from_right',
               }}
             >
-              <Stack.Screen 
-                name='NotificationTester' 
-                component={NotificationTester}
-                options={{ title: 'Test Notifications' }}
-              />
               <Stack.Screen
                 name='Foros'
                 component={IndexForos}
