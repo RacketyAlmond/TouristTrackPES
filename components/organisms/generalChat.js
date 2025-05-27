@@ -51,6 +51,7 @@ export default function Chats() {
         name: chat.firstName,
         about: chat.about,
         avatar: chat.avatar,
+        points: chat.points.current || 0,
       }));
 
       setChats(formattedChats);
