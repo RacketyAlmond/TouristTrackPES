@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
-import { getRankByLevel } from '../molecules/levelProgress.js';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js';
 
 export default function Comment({ user, date, text, points }) {
   // Calcula el tiempo relativo
@@ -11,7 +11,7 @@ export default function Comment({ user, date, text, points }) {
     locale: es,
   });
 
-  const userRank = getRankByLevel(points, true); //hardcoded rank for now
+  const userRank = getRankByLevel(getLevelInfo(points).currentLevel, true);
 
   return (
     <View style={{ paddingBottom: 3, paddingTop: 3, marginLeft: 20 }}>

@@ -75,10 +75,11 @@ export default function Forum({ route }) {
       const json = await response.json();
 
       if (json.success && json.usuario) {
-        const { firstName, userLocation } = json.usuario;
+        const { firstName, userLocation, points } = json.usuario;
         return {
           user: firstName || 'Desconocido',
           nationality: userLocation || 'Desconocido',
+          points: points.current || 0,
         };
       }
     } catch (error) {
@@ -99,7 +100,7 @@ export default function Forum({ route }) {
       if (json.success) {
         const preguntas = await Promise.all(
           json.preguntas.map(async (q) => {
-            const { user, nationality } = await getUserInfo(q.Author);
+            const { user, nationality, points } = await getUserInfo(q.Author);
             return {
               id: q.id,
               userId: q.Author,
@@ -107,6 +108,7 @@ export default function Forum({ route }) {
               date: new Date(q.date._seconds * 1000).toISOString(),
               user,
               nationality,
+              points,
             };
           }),
         );
@@ -289,6 +291,7 @@ export default function Forum({ route }) {
                     text={question.question}
                     user={question.user}
                     date={question.date}
+                    points={question.points}
                   />
                 </View>
               ))}
