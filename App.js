@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable prettier/prettier */
+import React, { useEffect, useContext } from 'react';
+import { registerForPushNotificationsAsync, setupNotificationListeners } from './notifications';
+import { useNavigation } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import { View, Text } from 'react-native';
@@ -20,17 +23,51 @@ import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
+import { UserContext } from './components/atoms/UserContext';
+
+
+
+import NotificationTester from './components/organisms/test';
+
+
+
+
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { loading, error } = useSyncForosActividades();
 
+  function NotificationHandler() {
+    const navigation = useNavigation();
+    const { userData } = useContext(UserContext); // Your user context
+
+    useEffect(() => {
+      if (userData?.id) {
+        // Register for push tokens
+        registerForPushNotificationsAsync(userData.id);
+        
+        // Set up notification listeners
+        const { notificationListener, responseListener } = setupNotificationListeners(navigation);
+        
+        // Clean up
+        return () => {
+          notificationListener?.remove();
+          responseListener?.remove();
+        };
+      }
+    }, [userData, navigation]);
+
+    return null; // This component doesn't render anything
+  }
+
   return (
     <I18nextProvider i18n={i18n}>
       <UserProvider>
         <AuthProvider>
           <NavigationContainer>
+            <NotificationHandler />
             <Stack.Navigator
               initialRouteName='Mapa'
               screenOptions={{
@@ -39,6 +76,11 @@ export default function App() {
                 animation: 'slide_from_right',
               }}
             >
+              <Stack.Screen 
+                name='NotificationTester' 
+                component={NotificationTester}
+                options={{ title: 'Test Notifications' }}
+              />
               <Stack.Screen
                 name='Foros'
                 component={IndexForos}
