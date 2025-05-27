@@ -21,6 +21,7 @@ import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/organisms/personalChat';
 import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
+import UserForumComments from './components/molecules/userForumComments'
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
 import { UserContext } from './components/atoms/UserContext'; 
@@ -125,6 +126,11 @@ export default function App() {
               <Stack.Screen
                 name='User'
                 component={UserStack}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name='UserForumComments' 
+                component={UserForumComments}
                 options={{ headerShown: false }}
               />
             </Stack.Navigator>
