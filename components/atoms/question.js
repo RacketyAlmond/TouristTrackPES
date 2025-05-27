@@ -1,11 +1,11 @@
-// components/molecules/Question.js
-
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
+import { getRankByLevel } from '../molecules/levelProgress.js'; // Importa la función de rangos
+import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
 
@@ -24,6 +24,9 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
+  const [userRank, setUserRank] = useState(getRankByLevel(0, true)); //hardcoded rank for now
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
 
   // Elegimos el locale de date-fns según el idioma activo
   const locale = i18n.language === 'es' ? es : enUS;
@@ -33,7 +36,6 @@ export default function Question({
     locale: locale,
   });
 
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -42,10 +44,11 @@ export default function Question({
       const json = await response.json();
 
       if (json.success && json.usuario) {
-        const { firstName, userLocation } = json.usuario;
+        const { firstName, userLocation, points } = json.usuario;
         return {
           user: firstName || 'Desconocido',
           nationality: userLocation || 'Desconocido',
+          points: points.current || 0,
         };
       }
     } catch (error) {
@@ -84,7 +87,7 @@ export default function Question({
       if (json.success) {
         const respuestas = await Promise.all(
           json.respuestas.map(async (a) => {
-            const { user, nationality } = await getUserInfo(a.Author);
+            const { user, nationality, points } = await getUserInfo(a.Author);
             return {
               id: a.id,
               userId: a.Author,
@@ -92,7 +95,9 @@ export default function Question({
               date: new Date(a.date._seconds * 1000).toISOString(),
               nationality,
               user,
+              points,
             };
+
           }),
         );
         setAllAnswers(respuestas);
@@ -108,6 +113,8 @@ export default function Question({
 
   // Añadir nueva respuesta
   const handleAddAnswer = async () => {
+    console.log(`user = ${idCurrentUser}`);
+
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -118,7 +125,7 @@ export default function Question({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newAnswer,
             }),
           },
@@ -132,17 +139,18 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality, points } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
             user,
             nationality,
+            points,
           };
-
+          setUserRank(newAnswerObject.points.current);
           setAllAnswers([...allAnswers, newAnswerObject]);
           setNewAnswer('');
         } else {
@@ -158,9 +166,27 @@ export default function Question({
     <View
       style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}
     >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={{ fontWeight: 'bold' }}>{user}</Text>
-        <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold' }}>{user}</Text>
+            {userRank && (
+              <Image
+                source={userRank.icon}
+                style={{ width: 20, height: 20, marginLeft: 5 }}
+                resizeMode='contain'
+              />
+            )}
+          </View>
+          <Text style={{ color: 'gray' }}>{relativeTime}</Text>
+        </View>
+        <Text>{text}</Text>
       </View>
 
       <Text style={{ marginVertical: 8 }}>{text}</Text>
@@ -214,21 +240,30 @@ export default function Question({
         </View>
       )}
 
-      {showAnswers &&
-        allAnswers.map((answer, idx) => (
-          <View key={idx}>
-            <Comment
-              user={answer.user}
-              date={answer.date}
-              text={answer.answer}
-            />
-            <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
-              <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
-                {t('delete')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+      {/* Renderiza las respuestas si showAnswers es true */}
+      {showAnswers && (
+        <View>
+          {allAnswers.map((answer, answerIndex) => (
+            <View key={answerIndex}>
+              <Comment
+                user={answer.user}
+                date={answer.date}
+                text={answer.answer}
+                points={answer.points}
+              />
+              {answer.userId === idCurrentUser ? (
+                <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                  <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
+                    Eliminar
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }

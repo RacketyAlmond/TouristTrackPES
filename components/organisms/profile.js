@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -15,13 +16,13 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LevelProgress from '../molecules/levelProgress';
 
-// 1. Importa tu modal de idioma
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
   const { t } = useTranslation('profile');
-  const { updateUserData, getUserData } = useUser();
+  const { updateUserData, getUserPoints } = useUser();
 
   // Campos de usuario
   const [fname, setFname] = useState('');
@@ -40,6 +41,7 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
+
         const userPoints = await getUserPoints();
         setPoints(userPoints);
       } catch (err) {
@@ -48,7 +50,7 @@ const ProfileScreen = ({ onSignOut }) => {
     };
 
     fetchPoints();
-  }, []);
+  }, [points]);
   const getter = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -60,10 +62,31 @@ const ProfileScreen = ({ onSignOut }) => {
         setBirthdate(data.birthday);
         setUserLocation(data.userLocation);
         setAbout(data.about);
+        setPoints(data.points.current);
       }
     } catch (err) {
       console.error('Error fetching user:', err);
     }
+
+    return getDoc(doc(db, 'Users', user.uid))
+      .then((userDoc) => {
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          // console.log(`data = ${data.firstName}`);
+          // console.log(`userData.firstName = ${data.firstName}`);
+          // console.log(`userData.birthday = ${data.birthday}`);
+
+          setFname(data.firstName);
+          setBirthdate(data.birthday);
+          setUserLocation(data.userLocation);
+          setAbout(data.about);
+          setPoints(data.points.current);
+        }
+        console.log('User profile fetched successfully!');
+      })
+      .catch((error) => {
+        console.error('Error updating profile:', error);
+      });
   };
 
   useEffect(() => {
@@ -81,7 +104,14 @@ const ProfileScreen = ({ onSignOut }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: 20,
+        flex: 1,
+        backgroundColor: 'white',
+      }} // Mueve aquí los estilos relacionados con el contenido
+    >
       <Image source={map} style={styles.mapBackground} />
 
       <TouchableOpacity style={styles.backButton}>
@@ -111,16 +141,9 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{fname}</Text>
-        <TouchableOpacity onPress={() => setEditingField('fname')}>
-          <Icon name='edit' size={20} color='gray' />
-        </TouchableOpacity>
-      </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{points}</Text>
-      </View>
+
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
@@ -212,7 +235,7 @@ const ProfileScreen = ({ onSignOut }) => {
         visible={langModalVisible}
         onClose={() => setLangModalVisible(false)}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -234,7 +257,6 @@ const styles = StyleSheet.create({
     left: 20,
   },
   profileContainer: {
-    marginTop: 120,
     alignItems: 'center',
     position: 'relative',
   },

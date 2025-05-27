@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable prettier/prettier */
+import React, { useEffect, useContext } from 'react';
+import { registerForPushNotificationsAsync, setupNotificationListeners } from './notifications';
+import { useNavigation } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import { View, Text } from 'react-native';
@@ -20,17 +23,46 @@ import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
+import { UserContext } from './components/atoms/UserContext'; 
+
+
+
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { loading, error } = useSyncForosActividades();
 
+  function NotificationHandler() {
+    const navigation = useNavigation();
+    const { userData } = useContext(UserContext); // Your user context
+
+    useEffect(() => {
+      if (userData?.id) {
+        // Register for push tokens
+        registerForPushNotificationsAsync(userData.id);
+        
+        // Set up notification listeners
+        const { notificationListener, responseListener } = setupNotificationListeners(navigation);
+        
+        // Clean up
+        return () => {
+          notificationListener?.remove();
+          responseListener?.remove();
+        };
+      }
+    }, [userData, navigation]);
+
+    return null; // This component doesn't render anything
+  }
+
   return (
     <I18nextProvider i18n={i18n}>
       <UserProvider>
         <AuthProvider>
           <NavigationContainer>
+            <NotificationHandler />
             <Stack.Navigator
               initialRouteName='Mapa'
               screenOptions={{
@@ -38,6 +70,7 @@ export default function App() {
                 gestureDirection: 'horizontal',
                 animation: 'slide_from_right',
               }}
+              options={{ headerShown: false }}
             >
               <Stack.Screen
                 name='Foros'
@@ -54,12 +87,32 @@ export default function App() {
                   animation: 'slide_from_right',
                 }}
               />
+              <Stack.Screen 
+                name='Chats' 
+                component={Chats}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name='PersonalChat' 
+                component={PersonalChat}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name='AddChat' 
+                component={AddChat}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name='Estadisticas' 
+                component={Estadisticas}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen 
+                name='Valoraciones' 
+                component={Valoraciones}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name='Mapa' component={Map} />
-              <Stack.Screen name='Estadisticas' component={Estadisticas} />
-              <Stack.Screen name='Chats' component={Chats} />
-              <Stack.Screen name='PersonalChat' component={PersonalChat} />
-              <Stack.Screen name='AddChat' component={AddChat} />
-              <Stack.Screen name='Valoraciones' component={Valoraciones} />
               <Stack.Screen
                 name='Mis valoraciones'
                 component={ValoracionesUsuario}
@@ -77,16 +130,6 @@ export default function App() {
             </Stack.Navigator>
             <NavBar />
           </NavigationContainer>
-          {loading && (
-            <View style={{ position: 'absolute', top: 50 }}>
-              <Text>⏳ Sincronizando actividades...</Text>
-            </View>
-          )}
-          {error && (
-            <View style={{ position: 'absolute', top: 80 }}>
-              <Text>❌ Error: {error}</Text>
-            </View>
-          )}
         </AuthProvider>
       </UserProvider>
     </I18nextProvider>

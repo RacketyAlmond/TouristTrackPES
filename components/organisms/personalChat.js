@@ -13,14 +13,14 @@ import {
 import ChatHeader from '../molecules/chatHeader.js';
 import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
-import  socketService from '../../socketio.js';
+import socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
-  const { t } = useTranslation('foro');
+  const { t } = useTranslation('chats');
   const userData = route.params.User;
   const currentUser = route.params.currentUser;
-  const idCurrentSession = currentUser.id;
+  const idCurrentSession = currentUser.uid;
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState(route.params.state); // 0 = chat, 1 = requested, 2 = request
@@ -88,7 +88,7 @@ const PersonalChat = ({ route, navigation }) => {
     return () => {
       unsubscribeMessage();
       socketService.disconnect();
-    }
+    };
   }, [fetchMessages, idCurrentSession, userData.id]);
 
   const sendRequest = async () => {
@@ -186,21 +186,6 @@ const PersonalChat = ({ route, navigation }) => {
     }
   };
 
-  const simulateIncomingMessage = async () => {
-    console.log('Simulando mensaje entrante de:', userData.name);
-
-    const response = await fetch('***REMOVED***/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sentByID: userData.id,
-        sentToID: idCurrentSession,
-        content: `Mensaje nuevo`,
-      }),
-    });
-  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -215,12 +200,6 @@ const PersonalChat = ({ route, navigation }) => {
       />
       <MessageChatList messages={messages} isLoading={isLoading} />
       <MessageChatInput onSendMessage={handleSendMessage} />
-      <TouchableOpacity
-        style={styles.testButton}
-        onPress={simulateIncomingMessage}
-      >
-        <Text style={styles.testButtonText}>Simular mensaje</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
