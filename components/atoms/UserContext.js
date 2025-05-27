@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
+    avatar,
   ) => {
     const user = auth.currentUser;
 

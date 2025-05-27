@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 import {
@@ -12,14 +13,17 @@ import {
   Platform,
   ScrollView,
   Alert,
+  StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { auth } from '../../firebaseConfig.js';
+import { useUser } from '../atoms/UserContext';
 
 const RatingScreen = ({ route }) => {
+  const { userData, getUserData } = useUser();
   const currentUser = auth.currentUser;
 
   const defaultAvatar = require('../../public/user.png');
@@ -66,6 +70,21 @@ const RatingScreen = ({ route }) => {
     });
   }, [ratings]);
 
+  useEffect(() => {
+  const loadUserData = async () => {
+    try {
+      if (currentUser && currentUser.uid) {
+        // Ya tienes getUserData en UserContext, úsalo para cargar los datos
+        await getUserData();
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error);
+    }
+  };
+  
+  loadUserData();
+}, [currentUser]);
+
   useFocusEffect(
     useCallback(() => {
       fetchRatings(localidad.name);
@@ -75,7 +94,7 @@ const RatingScreen = ({ route }) => {
   const fetchRatings = async (city) => {
     try {
       const response = await fetch(
-        `http://192.168.1.77:8080/ratings/location/${city}`,
+        `***REMOVED***/ratings/location/${city}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -97,7 +116,7 @@ const RatingScreen = ({ route }) => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`http://192.168.1.77:8080/ratings/${id}`, {
+            await fetch(`***REMOVED***/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -127,7 +146,7 @@ const RatingScreen = ({ route }) => {
 
     try {
       const response = await fetch(
-        `http://192.168.1.77:8080/ratings/${ratingToUpdate.id}`,
+        `***REMOVED***/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -139,8 +158,8 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: currentUser.avatar || defaultAvatar,
-        authorFirstName: currentUser.displayName,
+        authorAvatar: userData.avatar || defaultAvatar,
+        authorFirstName: userData.firstName,
       };
 
       setRatings((prev) =>
@@ -178,7 +197,7 @@ const RatingScreen = ({ route }) => {
     };
 
     try {
-      const response = await fetch('http://192.168.1.77:8080/ratings', {
+      const response = await fetch('***REMOVED***/ratings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRatingData),
@@ -188,8 +207,8 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: currentUser.avatar || defaultAvatar,
-        authorFirstName: currentUser.displayName,
+        authorAvatar: userData?.avatar || defaultAvatar,
+        authorFirstName: userData?.firstName,
       };
 
       setRatings((prev) => [postedRating, ...prev]);
@@ -263,7 +282,7 @@ const RatingScreen = ({ route }) => {
         <View style={styles.reviewContainer}>
           <Image
             source={
-              typeof item.authorAvatar === 'string' && item.authorAvatar
+              item.authorAvatar && typeof item.authorAvatar === 'string'
                 ? { uri: item.authorAvatar }
                 : defaultAvatar
             }
@@ -393,14 +412,14 @@ const RatingScreen = ({ route }) => {
             <View style={styles.inputUser}>
               <Image
                 source={
-                  typeof currentUser.avatar === 'string' && currentUser.avatar
-                    ? { uri: currentUser.avatar }
+                  userData?.avatar && typeof userData.avatar === 'string'
+                    ? { uri: userData.avatar }
                     : defaultAvatar
                 }
                 style={styles.avatar}
               />
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.username}>{currentUser.username}</Text>
+                <Text style={styles.username}>{userData?.firstName}</Text>
                 {loggedRank && (
                   <Image
                     source={loggedRank.icon}
@@ -446,7 +465,14 @@ const RatingScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#fff',
+        paddingTop:
+          Platform.OS === 'android'
+            ? Math.min(StatusBar.currentHeight || 30, 30)
+            : 0,
+  },
   title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
   subtitle: { color: '#999' },
   ratingRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
