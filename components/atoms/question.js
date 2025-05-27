@@ -16,6 +16,7 @@ export default function Question({
   user,
   date,
   text,
+  points,
 }) {
   // namespace 'foro', además extraemos i18n.language
   const { t, i18n } = useTranslation('foro');
@@ -24,7 +25,7 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
-  const [userRank, setUserRank] = useState(getRankByLevel(0, true)); //hardcoded rank for now
+  const [userRank, setUserRank] = useState(getRankByLevel(points, true)); //hardcoded rank for now
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
@@ -97,7 +98,6 @@ export default function Question({
               user,
               points,
             };
-
           }),
         );
         setAllAnswers(respuestas);
@@ -139,7 +139,8 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality, points } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality, points } =
+            await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
