@@ -16,13 +16,14 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ChatItem from '../atoms/chatItem';
+import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 
 export default function AddChat({ route }) {
   const { t } = useTranslation('chats');
   const navigation = useNavigation();
-  const currentUser = route.params.currentUser;
-  const idCurrentUser = currentUser.id;
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
   const nameCurrentUser = currentUser.name;
   const UserFriends = route.params.dataJson || [];
   const [searchTerm, setSearchTerm] = useState('');

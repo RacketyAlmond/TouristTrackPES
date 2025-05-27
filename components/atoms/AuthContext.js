@@ -29,12 +29,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId:
-      '1096375029000-bl6bd1lvlji21jfpqdri55ejopbg7j81.apps.googleusercontent.com',
-    webClientId:
+    clientId:
       '***REMOVED***',
-    androidClientId:
-      '1096375029000-7vfrm90mbcftgqinj4klh1lnpfeclff9.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
+    redirectUri: '***REMOVED***',
   });
 
   useEffect(() => {
@@ -171,8 +169,10 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const signInWithGoogle = async () => {
-    await promptAsync();
+  const signInWithGoogle = async (accessToken) => {
+    const credential = GoogleAuthProvider.credential(null, accessToken);
+    const userCredential = await signInWithCredential(auth, credential);
+    return userCredential.user;
   };
 
   return (

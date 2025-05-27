@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 
 const getBaseURL = () => {
   const debuggerHost = Constants.manifest?.debuggerHost;
-  if (!debuggerHost) return 'http://192.168.1.45:3001'; // fallback
+  if (!debuggerHost) return '***REMOVED***'; // fallback
 
   //let ip = debuggerHost.split(':')[0];
   const ip = Platform.OS === 'android' ? '10.0.2.2' : 'localhost';

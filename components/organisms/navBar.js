@@ -1,54 +1,64 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../../firebaseConfig.js';
+
 export default function NavBar() {
   const navigation = useNavigation();
-
   return (
-    <>
-      <View style={styles.navbar}>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('Mapa')}
-        >
-          <Image
-            source={require('../../public/map.png')}
-            style={styles.navImage}
-            resizeMode='contain'
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('Foros')}
-        >
-          <Image
-            source={require('../../public/forum.png')}
-            style={styles.navImage}
-            resizeMode='contain'
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('Chats')}
-        >
-          <Image
-            source={require('../../public/chat.png')}
-            style={styles.navImage}
-            resizeMode='contain'
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navButton}
-          onPress={() => navigation.navigate('User')}
-        >
-          <Image
-            source={require('../../public/user.png')}
-            style={styles.navImage}
-            resizeMode='contain'
-          />
-        </TouchableOpacity>
-      </View>
-    </>
+    <View style={styles.navbar}>
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('Mapa')}
+      >
+        <Image
+          source={require('../../public/map.png')}
+          style={styles.navImage}
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => {
+          auth.currentUser != null
+            ? navigation.navigate('Foros')
+            : navigation.navigate('User');
+        }}
+      >
+        <Image
+          source={require('../../public/forum.png')}
+          style={styles.navImage}
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => {
+          auth.currentUser != null
+            ? navigation.navigate('Chats')
+            : navigation.navigate('User');
+        }}
+      >
+        <Image
+          source={require('../../public/chat.png')}
+          style={styles.navImage}
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navButton}
+        onPress={() => navigation.navigate('User')}
+      >
+        <Image
+          source={require('../../public/user.png')}
+          style={styles.navImage}
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 const styles = StyleSheet.create({

@@ -6,6 +6,7 @@ import { formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
+import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
 
@@ -24,6 +25,8 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
 
   // Elegimos el locale de date-fns según el idioma activo
   const locale = i18n.language === 'es' ? es : enUS;
@@ -33,7 +36,6 @@ export default function Question({
     locale: locale,
   });
 
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -108,6 +110,8 @@ export default function Question({
 
   // Añadir nueva respuesta
   const handleAddAnswer = async () => {
+    console.log(`user = ${idCurrentUser}`);
+
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -118,7 +122,7 @@ export default function Question({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newAnswer,
             }),
           },
@@ -132,11 +136,11 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
             user,
@@ -214,21 +218,29 @@ export default function Question({
         </View>
       )}
 
-      {showAnswers &&
-        allAnswers.map((answer, idx) => (
-          <View key={idx}>
-            <Comment
-              user={answer.user}
-              date={answer.date}
-              text={answer.answer}
-            />
-            <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
-              <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
-                {t('delete')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+      {/* Renderiza las respuestas si showAnswers es true */}
+      {showAnswers && (
+        <View>
+          {allAnswers.map((answer, answerIndex) => (
+            <View key={answerIndex}>
+              <Comment
+                user={answer.user}
+                date={answer.date}
+                text={answer.answer}
+              />
+              {answer.user === idCurrentUser ? (
+                <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                  <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
+                    Eliminar
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   );
 }

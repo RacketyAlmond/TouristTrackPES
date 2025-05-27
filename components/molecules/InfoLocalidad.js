@@ -7,7 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function InfoLocalidad({ city, numTourists, onClose }) {
+export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
   const { t } = useTranslation('info'); // ahora usamos el namespace "info"
 
@@ -82,7 +82,6 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
       </TouchableOpacity>
 
       <Text style={styles.title}>{locality.name}</Text>
-      <Text style={styles.comunidad}>{t('community')}</Text>
       <TouchableOpacity
         style={styles.ratingContainer}
         onPress={() =>
@@ -99,17 +98,22 @@ export default function InfoLocalidad({ city, numTourists, onClose }) {
         <Text style={styles.parameter}> {t('annually')}</Text>
       </View>
 
-      <View style={styles.row}>
-        <Text style={styles.info}>{t('expenses')}:</Text>
-        <Text style={styles.valueInfo}>{locality.expenses}€</Text>
-        <Text style={styles.parameter}> {t('perNight')}</Text>
-      </View>
-
       <TouchableOpacity
         style={styles.estadisticasButton}
         onPress={() => navigation.navigate('Estadisticas', { locality })}
       >
         <Text style={styles.textButton}>{t('viewStats')}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.estadisticasButton}
+        onPress={() =>
+          navigation.navigate('Forum', {
+            localityName: city,
+            forumId: id,
+          })
+        }
+      >
+        <Text style={styles.textButton}>Ir al foro</Text>
       </TouchableOpacity>
     </View>
   );
@@ -192,7 +196,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginHorizontal: 55,
     marginVertical: 10,
-    backgroundColor: 'rebeccapurple',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
