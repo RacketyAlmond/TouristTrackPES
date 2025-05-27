@@ -17,10 +17,10 @@ import socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
-  const { t } = useTranslation('foro');
+  const { t } = useTranslation('chats');
   const userData = route.params.User;
   const currentUser = route.params.currentUser;
-  const idCurrentSession = currentUser.id;
+  const idCurrentSession = currentUser.uid;
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState(route.params.state); // 0 = chat, 1 = requested, 2 = request
@@ -196,6 +196,7 @@ const PersonalChat = ({ route, navigation }) => {
         contactName={userData.name}
         contactAvatar={userData.avatar}
         contactDescription={userData.about}
+        contactPoints={userData.points}
         onBackPress={goBack}
       />
       <MessageChatList messages={messages} isLoading={isLoading} />

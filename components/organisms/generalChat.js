@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 export default function Chats() {
   const currentUser = auth.currentUser;
   const { t } = useTranslation('chats');
-  const idCurrentSession = currentUser.id;
+  const idCurrentSession = currentUser.uid;
   //const dataJson = UsersJson.find(
   //(user) => user.idUser === idCurrentSession,
   //).friends;
@@ -51,6 +51,7 @@ export default function Chats() {
         name: chat.firstName,
         about: chat.about,
         avatar: chat.avatar,
+        points: chat.points.current || 0,
       }));
 
       setChats(formattedChats);

@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
 import es from 'date-fns/locale/es';
 import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
-import { getRankByLevel } from '../molecules/levelProgress.js'; // Importa la función de rangos
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js'; // Importa la función de rangos
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
@@ -16,6 +17,7 @@ export default function Question({
   user,
   date,
   text,
+  points,
 }) {
   // namespace 'foro', además extraemos i18n.language
   const { t, i18n } = useTranslation('foro');
@@ -24,7 +26,9 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
-  const [userRank, setUserRank] = useState(getRankByLevel(0, true)); //hardcoded rank for now
+  const [userRank, setUserRank] = useState(
+    getRankByLevel(getLevelInfo(points).currentLevel, true),
+  );
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
@@ -97,7 +101,6 @@ export default function Question({
               user,
               points,
             };
-
           }),
         );
         setAllAnswers(respuestas);
@@ -139,7 +142,8 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality, points } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality, points } =
+            await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
@@ -150,7 +154,6 @@ export default function Question({
             nationality,
             points,
           };
-          setUserRank(newAnswerObject.points.current);
           setAllAnswers([...allAnswers, newAnswerObject]);
           setNewAnswer('');
         } else {
@@ -186,7 +189,6 @@ export default function Question({
           </View>
           <Text style={{ color: 'gray' }}>{relativeTime}</Text>
         </View>
-        <Text>{text}</Text>
       </View>
 
       <Text style={{ marginVertical: 8 }}>{text}</Text>
@@ -201,7 +203,7 @@ export default function Question({
         <TouchableOpacity onPress={() => setShowAnswers((v) => !v)}>
           <Text style={{ color: '#572364' }}>
             {showAnswers
-              ? t('hideAnswers')
+              ? t('hide')
               : `${allAnswers.length} ${t('answers')}`}
           </Text>
         </TouchableOpacity>
@@ -250,6 +252,7 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
                 points={answer.points}
+                locale={locale}
               />
               {answer.userId === idCurrentUser ? (
                 <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>

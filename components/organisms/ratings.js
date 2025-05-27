@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 import {
   View,
   Text,
@@ -34,6 +35,10 @@ const RatingScreen = ({ route }) => {
   const [editStars, setEditStars] = useState(0);
 
   const { localidad } = route.params;
+
+  const [loggedRank, setLoggedRank] = useState(
+    getRankByLevel(getLevelInfo(5000).currentLevel, true),
+  );
 
   const [localidadRating, setLocalidadRating] = useState({
     rating: localidad.rating,
@@ -251,6 +256,9 @@ const RatingScreen = ({ route }) => {
       // Formatear la fecha
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
+      // Determina el rango del usuario basado en los puntos
+      const userRank = getRankByLevel(15, true);
+
       return (
         <View style={styles.reviewContainer}>
           <Image
@@ -263,7 +271,16 @@ const RatingScreen = ({ route }) => {
           />
           <View style={{ flex: 1 }}>
             <View style={styles.reviewHeader}>
-              <Text style={styles.username}>{item.authorFirstName}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.username}>{item.authorFirstName}</Text>
+                {userRank && (
+                  <Image
+                    source={userRank.icon}
+                    style={styles.rankIcon}
+                    resizeMode='contain'
+                  />
+                )}
+              </View>
               <View style={styles.starsRight}>
                 {item.id === editingRatingId
                   ? renderStars(editStars, true, setEditStars)
@@ -382,7 +399,16 @@ const RatingScreen = ({ route }) => {
                 }
                 style={styles.avatar}
               />
-              <Text style={styles.username}>{currentUser.displayName}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.username}>{currentUser.username}</Text>
+                {loggedRank && (
+                  <Image
+                    source={loggedRank.icon}
+                    style={styles.rankIcon}
+                    resizeMode='contain'
+                  />
+                )}
+              </View>
             </View>
             {renderStars(ratingStars, true, setRatingStars)}
           </View>
@@ -507,6 +533,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: 'bold',
     color: '#572364',
+  },
+  rankIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
   },
 });
 

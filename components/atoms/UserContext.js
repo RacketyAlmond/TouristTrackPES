@@ -43,6 +43,36 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
+
+  const getUserForumComments = async () => {
+    try {
+      const user = auth.currentUser;
+      
+      if (!user) {
+        throw new Error('No user is signed in');
+      }
+      
+      console.log('Fetching forum activity for user', user.uid);
+      
+      // Usa la ruta correcta que tienes en el backend
+      const response = await fetch(`***REMOVED***/forums/user-forum-comments/${user.uid}`);
+      
+      if (!response.ok) {
+        console.error('Response not OK:', response.status);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error('Failed to fetch user forum comments');
+      }
+      
+      const data = await response.json();
+      console.log('Forum activity data received:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching user forum comments:', error);
+      throw error;
+    }
+  };
+
   const updateUserData = async (
     fname,
     birthday,
@@ -170,6 +200,7 @@ export const UserProvider = ({ children }) => {
         getUserData,
         getUserPoints,
         updateUserPoints,
+        getUserForumComments
       }}
     >
       {children}

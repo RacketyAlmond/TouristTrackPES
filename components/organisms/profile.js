@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   ScrollView,
   View,
@@ -21,6 +23,7 @@ import LevelProgress from '../molecules/levelProgress';
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
+  const navigation = useNavigation();
   const { t } = useTranslation('profile');
   const { updateUserData, getUserPoints } = useUser();
 
@@ -41,7 +44,6 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-
         const userPoints = await getUserPoints();
         setPoints(userPoints);
       } catch (err) {
@@ -141,8 +143,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-
-
       <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
@@ -197,12 +197,12 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UserForumComments')}>
         <Icon name='visibility' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Mis valoraciones')}>
         <Icon name='star-border' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 160,
     position: 'absolute',
-    top: 120,
+    top: 0,
   },
   backButton: {
     position: 'absolute',
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   infoText: {
     fontSize: 16,
