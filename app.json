@@ -1,38 +1,43 @@
 {
   "expo": {
-    "name": "touristrack",
+    "name": "TourisTrack",
     "slug": "touristrack",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "sdkVersion": "52.0.0",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "plugins": ["@react-native-google-signin/google-signin"],
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
-      "supportsTablet": true,
-      "googleServicesFile": "./GoogleService-Info.plist"
+        "bundleIdentifier": "com.company.touristrack",
+            "infoPlist": {
+                "ITSAppUsesNonExemptEncryption": false,
+                "NSLocationWhenInUseUsageDescription": "Esta aplicación necesita acceso a tu ubicación para mostrar mapas y contenido relevante.",
+                "NSLocationAlwaysUsageDescription": "Esta aplicación necesita acceso a tu ubicación incluso en segundo plano para mejorar la experiencia del usuario.",
+                "NSAppTransportSecurity": {
+                "NSAllowsArbitraryLoads": true
+            }
+        }
     },
     "android": {
-      "package": "com.company.touristrack",
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+      "package": "com.touristrack",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "INTERNET"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB8FWQZFAaVqqmpZrqBCGLgjIBt28OY5Q8"
+        }
       },
-      "googleServicesFile": "./google-services.json"
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": true
+      }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": ["expo-localization"],
     "extra": {
       "eas": {
-        "projectId": "f99430c4-6e74-4387-be0f-d4b0c2db67e5"
+        "projectId": "48635350-a145-4f94-8a4f-0ca28f141313"
       }
-    }
+    },
+    "owner": "sergifoja"
   }
 }
