@@ -104,7 +104,6 @@ export const AuthProvider = ({ children }) => {
       password,
     );
     const user = userCredential.user;
-    saveTokenToBackend(user.uid);
     return user;
   };
 
@@ -119,7 +118,6 @@ export const AuthProvider = ({ children }) => {
         displayName: username,
         photoURL: photoURL,
       });
-
       console.log('User profile updated successfully!');
       return user;
     } catch (error) {

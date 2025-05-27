@@ -1,6 +1,11 @@
 {
+  "cli": {
+    "version": ">= 16.6.2",
+    "appVersionSource": "remote"
+  },
   "build": {
     "development": {
+      "developmentClient": true,
       "distribution": "internal",
       "android": {
         "buildType": "apk"
@@ -13,9 +18,19 @@
       }
     },
     "production": {
+      "autoIncrement": true,
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
+      }
+    },
+    "ios-simulator": {
+      "extends": "development",
+      "ios": {
+        "simulator": true
       }
     }
+  },
+  "submit": {
+    "production": {}
   }
 }

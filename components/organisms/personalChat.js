@@ -17,7 +17,7 @@ import socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
-  const { t } = useTranslation('foro');
+  const { t } = useTranslation('chats');
   const userData = route.params.User;
   const currentUser = route.params.currentUser;
   const idCurrentSession = currentUser.uid;
