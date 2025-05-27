@@ -186,21 +186,6 @@ const PersonalChat = ({ route, navigation }) => {
     }
   };
 
-  const simulateIncomingMessage = async () => {
-    console.log('Simulando mensaje entrante de:', userData.name);
-
-    const response = await fetch('***REMOVED***/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sentByID: userData.id,
-        sentToID: idCurrentSession,
-        content: `Mensaje nuevo`,
-      }),
-    });
-  };
   const goBack = () => {
     navigation.goBack();
   };
@@ -215,12 +200,6 @@ const PersonalChat = ({ route, navigation }) => {
       />
       <MessageChatList messages={messages} isLoading={isLoading} />
       <MessageChatInput onSendMessage={handleSendMessage} />
-      <TouchableOpacity
-        style={styles.testButton}
-        onPress={simulateIncomingMessage}
-      >
-        <Text style={styles.testButtonText}>Simular mensaje</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

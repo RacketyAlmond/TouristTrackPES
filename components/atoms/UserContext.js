@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 // UserContext.js
 import React, { createContext, useState, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
-const UserContext = createContext();
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [userData, setUserData] = useState({});
