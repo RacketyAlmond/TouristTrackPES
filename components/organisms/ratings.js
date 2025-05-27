@@ -17,15 +17,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-
-const loggedInUser = {
-  id: '1',
-  username: 'mgimor',
-  avatar:
-    'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-};
+import { auth } from '../../firebaseConfig.js';
 
 const RatingScreen = ({ route }) => {
+  const currentUser = auth.currentUser;
+
+  const defaultAvatar = require('../../public/user.png');
   const [ratingContent, setRatingContent] = useState('');
   const [ratingStars, setRatingStars] = useState(0);
   const [inputHeight, setInputHeight] = useState(40);
@@ -78,12 +75,12 @@ const RatingScreen = ({ route }) => {
   const fetchRatings = async (city) => {
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/location/${city}`,
+        `http://192.168.1.77:8080/ratings/location/${city}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
       setRatings(data);
-      const userRating = data.find((r) => r.authorID === loggedInUser.id);
+      const userRating = data.find((r) => r.authorID === currentUser.uid);
       setHasUserRated(!!userRating);
     } catch (error) {
       console.error('Error:', error);
@@ -100,7 +97,7 @@ const RatingScreen = ({ route }) => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`***REMOVED***/ratings/${id}`, {
+            await fetch(`http://192.168.1.77:8080/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -122,7 +119,7 @@ const RatingScreen = ({ route }) => {
     if (!ratingToUpdate) return;
 
     const updatedRating = {
-      authorID: loggedInUser.id,
+      authorID: currentUser.uid,
       location: localidad.name,
       stars: editStars,
       content: editContent,
@@ -130,7 +127,7 @@ const RatingScreen = ({ route }) => {
 
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/${ratingToUpdate.id}`,
+        `http://192.168.1.77:8080/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -142,8 +139,8 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
+        authorAvatar: currentUser.avatar || defaultAvatar,
+        authorFirstName: currentUser.displayName,
       };
 
       setRatings((prev) =>
@@ -174,14 +171,14 @@ const RatingScreen = ({ route }) => {
     }
 
     const newRatingData = {
-      authorID: loggedInUser.id,
+      authorID: currentUser.uid,
       location: localidad.name,
       stars: ratingStars,
       content: ratingContent,
     };
 
     try {
-      const response = await fetch('***REMOVED***/ratings', {
+      const response = await fetch('http://192.168.1.77:8080/ratings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRatingData),
@@ -191,8 +188,8 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
+        authorAvatar: currentUser.avatar || defaultAvatar,
+        authorFirstName: currentUser.displayName,
       };
 
       setRatings((prev) => [postedRating, ...prev]);
@@ -264,7 +261,14 @@ const RatingScreen = ({ route }) => {
 
       return (
         <View style={styles.reviewContainer}>
-          <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
+          <Image
+            source={
+              typeof item.authorAvatar === 'string' && item.authorAvatar
+                ? { uri: item.authorAvatar }
+                : defaultAvatar
+            }
+            style={styles.avatar}
+          />
           <View style={{ flex: 1 }}>
             <View style={styles.reviewHeader}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -336,7 +340,7 @@ const RatingScreen = ({ route }) => {
                   </Text>
                 </View>
 
-                {item.authorID === loggedInUser.id && (
+                {item.authorID === currentUser.uid && (
                   <View style={styles.rightActions}>
                     <TouchableOpacity onPress={() => handleEdit(item)}>
                       <Text style={[styles.actionText, { color: '#572364' }]}>
@@ -388,11 +392,15 @@ const RatingScreen = ({ route }) => {
           <View style={styles.inputHeader}>
             <View style={styles.inputUser}>
               <Image
-                source={{ uri: loggedInUser.avatar }}
+                source={
+                  typeof currentUser.avatar === 'string' && currentUser.avatar
+                    ? { uri: currentUser.avatar }
+                    : defaultAvatar
+                }
                 style={styles.avatar}
               />
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.username}>{loggedInUser.username}</Text>
+                <Text style={styles.username}>{currentUser.username}</Text>
                 {loggedRank && (
                   <Image
                     source={loggedRank.icon}
