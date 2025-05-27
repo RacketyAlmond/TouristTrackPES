@@ -21,7 +21,6 @@ export default function TitleLocalidadForo({ LocName, forumId }) {
           marginVertical: 0,
           borderTopColor: '#ccc',
           borderTopWidth: 1,
-          elevation: 1,
         }}
       >
         <View

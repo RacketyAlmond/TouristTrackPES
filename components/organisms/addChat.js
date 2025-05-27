@@ -15,17 +15,20 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import UsersAppJson from '../../json/userApp.json';
 import ChatItem from '../atoms/chatItem';
+import { auth } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
 
 export default function AddChat({ route }) {
+  const { t } = useTranslation('chats');
   const navigation = useNavigation();
-  const currentUser = route.params.currentUser;
-  const idCurrentUser = currentUser.id;
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
+  const nameCurrentUser = currentUser.name;
   const UserFriends = route.params.dataJson || [];
-  const data = UsersAppJson;
   const [searchTerm, setSearchTerm] = useState('');
   const [requests, setRequests] = useState([]);
+  const [Users, setUsers] = useState([]);
   const [searchedUser, setSearchedUser] = useState(null);
   const [isUserFound, setIsUserFound] = useState(false);
   const [sentRequests, setSentRequests] = useState([]);
@@ -33,9 +36,32 @@ export default function AddChat({ route }) {
 
   useEffect(() => {
     setIsUserFound(searchedUser && searchedUser.id);
+    fetchUsers();
     fetchRequests();
     fetchSentRequests();
   }, [searchedUser, idCurrentUser]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(
+        `***REMOVED***/users/`,
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      const data = await response.json();
+      const formattedUsers = data.usuarios.map((user) => ({
+        id: user.id.toString(),
+        name: user.firstName,
+        about: user.about,
+        avatar: user.avatar,
+      }));
+      setUsers(formattedUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      Alert.alert('Error', 'Could not load users. Please try again later.');
+    }
+  }
 
   const fetchRequests = async () => {
     try {
@@ -92,13 +118,13 @@ export default function AddChat({ route }) {
       return;
     }
     const normalizedUser = searchTerm.toLowerCase();
-    const searchID = data.find(
-      (user) => user.id.toLowerCase() === normalizedUser,
+    const searchID = Users.find(
+      (user) => user.name && user.name.toLowerCase() === normalizedUser,
     );
     if (!searchID) {
       Alert.alert(
-        'USER NOT FOUND',
-        `The id doesn't belong to any user.`,
+        t('not-found'),
+        t('not-found-text'),
         [
           {
             text: 'OK',
@@ -108,7 +134,7 @@ export default function AddChat({ route }) {
         { cancelable: false },
       );
       setSearchedUser(null);
-    } else if (UserFriend.some((friend) => friend.id === searchID.id)) {
+    } else if (UserFriend.some((friend) => friend.name === searchID.name)) {
       Alert.alert(
         'USER ALREADY ADDED',
         `The user of the id is part of the added chats.`,
@@ -121,7 +147,7 @@ export default function AddChat({ route }) {
         { cancelable: false },
       );
       setSearchedUser(null);
-    } else if (searchID.id === idCurrentUser) {
+    } else if (searchID.name === nameCurrentUser) {
       Alert.alert(
         'USER IS YOURSELF',
         `The user of the id is yourself.`,
@@ -135,7 +161,7 @@ export default function AddChat({ route }) {
       );
     }
     //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
-    else if (sentRequests.some((request) => request.id === searchID.id)) {
+    else if (sentRequests.some((request) => request.name === searchID.id)) {
       Alert.alert(
         'USER HAS A REQUEST',
         `You have already sent a request to the user.`,
@@ -147,7 +173,7 @@ export default function AddChat({ route }) {
         ],
         { cancelable: false },
       );
-    } else if (requests.some((request) => request.id === searchID.id)) {
+    } else if (requests.some((request) => request.name === searchID.name)) {
       Alert.alert(
         'USER SENT YOU A REQUEST',
         `The user has already sent you a request.`,
@@ -190,16 +216,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para crear el chat
     try {
-      const response = await fetch(`***REMOVED***/allowed-chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `***REMOVED***/allowed-chats`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user1ID: idCurrentUser,
+            user2ID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          user1ID: idCurrentUser,
-          user2ID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to accept chat');
@@ -233,16 +262,19 @@ export default function AddChat({ route }) {
 
     // Petición al backend para eliminar la solicitud pendiente
     try {
-      const response = await fetch(`***REMOVED***/pending-requests`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `***REMOVED***/pending-requests`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentToID: idCurrentUser,
+            sentByID: item.id,
+          }),
         },
-        body: JSON.stringify({
-          sentToID: idCurrentUser,
-          sentByID: item.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to reject chat');
@@ -259,7 +291,15 @@ export default function AddChat({ route }) {
   const renderItem = ({ item }) => (
     <View style={styles.chatItem}>
       {/* hacer que este boton acceda al personalChat con un navigate y con el state a 1, de manera que este no pueda escribir mensajes*/}
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PersonalChat', {
+            currentUser,
+            User: item,
+            state: 1,
+          })
+        }
+      >
         <ChatItem item={item} />
         <View style={styles.newChatButtonContainer}>
           <TouchableOpacity
@@ -287,21 +327,17 @@ export default function AddChat({ route }) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name='arrow-back' style={styles.icon} size={24} />
           </TouchableOpacity>
-          <Text style={styles.title}>Add Chat</Text>
+          <Text style={styles.title}>{t('add')}</Text>
         </View>
         <View style={styles.descriptionContainer}>
-          <Text style={styles.description}>
-            You can open new chats with users with their ID.
-          </Text>
-          <Text style={styles.description}>
-            A confirmation message will be sent to the user.
-          </Text>
+          <Text style={styles.description}>{t('text1')}</Text>
+          <Text style={styles.description}>{t('text2')}</Text>
         </View>
         <TextInput
           style={styles.searchBar}
           onSubmitEditing={handleSubmit}
           onChangeText={handleChangeText}
-          placeholder='Enter the ID of the user'
+          placeholder={t('create')}
           value={searchTerm}
         />
 
@@ -334,7 +370,7 @@ export default function AddChat({ route }) {
       </View>
 
       <View style={styles.requestsContainer}>
-        <Text style={styles.title}>New Chat Requests</Text>
+        <Text style={styles.title}>{t('new-request')}</Text>
         <FlatList
           data={requests}
           keyExtractor={(item) => item.id.toString()}

@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale.cjs';
+import es from 'date-fns/locale/es';
+import enUS from 'date-fns/locale/en-US';
 import Comment from './comment';
 import { getRankByLevel } from '../molecules/levelProgress.js'; // Importa la función de rangos
+import { auth } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
+import config from '../../config';
 
 export default function Question({
   forumId,
@@ -13,18 +17,25 @@ export default function Question({
   date,
   text,
 }) {
+  // namespace 'foro', además extraemos i18n.language
+  const { t, i18n } = useTranslation('foro');
+
   const [showAnswers, setShowAnswers] = useState(false);
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
   const [userRank, setUserRank] = useState(getRankByLevel(20, true)); //hardcoded rank for now
+  const currentUser = auth.currentUser;
+  const idCurrentUser = currentUser.uid;
 
+  // Elegimos el locale de date-fns según el idioma activo
+  const locale = i18n.language === 'es' ? es : enUS;
+  // formateo con sufijo ("hace X" o "X ago")
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
-    locale: es,
+    locale: locale,
   });
 
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -56,7 +67,6 @@ export default function Question({
       );
 
       const json = await response.json();
-
       if (json.success) {
         setAllAnswers((prev) => prev.filter((a) => a.id !== answerId));
       } else {
@@ -67,12 +77,11 @@ export default function Question({
     }
   };
 
-  const getAnswers = React.useCallback(async () => {
+  const getAnswers = useCallback(async () => {
     try {
       const response = await fetch(
         `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
-
       const json = await response.json();
       if (json.success) {
         const respuestas = await Promise.all(
@@ -83,7 +92,7 @@ export default function Question({
               userId: a.Author,
               answer: a.text,
               date: new Date(a.date._seconds * 1000).toISOString(),
-              nationality, //--> de momento no se filtra por nacionalidad de respuesta
+              nationality,
               user,
             };
           }),
@@ -91,16 +100,18 @@ export default function Question({
         setAllAnswers(respuestas);
       }
     } catch (error) {
-      console.error('Error al obtener las preguntas:', error);
+      console.error('Error al obtener las respuestas:', error);
     }
   }, [forumId, questionId]);
 
   useEffect(() => {
     getAnswers();
-  }, []);
+  }, [getAnswers]);
 
-  // Función para añadir una nueva respuesta
+  // Añadir nueva respuesta
   const handleAddAnswer = async () => {
+    console.log(`user = ${idCurrentUser}`);
+
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -111,7 +122,7 @@ export default function Question({
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
               text: newAnswer,
             }),
           },
@@ -125,11 +136,11 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo('NewUserId'); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
-            userId: 'NewUserId', // Reemplaza con el ID del usuario autenticado
+            userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
             user,
@@ -149,11 +160,7 @@ export default function Question({
 
   return (
     <View
-      style={{
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-      }}
+      style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}
     >
       <View style={{ flex: 1 }}>
         <View
@@ -178,33 +185,31 @@ export default function Question({
         <Text>{text}</Text>
       </View>
 
+      <Text style={{ marginVertical: 8 }}>{text}</Text>
+
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          margin: 5,
+          marginVertical: 5,
         }}
       >
-        <TouchableOpacity onPress={() => setShowAnswers(!showAnswers)}>
+        <TouchableOpacity onPress={() => setShowAnswers((v) => !v)}>
           <Text style={{ color: '#572364' }}>
-            {showAnswers ? 'Ocultar' : `${allAnswers.length} respuestas`}
+            {showAnswers
+              ? t('hideAnswers')
+              : `${allAnswers.length} ${t('answers')}`}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowNewAnswer(!showNewAnswer)}>
+        <TouchableOpacity onPress={() => setShowNewAnswer((v) => !v)}>
           <Text style={{ color: '#572364' }}>
-            {showNewAnswer ? 'No Responder' : 'Responder'}
+            {showNewAnswer ? t('noReply') : t('reply')}
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Renderiza el campo de texto para la nueva respuesta si showNewAnswer es true */}
       {showNewAnswer && (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TextInput
             style={{
               flex: 1,
@@ -213,7 +218,7 @@ export default function Question({
               borderRadius: 5,
               padding: 5,
             }}
-            placeholder='Escribe tu respuesta...'
+            placeholder={t('writeAnswer')}
             value={newAnswer}
             onChangeText={setNewAnswer}
           />
@@ -241,11 +246,15 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
               />
-              <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
-                <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
-                  Eliminar
-                </Text>
-              </TouchableOpacity>
+              {answer.user === idCurrentUser ? (
+                <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
+                  <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
+                    Eliminar
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                ''
+              )}
             </View>
           ))}
         </View>
