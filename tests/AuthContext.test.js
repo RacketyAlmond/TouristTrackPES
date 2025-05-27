@@ -13,6 +13,11 @@ jest.mock('../firebaseConfig.js', () => ({
   auth: {},
   db: {},
 }));
+jest.mock('expo-auth-session');
+jest.mock('expo-auth-session/providers/google', () => ({
+  useIdTokenAuthRequest: jest.fn(() => [{}, jest.fn(), {}]),
+  useAuthRequest: jest.fn(() => [{}, jest.fn(), {}]),
+}));
 
 const React = require('react');
 const renderer = require('react-test-renderer');

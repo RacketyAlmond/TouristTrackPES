@@ -3,13 +3,13 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Alert } from 'react-native';
 import AddChat from '../components/organisms/addChat';
 
-// ✅ Mock de navegación sin requireActual
-jest.mock('@react-navigation/native', () => ({
-  NavigationContainer: ({ children }) => children,
-  useNavigation: () => ({
-    navigate: jest.fn(),
-    goBack: jest.fn(),
-  }),
+jest.mock('../firebaseConfig.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'test-uid',
+      name: 'Test User',
+    },
+  },
 }));
 
 jest.mock('@expo/vector-icons', () => ({
