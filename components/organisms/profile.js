@@ -140,7 +140,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <LevelProgress points={1000} />
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
