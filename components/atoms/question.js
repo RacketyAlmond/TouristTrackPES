@@ -24,7 +24,7 @@ export default function Question({
   const [showNewAnswer, setShowNewAnswer] = useState(false);
   const [newAnswer, setNewAnswer] = useState('');
   const [allAnswers, setAllAnswers] = useState([]);
-  const [userRank, setUserRank] = useState(getRankByLevel(20, true)); //hardcoded rank for now
+  const [userRank, setUserRank] = useState(getRankByLevel(0, true)); //hardcoded rank for now
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
@@ -44,10 +44,11 @@ export default function Question({
       const json = await response.json();
 
       if (json.success && json.usuario) {
-        const { firstName, userLocation } = json.usuario;
+        const { firstName, userLocation, points } = json.usuario;
         return {
           user: firstName || 'Desconocido',
           nationality: userLocation || 'Desconocido',
+          points: points.current || 0,
         };
       }
     } catch (error) {
@@ -86,7 +87,7 @@ export default function Question({
       if (json.success) {
         const respuestas = await Promise.all(
           json.respuestas.map(async (a) => {
-            const { user, nationality } = await getUserInfo(a.Author);
+            const { user, nationality, points } = await getUserInfo(a.Author);
             return {
               id: a.id,
               userId: a.Author,
@@ -94,7 +95,9 @@ export default function Question({
               date: new Date(a.date._seconds * 1000).toISOString(),
               nationality,
               user,
+              points,
             };
+
           }),
         );
         setAllAnswers(respuestas);
@@ -136,7 +139,7 @@ export default function Question({
         }
 
         if (json.success) {
-          const { user, nationality } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
+          const { user, nationality, points } = await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const newAnswerObject = {
             id: json.preguntaId,
@@ -145,8 +148,9 @@ export default function Question({
             date: new Date().toISOString(),
             user,
             nationality,
+            points,
           };
-
+          setUserRank(newAnswerObject.points.current);
           setAllAnswers([...allAnswers, newAnswerObject]);
           setNewAnswer('');
         } else {
@@ -245,8 +249,9 @@ export default function Question({
                 user={answer.user}
                 date={answer.date}
                 text={answer.answer}
+                points={answer.points}
               />
-              {answer.user === idCurrentUser ? (
+              {answer.userId === idCurrentUser ? (
                 <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
                   <Text style={{ color: 'red', fontSize: 12, marginLeft: 10 }}>
                     Eliminar

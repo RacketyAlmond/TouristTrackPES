@@ -4,14 +4,14 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale.cjs';
 import { getRankByLevel } from '../molecules/levelProgress.js';
 
-export default function Comment({ user, date, text }) {
+export default function Comment({ user, date, text, points }) {
   // Calcula el tiempo relativo
   const relativeTime = formatDistanceToNow(new Date(date), {
     addSuffix: true,
     locale: es,
   });
 
-  const userRank = getRankByLevel(15, true); //hardcoded rank for now
+  const userRank = getRankByLevel(points, true); //hardcoded rank for now
 
   return (
     <View style={{ paddingBottom: 3, paddingTop: 3, marginLeft: 20 }}>

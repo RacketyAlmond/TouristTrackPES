@@ -22,7 +22,7 @@ import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
   const { t } = useTranslation('profile');
-  const { updateUserData, getUserData } = useUser();
+  const { updateUserData, getUserPoints } = useUser();
 
   // Campos de usuario
   const [fname, setFname] = useState('');
@@ -41,9 +41,9 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-        //const userPoints = await getUserPoints();
-        //setPoints(userPoints);
-        setPoints(2500);
+
+        const userPoints = await getUserPoints();
+        setPoints(userPoints);
       } catch (err) {
         console.error('Failed to load user points:', err);
       }
@@ -62,6 +62,7 @@ const ProfileScreen = ({ onSignOut }) => {
         setBirthdate(data.birthday);
         setUserLocation(data.userLocation);
         setAbout(data.about);
+        setPoints(data.points.current);
       }
     } catch (err) {
       console.error('Error fetching user:', err);
@@ -79,6 +80,7 @@ const ProfileScreen = ({ onSignOut }) => {
           setBirthdate(data.birthday);
           setUserLocation(data.userLocation);
           setAbout(data.about);
+          setPoints(data.points.current);
         }
         console.log('User profile fetched successfully!');
       })
@@ -139,12 +141,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.mainRow}>
-        <Text style={styles.mainRow}>{fname}</Text>
-        <TouchableOpacity onPress={() => setEditingField('fname')}>
-          <Icon name='edit' size={20} color='gray' />
-        </TouchableOpacity>
-      </View>
+
 
       <LevelProgress points={points} />
 
@@ -260,7 +257,6 @@ const styles = StyleSheet.create({
     left: 20,
   },
   profileContainer: {
-    marginTop: 120,
     alignItems: 'center',
     position: 'relative',
   },

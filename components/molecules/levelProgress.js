@@ -143,7 +143,6 @@ const LevelProgress = ({ points }) => {
 const styles = StyleSheet.create({
   levelContainer: {
     width: '90%',
-    marginTop: 20,
     alignItems: 'center',
   },
 
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
   rankContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
     backgroundColor: '#ffffff',
     padding: 8,
     borderRadius: 10,
