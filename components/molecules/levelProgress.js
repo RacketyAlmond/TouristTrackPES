@@ -46,7 +46,7 @@ const ranks = [
   },
 ];
 
-const getLevelInfo = (points) => {
+export const getLevelInfo = (points) => {
   const levels = [
     { level: 1, required: 0 },
     { level: 2, required: 100 },

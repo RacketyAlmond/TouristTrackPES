@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getRankByLevel } from '../molecules/levelProgress';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 import {
   View,
   Text,
@@ -39,7 +39,9 @@ const RatingScreen = ({ route }) => {
 
   const { localidad } = route.params;
 
-  const [loggedRank, setLoggedRank] = useState(getRankByLevel(15, true));
+  const [loggedRank, setLoggedRank] = useState(
+    getRankByLevel(getLevelInfo(5000).currentLevel, true),
+  );
 
   const [localidadRating, setLocalidadRating] = useState({
     rating: localidad.rating,
