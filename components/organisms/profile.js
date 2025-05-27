@@ -41,7 +41,6 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-
         const userPoints = await getUserPoints();
         setPoints(userPoints);
       } catch (err) {
@@ -141,9 +140,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-
-
-      <LevelProgress points={points} />
+      <LevelProgress points={1000} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
@@ -249,7 +246,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 160,
     position: 'absolute',
-    top: 120,
+    top: 0,
   },
   backButton: {
     position: 'absolute',
@@ -305,7 +302,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   infoText: {
     fontSize: 16,

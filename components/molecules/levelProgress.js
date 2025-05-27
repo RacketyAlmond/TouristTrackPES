@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: 'gray',
     marginTop: 5,
+    marginBottom: 15,
   },
 
   rankContainer: {
