@@ -202,7 +202,7 @@ const ProfileScreen = ({ onSignOut }) => {
         <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Mis valoraciones')}>
         <Icon name='star-border' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>

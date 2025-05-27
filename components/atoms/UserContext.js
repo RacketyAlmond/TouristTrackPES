@@ -55,7 +55,7 @@ export const UserProvider = ({ children }) => {
       console.log('Fetching forum activity for user', user.uid);
       
       // Usa la ruta correcta que tienes en el backend
-      const response = await fetch(`http://192.168.1.45:8080/forums/user-forum-comments/${user.uid}`);
+      const response = await fetch(`***REMOVED***/forums/user-forum-comments/${user.uid}`);
       
       if (!response.ok) {
         console.error('Response not OK:', response.status);
