@@ -17,7 +17,6 @@ const ChatHeader = ({
   contactDescription,
   onBackPress,
 }) => {
-
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const ChatHeader = ({
             <Image
               source={userRank.icon}
               style={styles.rankIcon}
-              resizeMode="contain"
+              resizeMode='contain'
             />
           )}
         </View>

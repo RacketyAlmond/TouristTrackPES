@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
-import { getRankByLevel } from '../molecules/levelProgress'; 
+import { getRankByLevel } from '../molecules/levelProgress';
 
 export default function ChatItem({ item }) {
   const [userRank, setUserRank] = useState(null);
@@ -11,7 +11,6 @@ export default function ChatItem({ item }) {
     const rank = getRankByLevel(15, true); // Usa los puntos del usuario o 0 por defecto
     setUserRank(rank);
   }, [item.points]);
-
 
   return (
     <View style={styles.userContainer}>
@@ -27,7 +26,7 @@ export default function ChatItem({ item }) {
             <Image
               source={userRank.icon}
               style={styles.rankIcon}
-              resizeMode="contain"
+              resizeMode='contain'
             />
           )}
         </View>

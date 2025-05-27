@@ -43,9 +43,7 @@ export default function AddChat({ route }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(
-        `***REMOVED***/users/`,
-      );
+      const response = await fetch(`***REMOVED***/users/`);
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -61,7 +59,7 @@ export default function AddChat({ route }) {
       console.error('Error fetching users:', error);
       Alert.alert('Error', 'Could not load users. Please try again later.');
     }
-  }
+  };
 
   const fetchRequests = async () => {
     try {

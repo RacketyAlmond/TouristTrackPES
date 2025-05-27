@@ -20,9 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 
-
 export default function Chats() {
-
   const currentUser = auth.currentUser;
   const { t } = useTranslation('chats');
   const idCurrentSession = currentUser.id;
