@@ -55,18 +55,6 @@ export default function UserStack() {
             />
           )}
           {/* In your Settings or Profile screen */}
-          <TouchableOpacity
-            style={styles.settingItem}
-            onPress={() => navigation.navigate('NotificationTester')}
-          >
-            <View style={styles.settingItemIconContainer}>
-              <MaterialIcons name="notifications" size={24} color="#572364" />
-            </View>
-            <View style={styles.settingItemTextContainer}>
-              <Text style={styles.settingItemText}>Test Notifications</Text>
-            </View>
-            <MaterialIcons name="chevron-right" size={24} color="#ccc" />
-          </TouchableOpacity>
         </View>
       </AuthProvider>
     </UserProvider>
