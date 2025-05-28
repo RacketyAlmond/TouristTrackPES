@@ -15,41 +15,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "***REMOVED***",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB8FWQZFAaVqqmpZrqBCGLgjIBt28OY5Q8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "***REMOVED***",
-              "client_type": 3
-            },
-            {
-              "client_id": "1096375029000-bl6bd1lvlji21jfpqdri55ejopbg7j81.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.company.touristtrack"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1096375029000:android:552c2e0b29e82e54f4b0bd",
-        "android_client_info": {
-          "package_name": "com.touristrack"
-        }
-      },
-      "oauth_client": [
+          "client_id": "1096375029000-f8rpsfbp54mrr9tq02cpbd56lnkqj0hh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.company.touristtrack",
+            "certificate_hash": "34155db01773411a2c72bf4c834fd6bfc5841327"
+          }
+        },
         {
           "client_id": "***REMOVED***",
           "client_type": 3
