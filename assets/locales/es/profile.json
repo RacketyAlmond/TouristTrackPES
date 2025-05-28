@@ -5,5 +5,15 @@
   "see-reviews": "Ver mis reseñas",
   "save-changes": "Guardar cambios",
   "log-out": "Cerrar sesión",
-  "change-language": "Cambiar idioma"
+  "change-language": "Cambiar idioma",
+  "level": "Nivel",
+  "points": "puntos",
+  "next-level": "Próximo nivel",
+  "questions": "Preguntas",
+  "answers": "Respuestas",
+  "headerComments": "Mis comentarios",
+  "back": "Atrás",
+  "no-questions-found": "No se han encontrado preguntas",
+  "no-answers-found": "No se han encontrado respuestas", 
+  "mis-valoraciones": "Mis valoraciones"
 }

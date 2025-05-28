@@ -224,7 +224,7 @@ export default function Question({
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowNewAnswer((v) => !v)}>
           <Text style={{ color: '#572364' }}>
-            {showNewAnswer ? t('noReply') : t('reply')}
+            {showNewAnswer ? t('no-reply') : t('reply')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -239,7 +239,7 @@ export default function Question({
               borderRadius: 5,
               padding: 5,
             }}
-            placeholder={t('writeAnswer')}
+            placeholder={t('answer')}
             value={newAnswer}
             onChangeText={setNewAnswer}
           />

@@ -108,7 +108,7 @@ const UserForumComments = () => {
         >
           <Text style={styles.backButtonText}>← {t('back')}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('My Comments')}</Text>
+        <Text style={styles.headerTitle}>{t('headerComments')}</Text>
       </View>
 
       <View style={styles.tabs}>

@@ -19,6 +19,8 @@ import chatsEn from './assets/locales/en/chats.json';
 import chatsEs from './assets/locales/es/chats.json';
 import profileEn from './assets/locales/en/profile.json';
 import profileEs from './assets/locales/es/profile.json';
+import ratingsEn from './assets/locales/en/ratings.json';
+import ratingsEs from './assets/locales/es/ratings.json';
 
 const resources = {
   en: {
@@ -29,6 +31,7 @@ const resources = {
     foro: foroEn,
     chats: chatsEn,
     profile: profileEn,
+    ratings: ratingsEn,
   },
   es: {
     map: mapEs,
@@ -38,6 +41,7 @@ const resources = {
     foro: foroEs,
     chats: chatsEs,
     profile: profileEs,
+    ratings: ratingsEs,
   },
 };
 
@@ -65,7 +69,16 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
-    ns: ['map', 'info', 'estadisticas', 'settings', 'foro', 'chats', 'profile'], // declara tus namespaces
+    ns: [
+      'map',
+      'info',
+      'estadisticas',
+      'settings',
+      'foro',
+      'chats',
+      'profile',
+      'ratings',
+    ], // declara tus namespaces
     defaultNS: 'map', // map por defecto en useTranslation()
     interpolation: { escapeValue: false },
   });

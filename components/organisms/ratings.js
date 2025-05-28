@@ -21,8 +21,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { auth } from '../../firebaseConfig.js';
 import { useUser } from '../atoms/UserContext';
+import { useTranslation } from 'react-i18next';
+
 
 const RatingScreen = ({ route }) => {
+  const { t } = useTranslation('ratings');
   const { userData, getUserData } = useUser();
   const currentUser = auth.currentUser;
 
@@ -108,12 +111,12 @@ const RatingScreen = ({ route }) => {
 
   const handleDelete = async (id) => {
     Alert.alert(
-      'Eliminar reseña',
-      '¿Estás seguro de que quieres eliminar esta reseña?',
+      t('eliminarReseña'),
+      t('eliminarReseñaDesc'),
       [
-        { text: 'Cancelar', style: 'cancel' },
+        { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Eliminar',
+          text: t('delete'),
           style: 'destructive',
           onPress: async () => {
             await fetch(`***REMOVED***/ratings/${id}`, {
@@ -183,8 +186,8 @@ const RatingScreen = ({ route }) => {
   const handleSend = async () => {
     if (hasUserRated) {
       Alert.alert(
-        'Ya has calificado',
-        'Solo puedes dejar una reseña por lugar.',
+        t('calificadoYa'),
+        t('calificadoYaDesc'),
       );
       return;
     }
@@ -321,12 +324,12 @@ const RatingScreen = ({ route }) => {
                 <View style={styles.actionButtons}>
                   <TouchableOpacity onPress={handleUpdate}>
                     <Text style={[styles.actionText, { color: '#572364' }]}>
-                      Guardar
+                      {t('save')}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={cancelEdit}>
                     <Text style={[styles.actionText, { color: '#999' }]}>
-                      Cancelar
+                      {t('cancel')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -355,7 +358,7 @@ const RatingScreen = ({ route }) => {
                     )}
                   </View>
                   <Text style={styles.dateText}>
-                    Publicado el: {formattedDate}
+                    {t('published')} {formattedDate}
                   </Text>
                 </View>
 
@@ -363,12 +366,12 @@ const RatingScreen = ({ route }) => {
                   <View style={styles.rightActions}>
                     <TouchableOpacity onPress={() => handleEdit(item)}>
                       <Text style={[styles.actionText, { color: '#572364' }]}>
-                        Editar
+                        {t('edit')}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleDelete(item.id)}>
                       <Text style={[styles.actionText, { color: 'red' }]}>
-                        Eliminar
+                        {t('delete')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -434,7 +437,7 @@ const RatingScreen = ({ route }) => {
 
           <View style={styles.textInputWrapper}>
             <TextInput
-              placeholder='Escribe aquí tu reseña...'
+              placeholder={t('writeReview')}
               style={[styles.textInput, { height: Math.max(40, inputHeight) }]}
               multiline
               value={ratingContent}
