@@ -191,7 +191,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image
-            source={logo}
+            source={profileImage ? { uri: profileImage } : logo}
             style={styles.profileImage}
         />
         <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
