@@ -1,4 +1,4 @@
-package com.company.touristrack
+package com.company.touristtrack
 
 import android.os.Build
 import android.os.Bundle
