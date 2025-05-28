@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale.cjs';
+import { es } from 'date-fns/locale';
 import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js';
 
 export default function Comment({ user, date, text, points, locale }) {

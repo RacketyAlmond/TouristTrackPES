@@ -29,35 +29,35 @@ export default function UserStack() {
 
   return (
     <ScrollView style={{ flex: 1 }}>
-    <UserProvider>
-      <AuthProvider>
-        <View style={{ flex: 1 }}>
-          {screen === 'Auth' && (
-            <AuthScreen
-              onAuthenticated={(user, isNewUser) => {
-                setCurrentUser(user);
-                setScreen(isNewUser ? 'Birthdate' : 'Profile');
-              }}
-            />
-          )}
-          {screen === 'Birthdate' && (
-            <BirthdateScreen
-              user={currentUser}
-              onComplete={(status) =>
-                setScreen(status ? 'Profile' : 'Birthdate')
-              }
-            />
-          )}
-          {screen === 'Profile' && (
-            <ProfileScreen
-              user={currentUser}
-              onSignOut={() => setScreen('Auth')}
-            />
-          )}
-          {/* In your Settings or Profile screen */}
-        </View>
-      </AuthProvider>
-    </UserProvider>
+      <UserProvider>
+        <AuthProvider>
+          <View style={{ flex: 1 }}>
+            {screen === 'Auth' && (
+              <AuthScreen
+                onAuthenticated={(user, isNewUser) => {
+                  setCurrentUser(user);
+                  setScreen(isNewUser ? 'Birthdate' : 'Profile');
+                }}
+              />
+            )}
+            {screen === 'Birthdate' && (
+              <BirthdateScreen
+                user={currentUser}
+                onComplete={(status) =>
+                  setScreen(status ? 'Profile' : 'Birthdate')
+                }
+              />
+            )}
+            {screen === 'Profile' && (
+              <ProfileScreen
+                user={currentUser}
+                onSignOut={() => setScreen('Auth')}
+              />
+            )}
+            {/* In your Settings or Profile screen */}
+          </View>
+        </AuthProvider>
+      </UserProvider>
     </ScrollView>
   );
 }

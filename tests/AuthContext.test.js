@@ -5,15 +5,32 @@ jest.mock('firebase/auth', () => ({
   onAuthStateChanged: jest.fn(),
   updateProfile: jest.fn(),
 }));
+
 jest.mock('firebase/firestore', () => ({
   setDoc: jest.fn(),
   doc: jest.fn(),
 }));
+
 jest.mock('../firebaseConfig.js', () => ({
   auth: {},
   db: {},
 }));
+
+// Mocks para Expo nativos que causan error en Jest
+jest.mock('expo-web-browser', () => ({
+  maybeCompleteAuthSession: jest.fn(),
+}));
+
+jest.mock('expo-constants', () => ({
+  expoConfig: { extra: { eas: { projectId: 'test-project' } } },
+}));
+
+jest.mock('expo-notifications', () => ({
+  getExpoPushTokenAsync: jest.fn(async () => ({ data: 'fake-token' })),
+}));
+
 jest.mock('expo-auth-session');
+
 jest.mock('expo-auth-session/providers/google', () => ({
   useIdTokenAuthRequest: jest.fn(() => [{}, jest.fn(), {}]),
   useAuthRequest: jest.fn(() => [{}, jest.fn(), {}]),
