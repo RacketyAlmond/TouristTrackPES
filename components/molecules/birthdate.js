@@ -25,6 +25,7 @@ const BirthdateScreen = ({ onComplete }) => {
   const [birthdate, setBirthdate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const points = useRef(10);
+  const profileImage = useRef('');
   let authStatus = false;
 
   useEffect(() => {
@@ -73,18 +74,18 @@ const BirthdateScreen = ({ onComplete }) => {
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
+
       await createUserData(
-        fname,
-        birthdate.toDateString(),
-        userLocation,
-        about,
-        points,
+          fname,
+          birthdate.toDateString(),
+          userLocation,
+          about,
+          points,
+          profileImage,
       );
       authStatus = true;
-      console.log('Wchodzi tutaj a ma nie');
 
       onComplete(authStatus);
-      //obtener el id del usuario
       const currentUser = auth.currentUser;
 
       saveTokenToBackend(currentUser.uid);
@@ -137,7 +138,7 @@ const BirthdateScreen = ({ onComplete }) => {
             onChangeText={setUserLocation}
             style={styles.input}
           />
-          {fname.length > 3 && userLocation.length > 5 ? (
+          {fname.length > 2 && userLocation.length > 2 ? (
             <TouchableOpacity style={styles.button} onPress={handleSend}>
               <Text style={styles.buttonText}>Save Data</Text>
             </TouchableOpacity>
@@ -200,6 +201,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop: 250,
+    paddingBottom: 300,
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   text: { width: '80%' },

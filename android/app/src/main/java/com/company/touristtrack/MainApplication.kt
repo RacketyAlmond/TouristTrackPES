@@ -1,4 +1,4 @@
-package com.company.touristrack
+package com.company.touristtrack
 
 import android.app.Application
 import android.content.res.Configuration
