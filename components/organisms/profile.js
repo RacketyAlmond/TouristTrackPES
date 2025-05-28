@@ -16,10 +16,11 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
-import { getAuth } from 'firebase/auth';
+import { getAuth, updateProfile  } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
+import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
 
@@ -92,6 +93,56 @@ const ProfileScreen = ({ onSignOut }) => {
     }
   };
 
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      return result.assets[0].uri;
+    }
+
+    return null;
+  };
+  const updateUserProfilePicture = async (imageUrl) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await updateProfile(user, {
+        photoURL: imageUrl
+      });
+    }
+  };
+  const uploadImageAsync = async (uri, uid) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const storage = getStorage();
+    const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+    await uploadBytes(imageRef, blob);
+
+    return await getDownloadURL(imageRef);
+  };
+
+  const handleChangeProfilePicture = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const uri = await pickImage();
+    if (!uri) return;
+
+    const imageUrl = await uploadImageAsync(uri, user.uid);
+    await updateUserProfilePicture(imageUrl);
+    alert("Profile picture updated!");
+  };
+
   const handleSend = async () => {
     try {
       await updateUserData(fname, birthdate, userLocation, about, points);
@@ -119,7 +170,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon}>
+        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
