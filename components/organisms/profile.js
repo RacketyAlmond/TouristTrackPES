@@ -13,9 +13,10 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import { getAuth } from "firebase/auth";
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData } = useUser();
+  const { updateUserData, getUserData, updateSignOut } = useUser();
 
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
@@ -55,6 +56,19 @@ const ProfileScreen = ({ onSignOut }) => {
   }, []);
 
   const [editingField, setEditingField] = useState(null);
+
+
+
+  const handleSignOut = async () => {
+    try {
+      await updateSignOut();
+      onSignOut();
+      console.error('Signed out user:');
+
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
 
   const handleSend = async () => {
     try {
@@ -178,7 +192,7 @@ const ProfileScreen = ({ onSignOut }) => {
       )}
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
         <Text style={styles.logoutText}>Cerrar sesión</Text>
       </TouchableOpacity>
     </View>

@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
 const UserContext = createContext();
 
@@ -63,6 +64,13 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
+  const updateSignOut = async () => {
+    signOut(auth).then(() => {
+      console.log('Successfully signed out the user')
+    }).catch((error) => {
+      throw new Error('Error signing out');
+    });
+  }
 
   const getUserData = async () => {
     const user = auth.currentUser;
@@ -93,6 +101,7 @@ export const UserProvider = ({ children }) => {
         createUserData,
         updateUserData,
         getUserData,
+        updateSignOut,
       }}
     >
       {children}
