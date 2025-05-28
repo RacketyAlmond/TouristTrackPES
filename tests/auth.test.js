@@ -17,6 +17,15 @@ jest.mock('expo-auth-session', () => ({
   makeRedirectUri: jest.fn(() => 'mock-redirect-uri'),
 }));
 
+// Añade este mock al principio del archivo auth.test.js, junto con los otros mocks
+jest.mock('react-native', () => {
+  const reactNative = jest.requireActual('react-native');
+  reactNative.Alert = {
+    alert: jest.fn(),
+  };
+  return reactNative;
+});
+
 // 2) Mock useAuth before importing the component
 const mockSignUp = jest.fn();
 const mockSignIn = jest.fn();
