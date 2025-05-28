@@ -58,27 +58,12 @@ const ProfileScreen = ({ onSignOut }) => {
   const getter = async () => {
     const user = auth.currentUser;
     if (!user) return;
-    try {
-      const userDoc = await getDoc(doc(db, 'Users', user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        setFname(data.firstName);
-        setBirthdate(data.birthday);
-        setUserLocation(data.userLocation);
-        setAbout(data.about);
-        setPoints(data.points.current);
-      }
-    } catch (err) {
-      console.error('Error fetching user:', err);
-    }
+
 
     return getDoc(doc(db, 'Users', user.uid))
       .then((userDoc) => {
         if (userDoc.exists()) {
           const data = userDoc.data();
-          // console.log(`data = ${data.firstName}`);
-          // console.log(`userData.firstName = ${data.firstName}`);
-          // console.log(`userData.birthday = ${data.birthday}`);
 
           setFname(data.firstName);
           setBirthdate(data.birthday);
@@ -120,10 +105,11 @@ const ProfileScreen = ({ onSignOut }) => {
     <ScrollView
       contentContainerStyle={{
         alignItems: 'center',
-        paddingBottom: 20,
+        paddingBottom: 150,
         flex: 1,
         backgroundColor: 'white',
-      }} // Mueve aquí los estilos relacionados con el contenido
+
+      }}
     >
       <Image source={map} style={styles.mapBackground} />
 
@@ -258,11 +244,6 @@ const ProfileScreen = ({ onSignOut }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
   mapBackground: {
     width: '100%',
     height: 160,
@@ -284,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 3,
     borderColor: 'white',
-    marginTop: 90,
+    marginTop: 110,
   },
   editIcon: {
     position: 'absolute',

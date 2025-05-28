@@ -81,10 +81,8 @@ const BirthdateScreen = ({ onComplete }) => {
         points,
       );
       authStatus = true;
-      console.log('Wchodzi tutaj a ma nie');
 
       onComplete(authStatus);
-      //obtener el id del usuario
       const currentUser = auth.currentUser;
 
       saveTokenToBackend(currentUser.uid);
@@ -137,7 +135,7 @@ const BirthdateScreen = ({ onComplete }) => {
             onChangeText={setUserLocation}
             style={styles.input}
           />
-          {fname.length > 3 && userLocation.length > 5 ? (
+          {fname.length > 2 && userLocation.length > 2 ? (
             <TouchableOpacity style={styles.button} onPress={handleSend}>
               <Text style={styles.buttonText}>Save Data</Text>
             </TouchableOpacity>
@@ -200,6 +198,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop:250,
+    paddingBottom: 300,
+
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   text: { width: '80%' },
