@@ -16,13 +16,16 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
-    avatar,
+    profileImage,
   ) => {
     const user = auth.currentUser;
 
     if (!user) {
       throw new Error('No user is signed in');
     }
+    const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
+        ? profileImage.uri
+        : profileImage;
 
     try {
       await setDoc(doc(db, 'Users', user.uid), {
@@ -31,6 +34,7 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
+        profileImage: profileImageUrl,
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -83,6 +87,7 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
+    profileImage,
   ) => {
     const user = auth.currentUser;
 
@@ -98,6 +103,7 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
+        profileImage: profileImage
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));

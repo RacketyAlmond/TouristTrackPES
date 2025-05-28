@@ -25,6 +25,7 @@ const BirthdateScreen = ({ onComplete }) => {
   const [birthdate, setBirthdate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const points = useRef(10);
+  const profileImage = useRef('');
   let authStatus = false;
 
   useEffect(() => {
@@ -73,12 +74,16 @@ const BirthdateScreen = ({ onComplete }) => {
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
+      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
+          ? profileImage.uri
+          : profileImage;
       await createUserData(
-        fname,
-        birthdate.toDateString(),
-        userLocation,
-        about,
-        points,
+          fname,
+          birthdate.toDateString(),
+          userLocation,
+          about,
+          points,
+          profileImageUrl,
       );
       authStatus = true;
 

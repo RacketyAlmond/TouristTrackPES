@@ -26,8 +26,7 @@ import LanguageModal from '../molecules/LanguageModal';
 import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData, updateSignOut, getUserPoints } =
-    useUser();
+  const { updateUserData, getUserData, updateSignOut, getUserPoints } = useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
 
@@ -37,6 +36,7 @@ const ProfileScreen = ({ onSignOut }) => {
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
   const [points, setPoints] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   // Estado para saber qué campo estamos editando
   const [editingField, setEditingField] = useState(null);
@@ -72,6 +72,7 @@ const ProfileScreen = ({ onSignOut }) => {
           setUserLocation(data.userLocation);
           setAbout(data.about);
           setPoints(data.points.current);
+          setProfileImage(data.profileImage)
         }
         console.log('User profile fetched successfully!');
       })
@@ -109,6 +110,8 @@ const ProfileScreen = ({ onSignOut }) => {
 
     return null;
   };
+
+
   const updateUserProfilePicture = async (imageUrl) => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -118,6 +121,15 @@ const ProfileScreen = ({ onSignOut }) => {
         photoURL: imageUrl
       });
     }
+    const photoURL = user.photoURL;
+    setProfileImage(photoURL);
+    const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
+        ? profileImage.uri
+        : profileImage;
+    await updateUserData(fname, birthdate, userLocation, about, points, profileImageUrl);
+    console.log('Profile image URL: ');
+
+    console.log(profileImage);
   };
   const uploadImageAsync = async (uri, uid) => {
     const response = await fetch(uri);
@@ -128,6 +140,8 @@ const ProfileScreen = ({ onSignOut }) => {
     await uploadBytes(imageRef, blob);
 
     return await getDownloadURL(imageRef);
+    console.log('Profile image URL: ');
+    console.log(profileImage);
   };
 
   const handleChangeProfilePicture = async () => {
@@ -141,12 +155,18 @@ const ProfileScreen = ({ onSignOut }) => {
 
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
+    console.log('image URL (in handler): ');
+    console.log(imageUrl);
+
     alert("Profile picture updated!");
   };
 
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about, points);
+      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
+          ? profileImage.uri
+          : profileImage;
+      await updateUserData(fname, birthdate, userLocation, about, points, profileImageUrl);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -170,7 +190,10 @@ const ProfileScreen = ({ onSignOut }) => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <Image source={logo} style={styles.profileImage} />
+        <Image
+            source={logo}
+            style={styles.profileImage}
+        />
         <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
