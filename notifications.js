@@ -43,7 +43,6 @@ export async function registerForPushNotificationsAsync(userId) {
     })
   ).data;
 
-  console.log('Push token:', token);
 
   // Save to server
   try {
@@ -93,7 +92,6 @@ export function setupNotificationListeners(navigation) {
   const responseListener =
     Notifications.addNotificationResponseReceivedListener((response) => {
       const data = response.notification.request.content.data;
-      console.log('Notification tapped:', data);
 
       // Navigate to chat if message notification
       if (data.type === 'message' && data.senderId) {

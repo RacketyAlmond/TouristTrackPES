@@ -10,7 +10,7 @@ import { auth } from '../../firebaseConfig.js';
 
 export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
-  const { t } = useTranslation('info'); // ahora usamos el namespace "info"
+  const { t } = useTranslation('info');
 
   const [ratingStats, setRatingStats] = useState({ average: 0, count: 0 });
 
@@ -39,7 +39,6 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
 
   if (!city) return null;
 
-  // Datos de ejemplo; tú puedes reemplazarlos por props o estado real
   const locality = {
     name: city,
     comunidad: 'Comunidad',
@@ -78,7 +77,10 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
 
   function handleMoveForum() {
     auth.currentUser != null
-      ? navigation.navigate('Foros')
+      ? navigation.navigate('Forum', {
+          localityName: locality.name,
+          forumId: id,
+        })
       : navigation.navigate('User');
   }
 

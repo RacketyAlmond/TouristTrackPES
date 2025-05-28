@@ -28,7 +28,7 @@ export default function SearchBar({
   selectedCountries,
   setSelectedCountries,
 }) {
-  const { t } = useTranslation(); // usa el namespace por defecto
+  const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const [filterVisible, setFilterVisible] = useState(false);
 

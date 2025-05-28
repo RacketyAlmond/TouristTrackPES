@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -12,7 +11,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useUser } from '../atoms/UserContext.js';
-import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
@@ -23,35 +21,31 @@ import LevelProgress from '../molecules/levelProgress';
 import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
-import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData, updateSignOut, getUserPoints } = useUser();
+  const { updateUserData, updateSignOut, getUserPoints } = useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
 
-  // Campos de usuario
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
   const [points, setPoints] = useState(null);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState('');
 
-  // Estado para saber qué campo estamos editando
   const [editingField, setEditingField] = useState(null);
 
-  // 2. Estado para controlar el modal de idioma
   const [langModalVisible, setLangModalVisible] = useState(false);
 
-  // Función para cargar los datos de Firebase
   useEffect(() => {
     const fetchPoints = async () => {
       try {
         const userPoints = await getUserPoints();
         setPoints(userPoints);
-      } catch (err) {
-        console.error('Failed to load user points:', err);
+      } catch (error) {
+        console.error('Error fetching points:', error);
       }
     };
 
@@ -72,7 +66,6 @@ const ProfileScreen = ({ onSignOut }) => {
           setAbout(data.about);
           setPoints(data.points.current);
         }
-        console.log('User profile fetched successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);
@@ -87,7 +80,6 @@ const ProfileScreen = ({ onSignOut }) => {
     try {
       await updateSignOut();
       onSignOut();
-      console.error('Signed out user:');
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -108,7 +100,6 @@ const ProfileScreen = ({ onSignOut }) => {
     return null;
   };
 
-
   const updateUserProfilePicture = async (imageUrl) => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -119,10 +110,14 @@ const ProfileScreen = ({ onSignOut }) => {
       });
     }
 
-    await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
-    console.log('Profile image URL: ');
-
-    console.log(imageUrl);
+    await updateUserData(
+      fname,
+      birthdate,
+      userLocation,
+      about,
+      points,
+      imageUrl,
+    );
   };
   const uploadImageAsync = async (uri, uid) => {
     try {
@@ -134,12 +129,7 @@ const ProfileScreen = ({ onSignOut }) => {
       await uploadBytes(imageRef, blob);
 
       return await getDownloadURL(imageRef);
-      console.log('Profile image URL: ');
-      console.log(profileImage);
-    }
-    catch{
-
-    }
+    } catch {}
   };
 
   const handleChangeProfilePicture = async () => {
@@ -153,18 +143,25 @@ const ProfileScreen = ({ onSignOut }) => {
 
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
-    setProfileImage(imageUrl)
-    console.log('image URL (in handler): ');
-    console.log(imageUrl);
+    setProfileImage(imageUrl);
 
-    alert("Profile picture updated!");
-
+    alert('Profile picture updated!');
   };
 
   const handleSend = async () => {
     try {
-      let imageUrl = profileImage !== "" ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055'
-      await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
+      let imageUrl =
+        profileImage !== ''
+          ? profileImage
+          : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055';
+      await updateUserData(
+        fname,
+        birthdate,
+        userLocation,
+        about,
+        points,
+        imageUrl,
+      );
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -188,11 +185,17 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image
-            source={{
-              uri: profileImage ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0'      }}
-            style={styles.profileImage}
+          source={{
+            uri: profileImage
+              ? profileImage
+              : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0',
+          }}
+          style={styles.profileImage}
         />
-        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
+        <TouchableOpacity
+          style={styles.editIcon}
+          onPress={handleChangeProfilePicture}
+        >
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
@@ -288,11 +291,7 @@ const ProfileScreen = ({ onSignOut }) => {
         style={styles.actionButton}
         onPress={() => setLangModalVisible(true)}
       >
-        <MaterialCommunityIcons
-          name='translate' // o "translate-variant" si lo prefieres
-          size={16}
-          color='black'
-        />
+        <MaterialCommunityIcons name='translate' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('change-language')}</Text>
       </TouchableOpacity>
 

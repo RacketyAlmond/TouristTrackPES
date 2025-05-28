@@ -10,11 +10,9 @@ export const getSummaryData = async (countries = []) => {
         ? `${baseUrl}?countries=${encodeURIComponent(countries.join(','))}`
         : baseUrl;
 
-    console.log('url: ', url);
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
-    console.log('✅ Datos recibidos del backend');
     return data;
   } catch (error) {
     throw error;
@@ -28,11 +26,9 @@ export const getDataOfMunicipality = async (municipality) => {
     // Si se pasa un array, lo convertimos a string tipo query
     const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
 
-    console.log('url: ', url);
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
-    console.log('✅ Datos recibidos del backend');
     return data;
   } catch (error) {
     throw error;

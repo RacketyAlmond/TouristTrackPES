@@ -4,10 +4,9 @@ import {
   registerForPushNotificationsAsync,
   setupNotificationListeners,
 } from './notifications';
+import i18n from './i18n';
 import { useNavigation } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n';
-import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Chats from './components/organisms/generalChat';
@@ -16,7 +15,6 @@ import Forum from './components/organisms/forum';
 import IndexForos from './components/organisms/indexForos';
 import Estadisticas from './components/organisms/estadisticas';
 import NavBar from './components/organisms/navBar';
-import useSyncForosActividades from './components/hooks/crearForosActividades';
 import Valoraciones from './components/organisms/ratings';
 import ValoracionesUsuario from './components/organisms/userRatings';
 
@@ -30,12 +28,10 @@ import { UserProvider } from './components/atoms/UserContext';
 import { UserContext } from './components/atoms/UserContext';
 import { useTranslation } from 'react-i18next';
 
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const { t, i18n } = useTranslation('profile');
-  const { loading, error } = useSyncForosActividades();
 
   function NotificationHandler() {
     const navigation = useNavigation();

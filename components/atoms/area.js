@@ -7,8 +7,6 @@ export default function Area({ municipi, numTuristes }) {
 
   const minOpacity = 0.5;
   const maxOpacity = 0.85;
-  const minRadius = 20;
-  const maxRadius = 80;
   const maxTuristes = 100000000;
 
   function scaleLog(value, min, max) {
@@ -52,7 +50,6 @@ export default function Area({ municipi, numTuristes }) {
   const t = scaleLog(numTuristes, 1, maxTuristes);
   const opacity = minOpacity + t * (maxOpacity - minOpacity);
   const fillColor = interpolateColor(numTuristes, 1, maxTuristes);
-  const r = minRadius + t * (maxRadius - minRadius);
 
   useEffect(() => {
     const buscarCiudad = async (cityName) => {
@@ -68,9 +65,8 @@ export default function Area({ municipi, numTuristes }) {
     if (municipi) {
       buscarCiudad(municipi);
     }
-  }, [municipi]); // Se ejecuta cuando cambia 'municipi'
+  }, [municipi]);
 
-  // Mientras se cargan las coordenadas, no renderizamos el círculo
   if (!coordinates || !numTuristes) {
     return null;
   }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { Platform, Text } from 'react-native';
+import { Platform } from 'react-native';
 import SelectorPlataforma from '../components/molecules/selectorPlataforma';
 
 jest.mock('@react-native-picker/picker', () => {

@@ -1,17 +1,11 @@
-/* eslint-disable prettier/prettier */
-// components/navigation/UserStack.js
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView } from 'react-native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthScreen from '../molecules/auth';
 import BirthdateScreen from '../molecules/birthdate';
 import ProfileScreen from './profile';
-import { AuthProvider } from '../atoms/AuthContext'; // NUEVO
+import { AuthProvider } from '../atoms/AuthContext';
 import { UserProvider } from '../atoms/UserContext';
-import { auth } from '../../firebaseConfig.js'; // NUEVO
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { auth } from '../../firebaseConfig.js';
 
 export default function UserStack() {
   const [screen, setScreen] = useState('Profile');
@@ -25,7 +19,6 @@ export default function UserStack() {
   useEffect(() => {
     getAuthenticated();
   }, []);
-  const navigation = useNavigation();
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -54,31 +47,9 @@ export default function UserStack() {
                 onSignOut={() => setScreen('Auth')}
               />
             )}
-            {/* In your Settings or Profile screen */}
           </View>
         </AuthProvider>
       </UserProvider>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  settingItemIconContainer: {
-    marginRight: 16,
-  },
-  settingItemTextContainer: {
-    flex: 1,
-  },
-  settingItemText: {
-    fontSize: 16,
-    color: '#572364',
-  },
-});

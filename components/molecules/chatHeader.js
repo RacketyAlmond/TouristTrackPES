@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -21,8 +20,7 @@ const ChatHeader = ({
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
-    // Determina el rango del usuario basado en los puntos
-    const rank = getRankByLevel(getLevelInfo(contactPoints).currentLevel, true); // Usa los puntos del contacto o 0 por defecto
+    const rank = getRankByLevel(getLevelInfo(contactPoints).currentLevel, true);
     setUserRank(rank);
   }, []);
   return (

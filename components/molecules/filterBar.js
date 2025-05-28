@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Text,
 } from 'react-native';
-// 1️⃣ Importa useTranslation
 import { useTranslation } from 'react-i18next';
 
 export default function FilterBar({
@@ -17,7 +16,6 @@ export default function FilterBar({
   onSelect,
   selectedCountries,
 }) {
-  // 2️⃣ Obtén t() sin namespace (usa el por defecto)
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
 
@@ -32,7 +30,6 @@ export default function FilterBar({
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        // 3️⃣ Sustituye el texto fijo por t('filter.open')
         placeholder={t('filter.open')}
         value={query}
         onChangeText={setQuery}

@@ -11,18 +11,17 @@ import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import config from '../../config';
 
 export default function IndexForos() {
   const { t } = useTranslation('foro');
   const [searchLocalidad, setSearchLocalidad] = useState('');
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
-  const [newForoName, setNewForoName] = useState(''); // Estado para el nombre del nuevo foro
+  const [newForoName, setNewForoName] = useState('');
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch(`***REMOVED***/forums`); // Cambia esto por la URL de tu servidor
+      const response = await fetch(`***REMOVED***/forums`);
       const json = await response.json();
 
       if (json.success) {
@@ -63,8 +62,8 @@ export default function IndexForos() {
       const json = await response.json();
       if (json.success) {
         alert('Foro creado exitosamente.');
-        setNewForoName(''); // Limpiar el campo de texto
-        obtenerForos(); // Actualizar la lista de foros
+        setNewForoName('');
+        obtenerForos();
       } else {
         alert('Error al crear el foro.');
       }
@@ -74,7 +73,6 @@ export default function IndexForos() {
     }
   };
 
-  // Filtrar las localidades cuando cambie el texto de búsqueda
   useEffect(() => {
     filteredLocalidades.length === 0 && setNewForoName(searchLocalidad);
     if (searchLocalidad) {
@@ -83,12 +81,10 @@ export default function IndexForos() {
       );
       setFilteredLocalidades(filtered);
     } else {
-      // Si no hay texto de búsqueda, mostrar todas las localidades
       setFilteredLocalidades(Localidades);
     }
   }, [searchLocalidad, Localidades]);
 
-  // Inicializar las localidades filtradas al cargar el componente
   useEffect(() => {
     setFilteredLocalidades(Localidades);
     obtenerForos();
@@ -179,9 +175,9 @@ export default function IndexForos() {
               <TouchableOpacity
                 onPress={crearForo}
                 style={{
-                  backgroundColor: '#572364', // Color de fondo del botón
+                  backgroundColor: '#572364',
                   padding: 10,
-                  borderRadius: 5, // Bordes redondeados
+                  borderRadius: 5,
                   alignItems: 'center',
                   marginTop: 10,
                 }}

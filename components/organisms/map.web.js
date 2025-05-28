@@ -62,7 +62,6 @@ const MapUpdater = ({ coords, city, location, goToUserLocation }) => {
   return null;
 };
 
-// Versión web del componente Map
 export default function Map() {
   const { t } = useTranslation();
   const navigation = useNavigation();
@@ -81,7 +80,6 @@ export default function Map() {
     navigation.setOptions({ title: t('header') });
   }, [t, navigation]);
 
-  // Carga inicial de datos
   useEffect(() => {
     (async () => {
       try {
@@ -97,7 +95,6 @@ export default function Map() {
     })();
   }, []);
 
-  // Actualiza el resumen cuando cambian los países seleccionados
   useEffect(() => {
     (async () => {
       try {
@@ -110,7 +107,6 @@ export default function Map() {
     })();
   }, [selectedCountries]);
 
-  // Solicitar ubicación del usuario (web)
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
@@ -145,12 +141,10 @@ export default function Map() {
       if (json.success) {
         const cityData = json.forum;
         if (cityData && cityData.id) {
-          console.log(`ID de la ciudad "${city}":`, cityData.id);
           return cityData.id;
         }
       }
 
-      console.log(`No se encontró la ciudad "${city}". Creando el foro...`);
       const response2 = await fetch(`***REMOVED***/forums`, {
         method: 'POST',
         headers: {
@@ -160,7 +154,6 @@ export default function Map() {
       });
       const json2 = await response2.json();
       if (json2.success) {
-        console.log(`Foro creado para la ciudad "${city}". ID:`, json2.forumId);
         return json2.forumId;
       } else {
         console.error(`Error al crear el foro para la ciudad "${city}".`);
@@ -177,7 +170,6 @@ export default function Map() {
     const fetchCityId = async () => {
       if (city) {
         const id = await getIdCity();
-        console.log(`ID de la ciudad "${city}":`, id);
         setCityId(id);
       } else {
         setCityId(null);
@@ -211,7 +203,6 @@ export default function Map() {
     setCity('');
   };
 
-  // Versión web actualizada con características de la versión nativa
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
@@ -225,7 +216,7 @@ export default function Map() {
 
       <View style={styles.mapContainer}>
         <MapContainer
-          center={[40.416775, -3.70379]} // Madrid, España como centro inicial
+          center={[40.416775, -3.70379]}
           zoom={6}
           style={{ height: '100%', width: '100%' }}
         >
