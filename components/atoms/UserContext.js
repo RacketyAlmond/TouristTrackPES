@@ -96,6 +96,9 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
+      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
+          ? profileImage.uri
+          : profileImage;
       // Save to Firestore
       await updateDoc(doc(db, 'Users', user.uid), {
         firstName: fname,
@@ -103,7 +106,7 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
-        profileImage: profileImage
+        profileImage: profileImageUrl
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
