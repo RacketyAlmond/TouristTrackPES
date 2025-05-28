@@ -36,7 +36,7 @@ const ProfileScreen = ({ onSignOut }) => {
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
   const [points, setPoints] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState("");
 
   // Estado para saber qué campo estamos editando
   const [editingField, setEditingField] = useState(null);
@@ -72,7 +72,7 @@ const ProfileScreen = ({ onSignOut }) => {
           setUserLocation(data.userLocation);
           setAbout(data.about);
           setPoints(data.points.current);
-          setProfileImage(data.profileImage)
+          //setProfileImage(data.profileImage);
         }
         console.log('User profile fetched successfully!');
       })
@@ -121,14 +121,11 @@ const ProfileScreen = ({ onSignOut }) => {
         photoURL: imageUrl
       });
     }
-    const photoURL = user.photoURL;
-    const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
-        ? profileImage.uri
-        : profileImage;
-    await updateUserData(fname, birthdate, userLocation, about, points, profileImageUrl);
+
+    await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
     console.log('Profile image URL: ');
 
-    console.log(profileImage);
+    console.log(imageUrl);
   };
   const uploadImageAsync = async (uri, uid) => {
     try {
@@ -168,10 +165,8 @@ const ProfileScreen = ({ onSignOut }) => {
 
   const handleSend = async () => {
     try {
-      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
-          ? profileImage.uri
-          : profileImage;
-      await updateUserData(fname, birthdate, userLocation, about, points, profileImageUrl);
+      let imageUrl = profileImage !== "" ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055'
+      await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -197,8 +192,7 @@ const ProfileScreen = ({ onSignOut }) => {
       <View style={styles.profileContainer}>
         <Image
             source={{
-              uri: 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055',
-            }}
+              uri: profileImage ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0'      }}
             style={styles.profileImage}
         />
         <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
