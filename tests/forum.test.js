@@ -3,7 +3,12 @@ import { render, waitFor } from '@testing-library/react-native';
 import Forum from '../components/organisms/forum';
 import { NavigationContainer } from '@react-navigation/native';
 
-// 👇 Solución al error: definir React dentro de cada mock
+jest.mock('../components/atoms/UserContext.js', () => ({
+  useUser: () => ({
+    updateUserPoints: jest.fn(),
+  }),
+}));
+
 jest.mock('../components/atoms/title', () => {
   const React = require('react');
   const { Text } = require('react-native');
@@ -20,6 +25,38 @@ jest.mock('../components/molecules/foroSearchBar', () => {
   const React = require('react');
   const { View } = require('react-native');
   return () => <View testID='foro-search-bar' />;
+});
+
+jest.mock('../firebaseConfig.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'test-uid',
+      name: 'Test User',
+    },
+  },
+}));
+
+jest.mock('firebase/firestore', () => ({
+  doc: jest.fn(() => 'mocked-doc'),
+  getDoc: jest.fn(() =>
+    Promise.resolve({
+      exists: () => true,
+      data: () => ({
+        firstName: 'TestFirstName',
+        userLocation: 'TestLocation',
+      }),
+    }),
+  ),
+}));
+
+jest.mock('@expo/vector-icons', () => {
+  return {
+    FontAwesome5: () => {
+      const React = require('react');
+      const { View } = require('react-native');
+      return <View />;
+    },
+  };
 });
 
 // Mock de fetch
@@ -75,9 +112,9 @@ describe('Forum component', () => {
     );
 
     await waitFor(() => {
-      expect(getByText('Barcelona')).toBeTruthy(); // Título mockeado
-      expect(getByText('Question')).toBeTruthy(); // Componente mockeado
-      expect(getByTestId('foro-search-bar')).toBeTruthy(); // SearchBar mockeado
+      expect(getByText('Barcelona')).toBeTruthy();
+      expect(getByText('Question')).toBeTruthy();
+      expect(getByTestId('foro-search-bar')).toBeTruthy();
     });
   });
 });

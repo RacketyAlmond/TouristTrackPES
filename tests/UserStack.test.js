@@ -1,7 +1,13 @@
-// tests/UserStack.test.js
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import UserStack from '../components/organisms/UserStack';
+
+jest.mock('../firebaseConfig.js', () => ({
+  auth: {
+    currentUser: { uid: '123' }, // Simula usuario autenticado
+  },
+}));
 
 jest.mock('../components/molecules/auth', () => {
   const React = require('react');
@@ -31,7 +37,11 @@ jest.mock('../components/atoms/UserContext', () => ({
 
 describe('UserStack component', () => {
   it('renderiza ProfileScreen por defecto', () => {
-    const { getByTestId } = render(<UserStack />);
+    const { getByTestId } = render(
+      <NavigationContainer>
+        <UserStack />
+      </NavigationContainer>,
+    );
     expect(getByTestId('profile-screen')).toBeTruthy();
   });
 });

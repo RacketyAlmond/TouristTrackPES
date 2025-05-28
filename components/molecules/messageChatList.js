@@ -3,8 +3,11 @@ import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import MessageChatBubble from '../atoms/messageChatBubble';
 import MessageChatData from '../atoms/messageChatData';
+import { useTranslation } from 'react-i18next';
 
 const MessageChatList = ({ messages }) => {
+  const { i18n } = useTranslation();
+
   const formatDate = (timestamp) => {
     const messageDate = new Date(timestamp);
     const today = new Date();
@@ -27,13 +30,17 @@ const MessageChatList = ({ messages }) => {
       yesterday.getDate(),
     );
 
+    const currentLocale = i18n.language === 'es' ? 'es-ES' : 'en-US';
+
     if (messageDay.getTime() === todayDay.getTime()) {
-      return 'TODAY';
+      return i18n.language === 'es' ? 'HOY' : 'TODAY';
     } else if (messageDay.getTime() === yesterdayDay.getTime()) {
-      return 'YESTERDAY';
+      return i18n.language === 'es' ? 'AYER' : 'YESTERDAY';
     } else {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      return messageDate.toLocaleDateString('en-US', options).toUpperCase();
+      return messageDate
+        .toLocaleDateString(currentLocale, options)
+        .toUpperCase();
     }
   };
 

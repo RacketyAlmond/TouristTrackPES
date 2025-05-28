@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
 export const UserContext = createContext();
 
@@ -15,6 +16,7 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
+    avatar,
   ) => {
     const user = auth.currentUser;
 
@@ -43,6 +45,38 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
+
+  const getUserForumComments = async () => {
+    try {
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error('No user is signed in');
+      }
+
+      console.log('Fetching forum activity for user', user.uid);
+
+      // Usa la ruta correcta que tienes en el backend
+      const response = await fetch(
+        `***REMOVED***/forums/user-forum-comments/${user.uid}`,
+      );
+
+      if (!response.ok) {
+        console.error('Response not OK:', response.status);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error('Failed to fetch user forum comments');
+      }
+
+      const data = await response.json();
+      console.log('Forum activity data received:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching user forum comments:', error);
+      throw error;
+    }
+  };
+
   const updateUserData = async (
     fname,
     birthday,
@@ -77,6 +111,15 @@ export const UserProvider = ({ children }) => {
       console.error('Error updating profile:', error);
       throw error;
     }
+  };
+  const updateSignOut = async () => {
+    signOut(auth)
+      .then(() => {
+        console.log('Successfully signed out the user');
+      })
+      .catch((error) => {
+        throw new Error('Error signing out');
+      });
   };
   const getUserPoints = async () => {
     const user = auth.currentUser;
@@ -160,6 +203,28 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  // const handleMoveSpecificForum = (id, city) => {
+  //   const user = auth.currentUser;
+  //
+  //   try {
+  //     if (!user) {
+  //
+  //     }
+  //     else {
+  //       navigation.navigate('Forum', {
+  //         localityName: city,
+  //         forumId: id,
+  //       })
+  //     }
+  //
+  //     console.log('User moved to Login');
+  //   } catch (error) {
+  //     console.error('Error moving to forum:', error);
+  //     throw error;
+  //   }
+  // };
+  // }
+
   return (
     <UserContext.Provider
       value={{
@@ -168,8 +233,10 @@ export const UserProvider = ({ children }) => {
         createUserData,
         updateUserData,
         getUserData,
+        updateSignOut,
         getUserPoints,
         updateUserPoints,
+        getUserForumComments,
       }}
     >
       {children}

@@ -24,6 +24,15 @@ jest.mock('../components/molecules/filter.js', () => {
   };
 }); // ajusta la ruta si es necesario
 
+jest.mock('react-i18next', () => ({
+  useTranslation: (ns) => ({
+    t: (key) => {
+      if (ns === 'foro' && key === 'question') return 'Buscar pregunta...';
+      return key;
+    },
+  }),
+}));
+
 describe('ForoSearchBar component', () => {
   let onSearch;
   let selectedCountries;

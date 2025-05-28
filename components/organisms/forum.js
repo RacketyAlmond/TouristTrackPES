@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -20,8 +21,8 @@ import config from '../../config';
 
 export default function Forum({ route }) {
   const { t } = useTranslation('foro');
+  const { userData, getUserData, updateUserPoints } = useUser();
   const { forumId, localityName } = route.params;
-  const { updateUserPoints } = useUser();
   const [actividadInfo, setActividadInfo] = useState('');
   const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -125,6 +126,19 @@ export default function Forum({ route }) {
     getQuestions();
   }, []);
 
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          await getUserData();
+        }
+      } catch (error) {
+        console.error('Error cargando datos del usuario:', error);
+      }
+    };
+    loadUserData();
+  }, [currentUser]);
+
   // Extraer las nacionalidades únicas de las preguntas
   const availableNationalities = Array.from(
     new Set(questions.map((q) => q.nationality)),
@@ -211,7 +225,7 @@ export default function Forum({ route }) {
             Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-            fname,
+            user: userData.firstName,
             userLocation,
           };
 

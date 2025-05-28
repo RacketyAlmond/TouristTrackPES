@@ -8,7 +8,7 @@ export default function ChatItem({ item }) {
 
   useEffect(() => {
     // Determina el rango del usuario basado en los puntos
-    const rank = getRankByLevel(getLevelInfo(item.points).currentLevel, true) // Usa los puntos del usuario o 0 por defecto
+    const rank = getRankByLevel(getLevelInfo(item.points).currentLevel, true); // Usa los puntos del usuario o 0 por defecto
     setUserRank(rank);
   }, [item.points]);
 

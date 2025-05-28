@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { auth } from '../../firebaseConfig.js';
 
 export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
@@ -75,6 +76,18 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
     return stars;
   };
 
+  function handleMoveForum(){
+      auth.currentUser != null
+          ? navigation.navigate('Foros')
+          : navigation.navigate('User');
+    }
+
+    function handleMoveValoraciones(){
+      auth.currentUser != null
+          ? navigation.navigate('Valoraciones')
+          : navigation.navigate('User');
+    }
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -84,9 +97,7 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
       <Text style={styles.title}>{locality.name}</Text>
       <TouchableOpacity
         style={styles.ratingContainer}
-        onPress={() =>
-          navigation.navigate('Valoraciones', { localidad: locality })
-        }
+        onPress={handleMoveValoraciones}
       >
         {renderStars(locality.rating)}
         <Text style={styles.ratingAverageText}>{locality.rating}</Text>
@@ -106,12 +117,7 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.estadisticasButton}
-        onPress={() =>
-          navigation.navigate('Forum', {
-            localityName: city,
-            forumId: id,
-          })
-        }
+        onPress={handleMoveForum}
       >
         <Text style={styles.textButton}>Ir al foro</Text>
       </TouchableOpacity>

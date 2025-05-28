@@ -3,6 +3,17 @@ import { render, waitFor } from '@testing-library/react-native';
 import Map from '../components/organisms/map';
 import { NavigationContainer } from '@react-navigation/native';
 
+jest.mock('@react-navigation/native', () => {
+  return {
+    ...jest.requireActual('@react-navigation/native'),
+    useNavigation: () => ({
+      navigate: jest.fn(),
+      setOptions: jest.fn(), // <-- agregar esta línea
+    }),
+    useFocusEffect: jest.fn(),
+  };
+});
+
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
 
 jest.mock('react-native-maps', () => {

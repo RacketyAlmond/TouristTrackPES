@@ -84,11 +84,8 @@ const RatingScreen = ({ route }) => {
       }
     };
 
-    loadUserData();
-
-    
-    
-  }, []);
+    loadUserData();  
+  }, [currentUser]);
 
   useFocusEffect(
     useCallback(() => {

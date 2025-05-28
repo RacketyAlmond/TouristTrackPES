@@ -1,6 +1,9 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useContext } from 'react';
-import { registerForPushNotificationsAsync, setupNotificationListeners } from './notifications';
+import {
+  registerForPushNotificationsAsync,
+  setupNotificationListeners,
+} from './notifications';
 import { useNavigation } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
@@ -21,13 +24,10 @@ import AddChat from './components/organisms/addChat';
 import PersonalChat from './components/organisms/personalChat';
 import UserStack from './components/organisms/UserStack';
 import SettingsScreen from './components/organisms/SettingsScreen';
+import UserForumComments from './components/molecules/userForumComments';
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
-import { UserContext } from './components/atoms/UserContext'; 
-
-
-
-
+import { UserContext } from './components/atoms/UserContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,10 +42,11 @@ export default function App() {
       if (userData?.id) {
         // Register for push tokens
         registerForPushNotificationsAsync(userData.id);
-        
+
         // Set up notification listeners
-        const { notificationListener, responseListener } = setupNotificationListeners(navigation);
-        
+        const { notificationListener, responseListener } =
+          setupNotificationListeners(navigation);
+
         // Clean up
         return () => {
           notificationListener?.remove();
@@ -87,28 +88,28 @@ export default function App() {
                   animation: 'slide_from_right',
                 }}
               />
-              <Stack.Screen 
-                name='Chats' 
+              <Stack.Screen
+                name='Chats'
                 component={Chats}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
-                name='PersonalChat' 
+              <Stack.Screen
+                name='PersonalChat'
                 component={PersonalChat}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
-                name='AddChat' 
+              <Stack.Screen
+                name='AddChat'
                 component={AddChat}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
-                name='Estadisticas' 
+              <Stack.Screen
+                name='Estadisticas'
                 component={Estadisticas}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen 
-                name='Valoraciones' 
+              <Stack.Screen
+                name='Valoraciones'
                 component={Valoraciones}
                 options={{ headerShown: false }}
               />
@@ -125,6 +126,11 @@ export default function App() {
               <Stack.Screen
                 name='User'
                 component={UserStack}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name='UserForumComments'
+                component={UserForumComments}
                 options={{ headerShown: false }}
               />
             </Stack.Navigator>

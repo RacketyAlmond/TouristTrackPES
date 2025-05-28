@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
@@ -8,6 +9,7 @@ import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js'; //
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
+import { useUser } from '../atoms/UserContext';
 
 export default function Question({
   forumId,
@@ -20,6 +22,7 @@ export default function Question({
 }) {
   // namespace 'foro', además extraemos i18n.language
   const { t, i18n } = useTranslation('foro');
+  const { userData, getUserData } = useUser();
 
   const [showAnswers, setShowAnswers] = useState(false);
   const [showNewAnswer, setShowNewAnswer] = useState(false);
@@ -113,10 +116,21 @@ export default function Question({
     getAnswers();
   }, [getAnswers]);
 
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          await getUserData();
+        }
+      } catch (error) {
+        console.error('Error cargando datos del usuario:', error);
+      }
+    };
+    loadUserData();
+  }, [currentUser]);
+
   // Añadir nueva respuesta
   const handleAddAnswer = async () => {
-    console.log(`user = ${idCurrentUser}`);
-
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -133,6 +147,8 @@ export default function Question({
           },
         );
 
+        print('aaa');
+
         const json = await response.json();
 
         if (!response.ok) {
@@ -144,12 +160,14 @@ export default function Question({
           const { user, nationality, points } =
             await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
+          const firstName = userData.firstName;
+          console.log(userData.firstName);
           const newAnswerObject = {
             id: json.preguntaId,
             userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
-            user,
+            user: firstName,
             nationality,
             points,
           };
@@ -188,7 +206,6 @@ export default function Question({
           </View>
           <Text style={{ color: 'gray' }}>{relativeTime}</Text>
         </View>
-        <Text>{text}</Text>
       </View>
 
       <Text style={{ marginVertical: 8 }}>{text}</Text>
@@ -202,9 +219,7 @@ export default function Question({
       >
         <TouchableOpacity onPress={() => setShowAnswers((v) => !v)}>
           <Text style={{ color: '#572364' }}>
-            {showAnswers
-              ? t('hideAnswers')
-              : `${allAnswers.length} ${t('answers')}`}
+            {showAnswers ? t('hide') : `${allAnswers.length} ${t('answers')}`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowNewAnswer((v) => !v)}>
@@ -252,6 +267,7 @@ export default function Question({
                 date={answer.date}
                 text={answer.answer}
                 points={answer.points}
+                locale={locale}
               />
               {answer.userId === idCurrentUser ? (
                 <TouchableOpacity onPress={() => deleteAnswer(answer.id)}>
