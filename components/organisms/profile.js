@@ -109,7 +109,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about);
+      await updateUserData(fname, birthdate, userLocation, about, points);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);

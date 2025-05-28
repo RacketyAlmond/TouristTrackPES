@@ -203,6 +203,28 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  // const handleMoveSpecificForum = (id, city) => {
+  //   const user = auth.currentUser;
+  //
+  //   try {
+  //     if (!user) {
+  //
+  //     }
+  //     else {
+  //       navigation.navigate('Forum', {
+  //         localityName: city,
+  //         forumId: id,
+  //       })
+  //     }
+  //
+  //     console.log('User moved to Login');
+  //   } catch (error) {
+  //     console.error('Error moving to forum:', error);
+  //     throw error;
+  //   }
+  // };
+  // }
+
   return (
     <UserContext.Provider
       value={{
