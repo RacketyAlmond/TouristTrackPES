@@ -43,6 +43,15 @@ jest.mock('../components/atoms/UserContext.js', () => ({
   }),
 }));
 
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: () => ({
+    navigate: jest.fn(),
+    goBack: jest.fn(),
+    // cualquier otro método que uses
+  }),
+}));
+
 describe('Performance test for ProfileScreen', () => {
   it('renders and responds within 5 seconds', async () => {
     const start = Date.now();
