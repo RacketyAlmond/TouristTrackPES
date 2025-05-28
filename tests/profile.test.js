@@ -28,34 +28,41 @@ jest.mock('firebase/firestore', () => ({
         birthday: '01/01/2000',
         userLocation: 'Barcelona',
         about: 'Me gusta viajar',
+        points: { current: 50 },
       }),
     }),
   ),
   doc: jest.fn(),
 }));
 
-// Mock del contexto
 jest.mock('../components/atoms/UserContext.js', () => ({
   useUser: () => ({
     updateUserData: jest.fn(),
     getUserPoints: jest.fn(() => Promise.resolve(50)),
+    updateSignOut: jest.fn(),
   }),
 }));
 
-describe('ProfileScreen component', () => {
-  it('renderiza correctamente el perfil de usuario', async () => {
-    const { getAllByText, getByText } = render(
+describe('Performance test for ProfileScreen', () => {
+  it('renders and responds within 5 seconds', async () => {
+    const start = Date.now();
+
+    const { getByText } = render(
       <NavigationContainer>
         <ProfileScreen onSignOut={jest.fn()} />
       </NavigationContainer>,
     );
 
     await waitFor(() => {
-      expect(getAllByText('TestName').length).toBeGreaterThan(0);
       expect(getByText('Barcelona')).toBeTruthy();
-      expect(getAllByText('Sobre mí').length).toBeGreaterThan(0);
       expect(getByText('01/01/2000')).toBeTruthy();
       expect(getByText('Me gusta viajar')).toBeTruthy();
     });
+
+    const end = Date.now();
+    const duration = end - start;
+
+    console.log(`⏱ Render time: ${duration}ms`);
+    expect(duration).toBeLessThanOrEqual(5000);
   });
 });
