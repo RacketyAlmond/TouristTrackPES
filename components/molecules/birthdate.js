@@ -74,16 +74,14 @@ const BirthdateScreen = ({ onComplete }) => {
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
-      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
-          ? profileImage.uri
-          : profileImage;
+
       await createUserData(
           fname,
           birthdate.toDateString(),
           userLocation,
           about,
           points,
-          profileImageUrl,
+          profileImage,
       );
       authStatus = true;
 

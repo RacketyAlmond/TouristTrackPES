@@ -23,9 +23,7 @@ export const UserProvider = ({ children }) => {
     if (!user) {
       throw new Error('No user is signed in');
     }
-    const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
-        ? profileImage.uri
-        : profileImage;
+
 
     try {
       await setDoc(doc(db, 'Users', user.uid), {
@@ -34,7 +32,7 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
-        profileImage: profileImageUrl,
+        profileImage: profileImage,
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -96,17 +94,14 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-      const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
-          ? profileImage.uri
-          : profileImage;
-      // Save to Firestore
+
       await updateDoc(doc(db, 'Users', user.uid), {
         firstName: fname,
         birthday: birthday,
         userLocation: userLocation,
         about: about,
         points: points,
-        profileImage: profileImageUrl
+        profileImage: profileImage
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
