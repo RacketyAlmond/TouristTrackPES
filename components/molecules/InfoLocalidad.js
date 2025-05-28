@@ -77,7 +77,10 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
 
   function handleMoveForum() {
     auth.currentUser != null
-      ? navigation.navigate('Foros')
+      ? navigation.navigate('Forum', {
+          localityName: locality.name,
+          forumId: id,
+        })
       : navigation.navigate('User');
   }
 
