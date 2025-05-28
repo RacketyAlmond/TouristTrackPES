@@ -17,17 +17,13 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 //import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
-import { API_BASE_URL } from '../../utilis/api';
-
+import { auth } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
 
 export default function Chats() {
-  const currentUser = {
-    id: '0',
-    name: 'Yo',
-    avatar: 'https://i.pinimg.com/474x/24/0d/b3/asdsaeeedsseed.jpg',
-    about: 'hi',
-  };
-  const idCurrentSession = currentUser.id;
+  const currentUser = auth.currentUser;
+  const { t } = useTranslation('chats');
+  const idCurrentSession = currentUser.uid;
   //const dataJson = UsersJson.find(
   //(user) => user.idUser === idCurrentSession,
   //).friends;
@@ -43,7 +39,7 @@ export default function Chats() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/allowed-chats/users/${idCurrentSession}`,
+        `***REMOVED***/allowed-chats/users/${idCurrentSession}`,
       );
 
       if (!response.ok) {
@@ -55,6 +51,7 @@ export default function Chats() {
         name: chat.firstName,
         about: chat.about,
         avatar: chat.avatar,
+        points: chat.points.current || 0,
       }));
 
       setChats(formattedChats);
@@ -84,7 +81,7 @@ export default function Chats() {
   const deleteAllowedChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/allowed-chats/between/${user1Id}/${user2Id}`,
+        `***REMOVED***/allowed-chats/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -131,7 +128,7 @@ export default function Chats() {
   const deleteChat = async (user1Id, user2Id) => {
     try {
       const response = await fetch(
-        `${API_BASE_URL}/messages/between/${user1Id}/${user2Id}`,
+        `***REMOVED***/messages/between/${user1Id}/${user2Id}`,
         {
           method: 'DELETE',
           headers: {
@@ -142,7 +139,7 @@ export default function Chats() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      setChats(chats.filter((chat) => chat.id !== user2Id))
+      setChats(chats.filter((chat) => chat.id !== user2Id));
     } catch (error) {
       console.error('Error sending message:', error);
       Alert.alert('Error', 'Failed to send message. Please try again.');
@@ -151,15 +148,15 @@ export default function Chats() {
 
   const handleDeleteChat = (item) => {
     Alert.alert(
-      'Delete Chat',
-      `Are you sure you want to delete the conversation with ${item.name}?`,
+      t('delete-chat'),
+      `${t(`sure`)} ${item.name}?`,
       [
         {
-          text: 'Cancel',
+          text: t('cancel'),
           style: 'cancel',
         },
         {
-          text: 'Delete',
+          text: t('delete'),
           style: 'destructive',
           onPress: () => {
             const updatedChats = filter.filter((chat) => chat.id !== item.id);
@@ -170,7 +167,10 @@ export default function Chats() {
             //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
             deleteAllowedChat(idCurrentSession, item.id);
 
-            Alert.alert('Success', `Chat with ${item.name} has been deleted.`);
+            Alert.alert(
+              t('success'),
+              `${t('final1')} ${item.name} ${t('final2')}`,
+            );
           },
         },
       ],
@@ -219,7 +219,7 @@ export default function Chats() {
         </TouchableOpacity>
         <TextInput
           style={styles.searchBar}
-          placeholder='Search for a Chat...'
+          placeholder={t('search')}
           onChangeText={handleSearchChange}
           onSubmitEditing={handleSubmit}
           value={searchTerm}

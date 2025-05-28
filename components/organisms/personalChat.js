@@ -1,24 +1,30 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   Platform,
   StatusBar,
   Alert,
+  AppState,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
-import ChatHeader from './chatHeader.js';
-import MessageChatList from './messageChatList.js';
+import ChatHeader from '../molecules/chatHeader.js';
+import MessageChatList from '../molecules/messageChatList.js';
 import MessageChatInput from '../atoms/messageChatInput.js';
-import { API_BASE_URL } from '../../utilis/api';
+import socketService from '../../socketio.js';
+import { useTranslation } from 'react-i18next';
 
 const PersonalChat = ({ route, navigation }) => {
+  const { t } = useTranslation('chats');
   const userData = route.params.User;
   const currentUser = route.params.currentUser;
-  const idCurrentSession = currentUser.id;
+  const idCurrentSession = currentUser.uid;
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState(route.params.state); // 0 = chat, 1 = requested, 2 = request
+  const AppStateRef = useRef(AppState.currentState);
 
   const transformFirebaseTimestamp = (timestamp) => {
     return new Date(timestamp._seconds * 1000).toISOString();
@@ -28,7 +34,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/messages/between/${idCurrentSession}/${userData.id}`,
+        `***REMOVED***/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -51,22 +57,55 @@ const PersonalChat = ({ route, navigation }) => {
     }
   }, [idCurrentSession, userData.id]);
 
+  const handleNewMessage = (msg) => {
+    if (
+      (msg.sentByID === userData.id && msg.sentToID === idCurrentSession) ||
+      (msg.sentByID === idCurrentSession && msg.sentToID === userData.id)
+    ) {
+      const formattedMessage = {
+        id: msg.id.toString(),
+        text: msg.content,
+        timestamp: transformFirebaseTimestamp(msg.timestamp),
+        isMe: msg.sentByID === idCurrentSession,
+      };
+
+      setMessages((prevMessages) => {
+        const exists = prevMessages.some((m) => m.id === formattedMessage.id);
+        if (exists) return prevMessages;
+        return [...prevMessages, formattedMessage];
+      });
+    }
+  };
+
   useEffect(() => {
+    socketService.connect(idCurrentSession);
+    const unsubscribeMessage = socketService.on(
+      'new_message',
+      handleNewMessage,
+    );
     fetchMessages();
-  }, [fetchMessages]);
+
+    return () => {
+      unsubscribeMessage();
+      socketService.disconnect();
+    };
+  }, [fetchMessages, idCurrentSession, userData.id]);
 
   const sendRequest = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/pending-requests`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `***REMOVED***/pending-requests`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentByID: idCurrentSession,
+            sentToID: userData.id,
+          }),
         },
-        body: JSON.stringify({
-          sentByID: idCurrentSession,
-          sentToID: userData.id,
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error('Failed to send request');
@@ -81,8 +120,8 @@ const PersonalChat = ({ route, navigation }) => {
     if (text.trim().length === 0) return;
     if (state === 2) {
       Alert.alert(
-        'Friend Request Sent',
-        `A friend request has been sent to ${userData.name}.`,
+        t('friend-request-sent'),
+        `${t('friend-request-sent-text')} ${userData.name}.`,
         [
           {
             text: 'OK',
@@ -99,8 +138,8 @@ const PersonalChat = ({ route, navigation }) => {
 
     if (state === 1) {
       Alert.alert(
-        'Friend Request Received',
-        `Accept the friend request to talk with ${userData.name}.`,
+        t('friend-request-sent'),
+        `${t('friend-request-sent-text')} ${userData.name}.`,
         [
           {
             text: 'OK',
@@ -122,24 +161,27 @@ const PersonalChat = ({ route, navigation }) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        const response = await fetch(`${API_BASE_URL}/messages`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `***REMOVED***/messages`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              sentByID: idCurrentSession,
+              sentToID: userData.id,
+              content: text,
+            }),
           },
-          body: JSON.stringify({
-            sentByID: idCurrentSession,
-            sentToID: userData.id,
-            content: text,
-          }),
-        });
+        );
 
         if (!response.ok) {
           throw new Error('Failed to send message');
         }
       } catch (error) {
         console.error('Error sending message:', error);
-        Alert.alert('Error', 'Failed to send message. Please try again.');
+        Alert.alert('Error', t('error'));
       }
     }
   };
@@ -154,6 +196,7 @@ const PersonalChat = ({ route, navigation }) => {
         contactName={userData.name}
         contactAvatar={userData.avatar}
         contactDescription={userData.about}
+        contactPoints={userData.points}
         onBackPress={goBack}
       />
       <MessageChatList messages={messages} isLoading={isLoading} />

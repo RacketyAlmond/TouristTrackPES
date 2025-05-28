@@ -10,10 +10,11 @@ import {
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { API_BASE_URL } from '../../utilis/api';
-
+import { useTranslation } from 'react-i18next';
+import config from '../../config';
 
 export default function IndexForos() {
+  const { t } = useTranslation('foro');
   const [searchLocalidad, setSearchLocalidad] = useState('');
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
@@ -21,14 +22,22 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/forums`); // Cambia esto por la URL de tu servidor
+      const response = await fetch(`***REMOVED***/forums`); // Cambia esto por la URL de tu servidor
       const json = await response.json();
 
       if (json.success) {
-        const locs = json.forums.map((forum) => ({
-          id: forum.id,
-          localidad: forum.Localidad,
-        }));
+        const locs = json.forums.map((forum) => {
+          /*coger titulo de la Actividad o Localidad*/
+          const actividad = forum.Actividad?.trim();
+          const localidad = forum.Localidad?.trim();
+
+          const titulo = actividad || localidad || 'Foro sin título';
+
+          return {
+            id: forum.id,
+            titulo,
+          };
+        });
         setLocalidades(locs);
       }
     } catch (error) {
@@ -43,7 +52,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/forums`, {
+      const response = await fetch(`***REMOVED***/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +79,7 @@ export default function IndexForos() {
     filteredLocalidades.length === 0 && setNewForoName(searchLocalidad);
     if (searchLocalidad) {
       const filtered = Localidades.filter((loc) =>
-        loc.localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
+        loc.titulo.toLowerCase().includes(searchLocalidad.toLowerCase()),
       );
       setFilteredLocalidades(filtered);
     } else {
@@ -109,7 +118,7 @@ export default function IndexForos() {
             borderRadius: 20,
           }}
         >
-          <Title title='Foros' />
+          <Title title={t('header')} />
 
           {/* Campo para buscar un foro */}
           <View
@@ -128,7 +137,7 @@ export default function IndexForos() {
                 borderRadius: 5,
                 padding: 10,
               }}
-              placeholder='Busca una localidad...'
+              placeholder={t('search')} //'Busca una localidad...'
               placeholderTextColor='#888'
               value={searchLocalidad}
               onChangeText={setSearchLocalidad}
@@ -188,10 +197,7 @@ export default function IndexForos() {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               {filteredLocalidades.map((loc, index) => (
                 <View key={index} style={{ marginVertical: 0 }}>
-                  <TitleLocalidadForo
-                    forumId={loc.id}
-                    LocName={loc.localidad}
-                  />
+                  <TitleLocalidadForo forumId={loc.id} LocName={loc.titulo} />
                 </View>
               ))}
             </ScrollView>

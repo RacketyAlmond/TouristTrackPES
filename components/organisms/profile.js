@@ -1,5 +1,8 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -14,21 +17,59 @@ import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
 import { getAuth } from "firebase/auth";
+import { useTranslation } from 'react-i18next';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LevelProgress from '../molecules/levelProgress';
+
+import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
   const { updateUserData, getUserData, updateSignOut } = useUser();
+  const navigation = useNavigation();
+  const { t } = useTranslation('profile');
+  const { updateUserData, getUserPoints } = useUser();
 
+  // Campos de usuario
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
+  const [points, setPoints] = useState(null);
 
+  // Estado para saber qué campo estamos editando
+  const [editingField, setEditingField] = useState(null);
+
+  // 2. Estado para controlar el modal de idioma
+  const [langModalVisible, setLangModalVisible] = useState(false);
+
+  // Función para cargar los datos de Firebase
+  useEffect(() => {
+    const fetchPoints = async () => {
+      try {
+        const userPoints = await getUserPoints();
+        setPoints(userPoints);
+      } catch (err) {
+        console.error('Failed to load user points:', err);
+      }
+    };
+
+    fetchPoints();
+  }, [points]);
   const getter = async () => {
     const user = auth.currentUser;
-    console.log(`user = ${user.uid}`);
-
-    if (!user) {
-      return Promise.reject(new Error('No user is signed in'));
+    if (!user) return;
+    try {
+      const userDoc = await getDoc(doc(db, 'Users', user.uid));
+      if (userDoc.exists()) {
+        const data = userDoc.data();
+        setFname(data.firstName);
+        setBirthdate(data.birthday);
+        setUserLocation(data.userLocation);
+        setAbout(data.about);
+        setPoints(data.points.current);
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
     }
 
     return getDoc(doc(db, 'Users', user.uid))
@@ -43,8 +84,9 @@ const ProfileScreen = ({ onSignOut }) => {
           setBirthdate(data.birthday);
           setUserLocation(data.userLocation);
           setAbout(data.about);
+          setPoints(data.points.current);
         }
-        console.log('User profile created successfully!');
+        console.log('User profile fetched successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);
@@ -56,8 +98,6 @@ const ProfileScreen = ({ onSignOut }) => {
   }, []);
 
   const [editingField, setEditingField] = useState(null);
-
-
 
   const handleSignOut = async () => {
     try {
@@ -80,19 +120,20 @@ const ProfileScreen = ({ onSignOut }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Background map image */}
-      <Image
-        source={map} // Replace with actual map URL
-        style={styles.mapBackground}
-      />
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: 20,
+        flex: 1,
+        backgroundColor: 'white',
+      }} // Mueve aquí los estilos relacionados con el contenido
+    >
+      <Image source={map} style={styles.mapBackground} />
 
-      {/* Back Button */}
       <TouchableOpacity style={styles.backButton}>
         <Icon name='arrow-back' size={24} color='black' />
       </TouchableOpacity>
 
-      {/* Profile Picture with Edit Icon */}
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />
         <TouchableOpacity style={styles.editIcon}>
@@ -100,7 +141,6 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Username */}
       <View style={styles.mainRow}>
         {editingField === 'fname' ? (
           <TextInput
@@ -117,7 +157,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Location */}
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
@@ -136,8 +176,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* About */}
-      <Text style={styles.sectionTitle}>Sobre mí</Text>
+      <Text style={styles.sectionTitle}>{t('about-me')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'about' ? (
           <TextInput
@@ -155,8 +194,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Birthdate */}
-      <Text style={styles.sectionTitle}>Fecha de nacimiento</Text>
+      <Text style={styles.sectionTitle}>{t('birthdate')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'birthdate' ? (
           <TextInput
@@ -173,48 +211,50 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Buttons for Comments & Reviews */}
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UserForumComments')}>
         <Icon name='visibility' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis comentarios</Text>
+        <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Mis valoraciones')}>
         <Icon name='star-border' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis reseñas</Text>
+        <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>
 
-      {/* Save Button (Only visible in edit mode) */}
+      {/* 3. Botón “Change Language” */}
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => setLangModalVisible(true)}
+      >
+        <MaterialCommunityIcons
+          name='translate' // o "translate-variant" si lo prefieres
+          size={16}
+          color='black'
+        />
+        <Text style={styles.actionButtonText}>{t('change-language')}</Text>
+      </TouchableOpacity>
+
       {editingField && (
         <TouchableOpacity style={styles.saveButton} onPress={handleSend}>
-          <Text style={styles.saveText}>Guardar cambios</Text>
+          <Text style={styles.saveText}>{t('save-changes')}</Text>
         </TouchableOpacity>
       )}
 
       {/* Logout Button */}
       <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
-        <Text style={styles.logoutText}>Cerrar sesión</Text>
+        <Text style={styles.logoutText}>{t('log-out')}</Text>
       </TouchableOpacity>
-    </View>
+
+      {/* 4. Renderiza el modal de idioma */}
+      <LanguageModal
+        visible={langModalVisible}
+        onClose={() => setLangModalVisible(false)}
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  mainRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    marginTop: 10,
-    fontSize: 20,
-  },
-  secoundRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    color: 'grey',
-    gap: 7,
-    fontSize: 15,
-    marginTop: 2,
-  },
   container: {
     flex: 1,
     backgroundColor: 'white',
@@ -224,7 +264,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 160,
     position: 'absolute',
-    top: 120,
+    top: 0,
   },
   backButton: {
     position: 'absolute',
@@ -232,7 +272,6 @@ const styles = StyleSheet.create({
     left: 20,
   },
   profileContainer: {
-    marginTop: 120,
     alignItems: 'center',
     position: 'relative',
   },
@@ -252,6 +291,21 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 5,
   },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    marginTop: 10,
+    fontSize: 20,
+  },
+  secoundRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: 'grey',
+    gap: 7,
+    fontSize: 15,
+    marginTop: 2,
+  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -266,7 +320,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   infoText: {
     fontSize: 16,
@@ -281,7 +335,7 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 12,
   },
   actionButtonText: {
     fontSize: 16,
