@@ -76,17 +76,17 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
     return stars;
   };
 
-  function handleMoveForum(){
-      auth.currentUser != null
-          ? navigation.navigate('Foros')
-          : navigation.navigate('User');
-    }
+  function handleMoveForum() {
+    auth.currentUser != null
+      ? navigation.navigate('Foros')
+      : navigation.navigate('User');
+  }
 
-    function handleMoveValoraciones(){
-      auth.currentUser != null
-          ? navigation.navigate('Valoraciones')
-          : navigation.navigate('User');
-    }
+  function handleMoveValoraciones() {
+    auth.currentUser != null
+      ? navigation.navigate('Valoraciones', { localidad: locality })
+      : navigation.navigate('User');
+  }
 
   return (
     <View style={styles.container}>
