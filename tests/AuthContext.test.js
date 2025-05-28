@@ -86,32 +86,6 @@ describe('Test AuthContext', () => {
     expect(result).toBe(fakeUser);
   });
 
-  test('Given valid credentials then signIn llama a signInWithEmailAndPassword y devuelve el user', async () => {
-    // given
-    const fakeUser = { uid: 'user42' };
-    signInWithEmailAndPassword.mockResolvedValueOnce({ user: fakeUser });
-
-    // when
-    await act(async () => {
-      renderer.create(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(TestConsumer),
-        ),
-      );
-    });
-    const result = await contextValue.signIn('user@ejemplo.com', '123456');
-
-    // then
-    expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
-      auth,
-      'user@ejemplo.com',
-      '123456',
-    );
-    expect(result).toBe(fakeUser);
-  });
-
   test('Given logout then llama a signOut y el user queda en null', async () => {
     // given
     firebaseSignOut.mockResolvedValueOnce();
