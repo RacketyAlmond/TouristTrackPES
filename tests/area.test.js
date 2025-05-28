@@ -39,6 +39,8 @@ describe('Test component Area que renderiza un Circle según municipi y numTuris
       tree = renderer.create(
         <Area municipi={municipi} numTuristes={numTuristes} />,
       );
+      // espera la siguiente actualización del hook useEffect
+      await Promise.resolve();
     });
 
     // then
@@ -68,6 +70,7 @@ describe('Test component Area que renderiza un Circle según municipi y numTuris
       tree = renderer.create(
         <Area municipi={municipi} numTuristes={numTuristes} />,
       );
+      await Promise.resolve();
     });
 
     // then
@@ -101,6 +104,7 @@ describe('Test component Area que renderiza un Circle según municipi y numTuris
       tree = renderer.create(
         <Area municipi={municipi} numTuristes={numTuristes} />,
       );
+      await Promise.resolve();
     });
 
     // then
