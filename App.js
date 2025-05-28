@@ -4,6 +4,7 @@ import {
   registerForPushNotificationsAsync,
   setupNotificationListeners,
 } from './notifications';
+import i18n from './i18n';
 import { useNavigation } from '@react-navigation/native';
 import { I18nextProvider } from 'react-i18next';
 import { NavigationContainer } from '@react-navigation/native';
