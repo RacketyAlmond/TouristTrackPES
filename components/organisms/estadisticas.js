@@ -119,7 +119,6 @@ export default function Estadisticas() {
           {/*ciudad*/}
           <View style={styles.sub_container}>
             <Text style={styles.titulos_morados}>{locality.name}</Text>
-            <Text style={styles.subtitulo}>{locality.comunidad}</Text>
           </View>
 
           {/*nº turistas*/}
