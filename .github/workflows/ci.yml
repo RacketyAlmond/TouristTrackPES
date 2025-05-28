@@ -30,6 +30,9 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Format code
+        run: npm run format
+
       - name: Run Prettier Check
         run: npm run prettier:check
 
