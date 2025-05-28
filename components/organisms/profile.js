@@ -16,6 +16,7 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import { getAuth } from "firebase/auth";
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
@@ -23,6 +24,7 @@ import LevelProgress from '../molecules/levelProgress';
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
+  const { updateUserData, getUserData, updateSignOut } = useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
   const { updateUserData, getUserPoints } = useUser();
@@ -95,7 +97,19 @@ const ProfileScreen = ({ onSignOut }) => {
     getter();
   }, []);
 
-  // Guarda los cambios en Firebase
+  const [editingField, setEditingField] = useState(null);
+
+  const handleSignOut = async () => {
+    try {
+      await updateSignOut();
+      onSignOut();
+      console.error('Signed out user:');
+
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
   const handleSend = async () => {
     try {
       await updateUserData(fname, birthdate, userLocation, about);
@@ -226,7 +240,8 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
         <Text style={styles.logoutText}>{t('log-out')}</Text>
       </TouchableOpacity>
 

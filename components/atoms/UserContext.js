@@ -3,6 +3,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { signOut } from 'firebase/auth';
 
 export const UserContext = createContext();
 
@@ -109,6 +110,13 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
+  const updateSignOut = async () => {
+    signOut(auth).then(() => {
+      console.log('Successfully signed out the user')
+    }).catch((error) => {
+      throw new Error('Error signing out');
+    });
+  }
   const getUserPoints = async () => {
     const user = auth.currentUser;
     try {
@@ -199,6 +207,7 @@ export const UserProvider = ({ children }) => {
         createUserData,
         updateUserData,
         getUserData,
+        updateSignOut,
         getUserPoints,
         updateUserPoints,
         getUserForumComments
