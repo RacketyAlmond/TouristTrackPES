@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const ranks = [
   {
@@ -108,6 +109,7 @@ export const getRankByLevel = (level, thick = false) => {
 };
 
 const LevelProgress = ({ points }) => {
+  const { t } = useTranslation('profile');
   if (points === null || points === undefined) return null;
 
   const levelInfo = getLevelInfo(points);
@@ -129,12 +131,16 @@ const LevelProgress = ({ points }) => {
             ]}
           />
         </View>
-        <Text style={styles.levelText}>Nivel {levelInfo.currentLevel}</Text>
+        <Text style={styles.levelText}>
+          {t('level')} {levelInfo.currentLevel}
+        </Text>
       </View>
 
       <Text style={styles.pointsText}>
-        {points} puntos
-        {levelInfo.nextLevel ? ` - Próximo nivel: ${levelInfo.nextLevel}` : ''}
+        {points} {t('points')}
+        {levelInfo.nextLevel
+          ? ` - ${t('next-level')}: ${levelInfo.nextLevel}`
+          : ''}
       </Text>
     </View>
   );

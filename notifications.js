@@ -19,7 +19,7 @@ export async function registerForPushNotificationsAsync(userId) {
 
   if (!Device.isDevice) {
     console.log('Must use physical device for push notifications');
-    return null;
+    //return null;
   }
 
   // Check if we have permission

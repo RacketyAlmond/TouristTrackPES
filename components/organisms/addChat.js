@@ -45,7 +45,7 @@ export default function AddChat({ route }) {
     try {
       const response = await fetch(`***REMOVED***/users/`);
       if (!response.ok) {
-        throw new Error('Failed to fetch users');
+        throw new Error(t('failedFetchUsers'));
       }
       const data = await response.json();
       const formattedUsers = data.usuarios.map((user) => ({
@@ -57,7 +57,7 @@ export default function AddChat({ route }) {
       setUsers(formattedUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
-      Alert.alert('Error', 'Could not load users. Please try again later.');
+      Alert.alert('Error', t('notLoadUsers'));
     }
   };
 
@@ -67,7 +67,7 @@ export default function AddChat({ route }) {
         `***REMOVED***/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
-        throw new Error('Failed to fetch requests');
+        throw new Error(t('failedFetchRequests'));
       }
       const data = await response.json();
 
@@ -80,7 +80,7 @@ export default function AddChat({ route }) {
       setRequests(formattedRequests);
     } catch (error) {
       console.error('Error fetching requests:', error);
-      Alert.alert('Error', 'Could not load requests. Please try again later.');
+      Alert.alert('Error', t('notLoadRequests'));
     }
   };
 
@@ -90,7 +90,7 @@ export default function AddChat({ route }) {
         `***REMOVED***/pending-requests/sent/${idCurrentUser}`,
       );
       if (!response.ok) {
-        throw new Error('Failed to fetch sent requests');
+        throw new Error(t('failedFetchSentRequests'));
       }
       const data = await response.json();
 
@@ -105,7 +105,7 @@ export default function AddChat({ route }) {
       console.error('Error fetching sent requests:', error);
       Alert.alert(
         'Error',
-        'Could not load sent requests. Please try again later.',
+        t('notLoadSentRequests'),
       );
     }
   };
@@ -134,8 +134,8 @@ export default function AddChat({ route }) {
       setSearchedUser(null);
     } else if (UserFriend.some((friend) => friend.name === searchID.name)) {
       Alert.alert(
-        'USER ALREADY ADDED',
-        `The user of the id is part of the added chats.`,
+        t('userAAdded'),
+        t('userAAddedDesc'),
         [
           {
             text: 'OK',
@@ -147,8 +147,8 @@ export default function AddChat({ route }) {
       setSearchedUser(null);
     } else if (searchID.name === nameCurrentUser) {
       Alert.alert(
-        'USER IS YOURSELF',
-        `The user of the id is yourself.`,
+        t('userYourserf'),
+        t('userYourserfDesc'),
         [
           {
             text: 'OK',
@@ -161,8 +161,8 @@ export default function AddChat({ route }) {
     //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
     else if (sentRequests.some((request) => request.name === searchID.id)) {
       Alert.alert(
-        'USER HAS A REQUEST',
-        `You have already sent a request to the user.`,
+        t('userRequest'),
+        t('userRequestDesc'),
         [
           {
             text: 'OK',
@@ -173,8 +173,8 @@ export default function AddChat({ route }) {
       );
     } else if (requests.some((request) => request.name === searchID.name)) {
       Alert.alert(
-        'USER SENT YOU A REQUEST',
-        `The user has already sent you a request.`,
+        t('userSentRequest'),
+        t('userRequestDesc'),
         [
           {
             text: 'OK',
@@ -199,15 +199,15 @@ export default function AddChat({ route }) {
       setSearchTerm('');
       setSearchedUser(null);
     } else {
-      Alert.alert('Error', 'Please enter a valid user ID.', [{ text: 'OK' }]);
+      Alert.alert('Error', t('enterValidID'), [{ text: 'OK' }]);
     }
   };
 
   //accepta el chat de les sol·licituds rebudes
   const acceptChat = async (item) => {
     Alert.alert(
-      'New Chat Accepted',
-      'You have opened a chat with ' + item.name + '.',
+      t('newChatAccepted'),
+      t('newChatAcceptedDesc') + item.name + '.',
       [{ text: 'OK' }],
     );
     setSearchedUser(null);
@@ -229,7 +229,7 @@ export default function AddChat({ route }) {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to accept chat');
+        throw new Error(t('failedAcceptChat'));
       }
 
       // Eliminar la solicitud aceptada de la lista de solicitudes
@@ -245,15 +245,15 @@ export default function AddChat({ route }) {
       });
     } catch (error) {
       console.error('Error accepting chat:', error);
-      Alert.alert('Error', 'Failed to accept chat. Please try again.');
+      Alert.alert('Error', t('failedAcceptChat2'));
     }
   };
 
   //rejecta el chat de les sol·licituds rebudes
   const rejectChat = async (item) => {
     Alert.alert(
-      'New Chat Rejected',
-      'You have rejected a chat with ' + item.name + '.',
+      t('chatRejected'),
+      t('chatRejectedDesc') + item.name + '.',
       [{ text: 'OK' }],
     );
     setSearchedUser(null);
@@ -275,14 +275,14 @@ export default function AddChat({ route }) {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to reject chat');
+        throw new Error(t('failedRejectChat'));
       }
 
       // Eliminar la solicitud rechazada de la lista
       setRequests((prev) => prev.filter((req) => req.id !== item.id));
     } catch (error) {
       console.error('Error rejecting chat:', error);
-      Alert.alert('Error', 'Failed to reject chat. Please try again.');
+      Alert.alert('Error', t('failedRejectChat2'));
     }
   };
 

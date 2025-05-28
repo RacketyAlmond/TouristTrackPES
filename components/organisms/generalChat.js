@@ -57,7 +57,7 @@ export default function Chats() {
       setChats(formattedChats);
     } catch (error) {
       console.error('Error fetching chats:', error);
-      Alert.alert('Error', 'Could not load chats. Please try again later.');
+      Alert.alert('Error', t('notLoadChats'));
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +95,7 @@ export default function Chats() {
       }
     } catch (error) {
       console.error('Error deleting allowed chat:', error);
-      Alert.alert('Error', 'Could not delete chat. Please try again.');
+      Alert.alert('Error', t('notDeleteChat'));
     }
   };
 
@@ -142,7 +142,7 @@ export default function Chats() {
       setChats(chats.filter((chat) => chat.id !== user2Id));
     } catch (error) {
       console.error('Error sending message:', error);
-      Alert.alert('Error', 'Failed to send message. Please try again.');
+      Alert.alert('Error', t('failedSendMessage'));
     }
   };
 

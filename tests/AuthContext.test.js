@@ -6,6 +6,14 @@ jest.mock('firebase/auth', () => ({
   updateProfile: jest.fn(),
 }));
 
+jest.mock('react-native', () => {
+  return {
+    Alert: {
+      alert: jest.fn(),
+    },
+  };
+});
+
 jest.mock('firebase/firestore', () => ({
   setDoc: jest.fn(),
   doc: jest.fn(),

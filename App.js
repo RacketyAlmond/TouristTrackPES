@@ -28,10 +28,13 @@ import UserForumComments from './components/molecules/userForumComments';
 import { AuthProvider } from './components/atoms/AuthContext';
 import { UserProvider } from './components/atoms/UserContext';
 import { UserContext } from './components/atoms/UserContext';
+import { useTranslation } from 'react-i18next';
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const { t, i18n } = useTranslation('profile');
   const { loading, error } = useSyncForosActividades();
 
   function NotificationHandler() {
@@ -115,7 +118,7 @@ export default function App() {
               />
               <Stack.Screen name='Mapa' component={Map} />
               <Stack.Screen
-                name='Mis valoraciones'
+                name={t('mis-valoraciones')}
                 component={ValoracionesUsuario}
               />
               <Stack.Screen
