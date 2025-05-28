@@ -122,7 +122,6 @@ const ProfileScreen = ({ onSignOut }) => {
       });
     }
     const photoURL = user.photoURL;
-    setProfileImage(photoURL);
     const profileImageUrl = typeof profileImage === 'object' && profileImage?.uri
         ? profileImage.uri
         : profileImage;
@@ -132,16 +131,21 @@ const ProfileScreen = ({ onSignOut }) => {
     console.log(profileImage);
   };
   const uploadImageAsync = async (uri, uid) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
 
-    const storage = getStorage();
-    const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
-    await uploadBytes(imageRef, blob);
+      const storage = getStorage();
+      const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+      await uploadBytes(imageRef, blob);
 
-    return await getDownloadURL(imageRef);
-    console.log('Profile image URL: ');
-    console.log(profileImage);
+      return await getDownloadURL(imageRef);
+      console.log('Profile image URL: ');
+      console.log(profileImage);
+    }
+    catch{
+
+    }
   };
 
   const handleChangeProfilePicture = async () => {
@@ -155,6 +159,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
+    setProfileImage(imageUrl)
     console.log('image URL (in handler): ');
     console.log(imageUrl);
 
@@ -191,7 +196,9 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image
-            source={profileImage ? { uri: profileImage } : logo}
+            source={{
+              uri: 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055',
+            }}
             style={styles.profileImage}
         />
         <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
