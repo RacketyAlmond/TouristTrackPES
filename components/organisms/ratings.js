@@ -168,7 +168,7 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: userData?.profileImage || defaultAvatar || '',
+        authorAvatar: userData.profileImage || defaultAvatar || '',
         authorFirstName: userData.firstName,
       };
 
@@ -218,8 +218,8 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: userData?.profileImage || userData?.avatar || defaultAvatar,
-        authorFirstName: userData?.firstName,
+        authorAvatar: userData.profileImage || userData?.avatar || defaultAvatar,
+        authorFirstName: userData.firstName,
       };
 
       setRatings((prev) => [postedRating, ...prev]);
@@ -292,13 +292,21 @@ const RatingScreen = ({ route }) => {
         true,
       );
 
+      console.log(item)
+      console.log(item.authorAvatar)
+
+      const avatarSource = item.authorAvatar || 
+        (item.authorID === currentUser.uid && userData?.profileImage) || 
+        null;
+
+
       return (
         <View style={styles.reviewContainer}>
           <Image
             source={
-              item.authorAvatar && typeof item.authorAvatar === 'string'
-                ? { uri: item.authorAvatar }
-                : item.profileImage || defaultAvatar
+              avatarSource && typeof avatarSource === 'string'
+                ? { uri: avatarSource }
+                : defaultAvatar
             }
             style={styles.avatar}
           />

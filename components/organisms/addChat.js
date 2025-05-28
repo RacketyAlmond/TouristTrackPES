@@ -159,7 +159,7 @@ export default function AddChat({ route }) {
       );
     }
     //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
-    else if (sentRequests.some((request) => request.name === searchID.id)) {
+    else if (sentRequests.some((request) => request.name === searchID.name)) {
       Alert.alert(
         t('userRequest'),
         t('userRequestDesc'),
