@@ -201,9 +201,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    marginTop:250,
+    marginTop: 250,
     paddingBottom: 300,
-
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   text: { width: '80%' },

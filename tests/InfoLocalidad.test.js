@@ -1,62 +1,67 @@
-// __tests__/InfoLocalidad.test.js
-
 import React from 'react';
-import renderer, { act } from 'react-test-renderer';
-import InfoLocalidad from '../components/molecules/InfoLocalidad.js'; // adjust path if needed
-import { Text, TouchableOpacity } from 'react-native';
+import { render, waitFor } from '@testing-library/react-native';
+import InfoLocalidad from '../components/molecules/InfoLocalidad';
 
-// 1) Mock vector icons
+// Mocks
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');
+  const { Text } = require('react-native');
   return {
-    FontAwesome: (props) => React.createElement('FontAwesome', props),
-    MaterialIcons: (props) => React.createElement('MaterialIcons', props),
+    FontAwesome: (props) => <Text>{`FontAwesome ${props.name}`}</Text>,
+    MaterialIcons: (props) => <Text>{`MaterialIcons ${props.name}`}</Text>,
   };
 });
 
-// 2) Mock useNavigation
-const mockNavigate = jest.fn();
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native');
-  return {
-    ...actualNav,
-    useNavigation: () => ({ navigate: mockNavigate }),
-    useFocusEffect: jest.fn((cb) => cb()), // simulate effect running
-  };
-});
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({ navigate: jest.fn() }),
+  useFocusEffect: (cb) => cb(), // fuerza ejecución del efecto
+}));
 
-let onClose;
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => key,
+    i18n: {
+      changeLanguage: () => new Promise(() => {}),
+    },
+  }),
+}));
 
-beforeEach(() => {
-  jest.useFakeTimers();
-  jest.clearAllMocks();
-  onClose = jest.fn();
-
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
+global.fetch = jest.fn().mockImplementation((url) => {
+  if (url.includes('ratings/location')) {
+    return Promise.resolve({
       json: () => Promise.resolve({ averageStars: 4.5, totalRatings: 1000 }),
-    }),
-  );
-});
-
-afterEach(() => {
-  jest.runOnlyPendingTimers();
-  jest.useRealTimers();
-});
-
-describe('InfoLocalidad component', () => {
-  const city = 'Barcelona';
-  const numTourists = 12345;
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    onClose = jest.fn();
+    });
+  }
+  return Promise.resolve({
+    json: () => Promise.resolve({}),
   });
+});
 
-  test('renders null when city is not provided', () => {
-    const component = renderer.create(
-      <InfoLocalidad city={null} numTourists={numTourists} onClose={onClose} />,
+describe('⏱ InfoLocalidad - tiempo de respuesta', () => {
+  it('renderiza correctamente en menos de 5 segundos', async () => {
+    const start = performance.now();
+
+    const { getByText } = render(
+      <InfoLocalidad
+        city='Barcelona'
+        numTourists={12345}
+        onClose={jest.fn()}
+      />,
     );
-    expect(component.toJSON()).toBeNull();
+
+    await waitFor(
+      () => {
+        // Asegura que los datos fueron cargados y renderizados
+        expect(getByText('4.5')).toBeTruthy(); // Rating visible
+      },
+      { timeout: 5000 },
+    );
+
+    const end = performance.now();
+    const duration = end - start;
+
+    console.log(`⏱ Tiempo total: ${duration.toFixed(2)}ms`);
+
+    expect(duration).toBeLessThan(5000);
   });
 });

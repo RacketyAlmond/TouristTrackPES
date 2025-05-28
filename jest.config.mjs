@@ -6,6 +6,8 @@ export default {
     '^.+\\.mjs$': 'babel-jest',
     '^.+\\.cjs$': 'babel-jest',
   },
+  setupFilesAfterEnv: ['./jest.setup.js'],
+
   transformIgnorePatterns: [
     'node_modules/(?!(react-native' +
       '|@react-native' +

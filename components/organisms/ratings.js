@@ -40,9 +40,7 @@ const RatingScreen = ({ route }) => {
 
   const { localidad } = route.params;
 
-  const [loggedRank, setLoggedRank] = useState(
-    getRankByLevel(getLevelInfo(5000).currentLevel, true),
-  );
+  const [loggedRank, setLoggedRank] = useState(0);
 
   const [localidadRating, setLocalidadRating] = useState({
     rating: localidad.rating,
@@ -76,6 +74,15 @@ const RatingScreen = ({ route }) => {
         if (currentUser && currentUser.uid) {
           // Ya tienes getUserData en UserContext, úsalo para cargar los datos
           await getUserData();
+          console.log('User data loaded:', userData);
+          if (userData && userData.points) {
+            setLoggedRank(
+              getRankByLevel(
+                getLevelInfo(userData.points.current).currentLevel,
+                true,
+              ),
+            );
+          }
         }
       } catch (error) {
         console.error('Error loading user data:', error);
@@ -276,7 +283,10 @@ const RatingScreen = ({ route }) => {
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
       // Determina el rango del usuario basado en los puntos
-      const userRank = getRankByLevel(15, true);
+      const userRank = getRankByLevel(
+        getLevelInfo(item.authorPoints).currentLevel,
+        true,
+      );
 
       return (
         <View style={styles.reviewContainer}>

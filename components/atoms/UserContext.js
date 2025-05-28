@@ -165,27 +165,51 @@ export const UserProvider = ({ children }) => {
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();
-        let rawPoints = data.points;
+        let currentPoints = data.points;
+        let updatedPoints;
 
-        console.log('Raw Points:', rawPoints);
-
-        if (typeof rawPoints === 'object' && rawPoints?.current !== undefined) {
-          rawPoints.current += numberOfPoints;
-          return rawPoints.current;
+        // Manejar diferentes estructuras de datos de puntos
+        if (
+          typeof currentPoints === 'object' &&
+          currentPoints?.current !== undefined
+        ) {
+          // Si los puntos están almacenados como objeto con propiedad 'current'
+          updatedPoints = {
+            ...currentPoints,
+            current: currentPoints.current + numberOfPoints,
+          };
+        } else if (typeof currentPoints === 'number') {
+          // Si los puntos están almacenados como número simple
+          updatedPoints = currentPoints + numberOfPoints;
+        } else {
+          // Si no hay puntos o formato no reconocido, inicializar con un objeto
+          updatedPoints = { current: numberOfPoints };
         }
 
-        if (typeof rawPoints === 'number') {
-          rawPoints += numberOfPoints;
-          return rawPoints;
-        }
+        // Guardar en Firestore
+        await updateDoc(doc(db, 'Users', user.uid), {
+          points: updatedPoints,
+        });
 
-        return 0;
+        // Actualizar el estado local
+        setUserData((prevData) => ({
+          ...prevData,
+          points: updatedPoints,
+        }));
+
+        // Devolver el valor actual de puntos
+        return typeof updatedPoints === 'object'
+          ? updatedPoints.current
+          : updatedPoints;
       }
+
+      return 0;
     } catch (error) {
-      console.error('Error fetching points:', error);
+      console.error('Error updating points:', error);
       throw error;
     }
   };
+
   const getUserData = async () => {
     const user = auth.currentUser;
 
