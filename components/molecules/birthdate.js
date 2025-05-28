@@ -76,12 +76,12 @@ const BirthdateScreen = ({ onComplete }) => {
       const about = "Hi! I'm using TouristTrack";
 
       await createUserData(
-          fname,
-          birthdate.toDateString(),
-          userLocation,
-          about,
-          points,
-          profileImage,
+        fname,
+        birthdate.toDateString(),
+        userLocation,
+        about,
+        points,
+        profileImage,
       );
       authStatus = true;
 

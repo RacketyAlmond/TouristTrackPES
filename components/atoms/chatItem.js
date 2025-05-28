@@ -7,8 +7,7 @@ export default function ChatItem({ item }) {
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
-    // Determina el rango del usuario basado en los puntos
-    const rank = getRankByLevel(getLevelInfo(item.points).currentLevel, true); // Usa los puntos del usuario o 0 por defecto
+    const rank = getRankByLevel(getLevelInfo(item.points).currentLevel, true);
     setUserRank(rank);
   }, [item.points]);
 
@@ -30,14 +29,13 @@ export default function ChatItem({ item }) {
             />
           )}
         </View>
-        {item.about &&
-          item.about.trim() !== '' && ( // Verifica si "about" no está vacío
-            <Text style={styles.message} numberOfLines={1} ellipsizeMode='tail'>
-              {item.about.length > 28
-                ? `${item.about.slice(0, 28)}...`
-                : item.about}
-            </Text>
-          )}
+        {item.about && item.about.trim() !== '' && (
+          <Text style={styles.message} numberOfLines={1} ellipsizeMode='tail'>
+            {item.about.length > 28
+              ? `${item.about.slice(0, 28)}...`
+              : item.about}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -65,14 +63,14 @@ const styles = {
   message: {
     color: '#555',
     fontSize: 14,
-    flexShrink: 1, // Permite que el contenedor se reduzca
-    overflow: 'hidden', // Asegura que el texto no sobresalga del contenedor
-    textOverflow: 'ellipsis', // Agrega puntos suspensivos si el texto es muy largo
+    flexShrink: 1,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   rankIcon: {
     width: 20,
     height: 20,
     marginLeft: 5,
-    marginBottom: 2, // Alinea el icono con el texto
+    marginBottom: 2,
   },
 };

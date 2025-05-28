@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -20,7 +19,7 @@ export default function Filter({
   selectedCountries,
   setSelectedCountries,
 }) {
-  const { t } = useTranslation(); // usamos namespace por defecto
+  const { t } = useTranslation();
   const [isModalVisible, setModalVisible] = useState(false);
   const [tempSelectedCountries, setTempSelectedCountries] = useState([]);
   const [countriesWithFlags, setCountriesWithFlags] = useState([]);

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { auth, db } from '../../firebaseConfig.js';
-import { setDoc, doc } from 'firebase/firestore'; //En node module si tieneis firebase instalado ;P
+import { auth } from '../../firebaseConfig.js';
 import {
   signInWithCredential,
   GoogleAuthProvider,
@@ -9,14 +8,12 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  updateProfile,
 } from 'firebase/auth';
 
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import * as AuthSession from 'expo-auth-session';
 import { Alert } from 'react-native';
 
 WebBrowser.maybeCompleteAuthSession();
@@ -28,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [response] = Google.useAuthRequest({
     clientId:
       '***REMOVED***',
     scopes: ['profile', 'email'],
@@ -107,51 +104,6 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
-  const updateProfileData = async (username, photoURL) => {
-    try {
-      const user = auth.currentUser;
-
-      if (!user) {
-        throw new Error('No user is signed in');
-      }
-      await createUserData(user, {
-        displayName: username,
-        photoURL: photoURL,
-      });
-      console.log('User profile updated successfully!');
-      return user;
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      throw error;
-    }
-  };
-  /*
-  const createUserData = async (fname, birthday, userLocation, points) => {
-    try {
-      const user = auth.currentUser;
-
-      if (!user) {
-        throw new Error('No user is signed in');
-      }
-
-      console.log(fname);
-
-      await setDoc(doc(db, 'Users', user.uid), {
-        email: user.email,
-        firstName: fname,
-        birthday: birthday,
-        userLocation: userLocation,
-        points: points
-      });
-
-      console.log('User profile updated successfully!');
-      return user;
-    } catch (error) {
-      console.error('Error creating profile:', error);
-      throw error;
-    }
-  };
-*/
   const signIn = async (email, password) => {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -179,7 +131,6 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         signUp,
-        updateProfileData,
         signIn,
         logout,
         signInWithGoogle,

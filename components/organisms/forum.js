@@ -34,7 +34,6 @@ export default function Forum({ route }) {
   const currentUser = auth.currentUser;
   const idCurrentUser = currentUser.uid;
 
-  /*obtiene la información de la actividad*/
   const getForumDetails = async () => {
     try {
       const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
@@ -48,7 +47,6 @@ export default function Forum({ route }) {
         setIsActividad(isActividadForum);
 
         if (isActividadForum) {
-          // Build full actividad object from root fields
           const actividadData = {
             Titulo: forum.Actividad,
             Descripcion: forum.Descripcion ?? '',
@@ -67,7 +65,6 @@ export default function Forum({ route }) {
     }
   };
 
-  /* obtiene los datos de usuario, Nombre y Nacionalidad a través de su docId en Users */
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
@@ -90,7 +87,6 @@ export default function Forum({ route }) {
     return { user: 'Desconocido', nationality: 'Desconocido' };
   };
 
-  /* llama a la api para obtener las preguntas del foro a través del docId: forumId */
   const getQuestions = async () => {
     try {
       const response = await fetch(
@@ -139,7 +135,6 @@ export default function Forum({ route }) {
     loadUserData();
   }, [currentUser]);
 
-  // Extraer las nacionalidades únicas de las preguntas
   const availableNationalities = Array.from(
     new Set(questions.map((q) => q.nationality)),
   );
@@ -205,7 +200,7 @@ export default function Forum({ route }) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
+              Author: idCurrentUser,
               text: newQuestion,
             }),
           },
@@ -222,7 +217,7 @@ export default function Forum({ route }) {
           updateUserPoints(50);
           const newQuestionObject = {
             id: json.preguntaId,
-            Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
+            Author: idCurrentUser,
             question: newQuestion,
             date: new Date().toISOString(),
             user: userData.firstName,
@@ -280,7 +275,6 @@ export default function Forum({ route }) {
                 <>
                   <DetailsAct actividadInfo={actividadInfo} />
 
-                  {/* Separador entre DetailsAct y Preguntas */}
                   <View style={{ marginVertical: 20, alignItems: 'center' }}>
                     <View
                       style={{
@@ -295,7 +289,6 @@ export default function Forum({ route }) {
                 </>
               ) : null}
 
-              {/* Lista de preguntas */}
               {filteredQuestions.map((question, index) => (
                 <View key={index} style={{ marginVertical: 0 }}>
                   <Question
@@ -311,7 +304,6 @@ export default function Forum({ route }) {
               ))}
             </ScrollView>
 
-            {/* Campo para escribir una nueva pregunta: fuera del ScrollView */}
             <View
               style={{
                 flexDirection: 'row',
@@ -328,7 +320,7 @@ export default function Forum({ route }) {
                   padding: 10,
                   backgroundColor: 'white',
                 }}
-                placeholder={t('write')} //'Escribe tu pregunta...'
+                placeholder={t('write')}
                 placeholderTextColor='#888'
                 value={newQuestion}
                 onChangeText={setNewQuestion}

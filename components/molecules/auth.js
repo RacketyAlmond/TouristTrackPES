@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useAuth } from '../atoms/AuthContext.js';
 import map from '../../public/mapa.png';
-import * as AuthSession from 'expo-auth-session';
 import * as Google from 'expo-auth-session/providers/google';
 
 const AuthScreen = ({ onAuthenticated }) => {
@@ -33,12 +32,8 @@ const AuthScreen = ({ onAuthenticated }) => {
       setError(error.message);
     }
   };
-  const redirectUri = AuthSession.makeRedirectUri({
-    scheme: 'yourapp',
-    useProxy: false,
-  });
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
+  const [response, promptAsync] = Google.useAuthRequest({
     clientId:
       '***REMOVED***',
     scopes: ['profile', 'email'],
@@ -94,7 +89,7 @@ const AuthScreen = ({ onAuthenticated }) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => promptAsync()}>
-          <Text style={styles.toggleText}>{`Google ID`}</Text>
+          <Text style={styles.toggleText}>Google ID</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -112,8 +107,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: '50%', // Covers the upper half
-    backgroundColor: 'rgba(255, 255, 255, 0.7)', // Gradual transparency effect
+    bottom: '50%',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   container: {
     flex: 1,
@@ -122,7 +117,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 250,
     paddingBottom: 300,
-    backgroundColor: 'rgba(255,255,255,0.5)', // Ensures text is readable
+    backgroundColor: 'rgba(255,255,255,0.5)',
   },
   title: {
     fontSize: 24,

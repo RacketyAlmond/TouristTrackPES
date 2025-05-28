@@ -24,7 +24,6 @@ export const UserProvider = ({ children }) => {
       throw new Error('No user is signed in');
     }
 
-
     try {
       await setDoc(doc(db, 'Users', user.uid), {
         firstName: fname,
@@ -94,14 +93,13 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-
       await updateDoc(doc(db, 'Users', user.uid), {
         firstName: fname,
         birthday: birthday,
         userLocation: userLocation,
         about: about,
         points: points,
-        profileImage: profileImage
+        profileImage: profileImage,
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -168,36 +166,29 @@ export const UserProvider = ({ children }) => {
         let currentPoints = data.points;
         let updatedPoints;
 
-        // Manejar diferentes estructuras de datos de puntos
         if (
           typeof currentPoints === 'object' &&
           currentPoints?.current !== undefined
         ) {
-          // Si los puntos están almacenados como objeto con propiedad 'current'
           updatedPoints = {
             ...currentPoints,
             current: currentPoints.current + numberOfPoints,
           };
         } else if (typeof currentPoints === 'number') {
-          // Si los puntos están almacenados como número simple
           updatedPoints = currentPoints + numberOfPoints;
         } else {
-          // Si no hay puntos o formato no reconocido, inicializar con un objeto
           updatedPoints = { current: numberOfPoints };
         }
 
-        // Guardar en Firestore
         await updateDoc(doc(db, 'Users', user.uid), {
           points: updatedPoints,
         });
 
-        // Actualizar el estado local
         setUserData((prevData) => ({
           ...prevData,
           points: updatedPoints,
         }));
 
-        // Devolver el valor actual de puntos
         return typeof updatedPoints === 'object'
           ? updatedPoints.current
           : updatedPoints;
@@ -230,28 +221,6 @@ export const UserProvider = ({ children }) => {
       throw error;
     }
   };
-
-  // const handleMoveSpecificForum = (id, city) => {
-  //   const user = auth.currentUser;
-  //
-  //   try {
-  //     if (!user) {
-  //
-  //     }
-  //     else {
-  //       navigation.navigate('Forum', {
-  //         localityName: city,
-  //         forumId: id,
-  //       })
-  //     }
-  //
-  //     console.log('User moved to Login');
-  //   } catch (error) {
-  //     console.error('Error moving to forum:', error);
-  //     throw error;
-  //   }
-  // };
-  // }
 
   return (
     <UserContext.Provider

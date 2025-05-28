@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
@@ -103,10 +102,7 @@ export default function AddChat({ route }) {
       setSentRequests(formattedRequests);
     } catch (error) {
       console.error('Error fetching sent requests:', error);
-      Alert.alert(
-        'Error',
-        t('notLoadSentRequests'),
-      );
+      Alert.alert('Error', t('notLoadSentRequests'));
     }
   };
 
@@ -157,9 +153,7 @@ export default function AddChat({ route }) {
         ],
         { cancelable: false },
       );
-    }
-    //mirar que no se pueda enviar una peticion a un usuario que ya tiene una peticion de ti
-    else if (sentRequests.some((request) => request.name === searchID.id)) {
+    } else if (sentRequests.some((request) => request.name === searchID.id)) {
       Alert.alert(
         t('userRequest'),
         t('userRequestDesc'),
@@ -203,7 +197,6 @@ export default function AddChat({ route }) {
     }
   };
 
-  //accepta el chat de les sol·licituds rebudes
   const acceptChat = async (item) => {
     Alert.alert(
       t('newChatAccepted'),
@@ -212,7 +205,6 @@ export default function AddChat({ route }) {
     );
     setSearchedUser(null);
 
-    // Petición al backend para crear el chat
     try {
       const response = await fetch(
         `***REMOVED***/allowed-chats`,
@@ -232,12 +224,9 @@ export default function AddChat({ route }) {
         throw new Error(t('failedAcceptChat'));
       }
 
-      // Eliminar la solicitud aceptada de la lista de solicitudes
       setRequests((prev) => prev.filter((req) => req.id !== item.id));
 
-      // Si necesitas también actualizar la lista de usuarios añadidos, puedes hacerlo aquí
       setUserFriend((prevUserFriend) => {
-        // Asegurarte de que no haya duplicados
         if (!prevUserFriend.some((friend) => friend.id === item.id)) {
           return [...prevUserFriend, item];
         }
@@ -249,16 +238,12 @@ export default function AddChat({ route }) {
     }
   };
 
-  //rejecta el chat de les sol·licituds rebudes
   const rejectChat = async (item) => {
-    Alert.alert(
-      t('chatRejected'),
-      t('chatRejectedDesc') + item.name + '.',
-      [{ text: 'OK' }],
-    );
+    Alert.alert(t('chatRejected'), t('chatRejectedDesc') + item.name + '.', [
+      { text: 'OK' },
+    ]);
     setSearchedUser(null);
 
-    // Petición al backend para eliminar la solicitud pendiente
     try {
       const response = await fetch(
         `***REMOVED***/pending-requests`,
@@ -278,7 +263,6 @@ export default function AddChat({ route }) {
         throw new Error(t('failedRejectChat'));
       }
 
-      // Eliminar la solicitud rechazada de la lista
       setRequests((prev) => prev.filter((req) => req.id !== item.id));
     } catch (error) {
       console.error('Error rejecting chat:', error);
@@ -288,7 +272,6 @@ export default function AddChat({ route }) {
 
   const renderItem = ({ item }) => (
     <View style={styles.chatItem}>
-      {/* hacer que este boton acceda al personalChat con un navigate y con el state a 1, de manera que este no pueda escribir mensajes*/}
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('PersonalChat', {

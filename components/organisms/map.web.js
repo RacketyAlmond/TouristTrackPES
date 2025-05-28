@@ -62,7 +62,6 @@ const MapUpdater = ({ coords, city, location, goToUserLocation }) => {
   return null;
 };
 
-// Versión web del componente Map
 export default function Map() {
   const { t } = useTranslation();
   const navigation = useNavigation();
@@ -81,7 +80,6 @@ export default function Map() {
     navigation.setOptions({ title: t('header') });
   }, [t, navigation]);
 
-  // Carga inicial de datos
   useEffect(() => {
     (async () => {
       try {
@@ -97,7 +95,6 @@ export default function Map() {
     })();
   }, []);
 
-  // Actualiza el resumen cuando cambian los países seleccionados
   useEffect(() => {
     (async () => {
       try {
@@ -110,7 +107,6 @@ export default function Map() {
     })();
   }, [selectedCountries]);
 
-  // Solicitar ubicación del usuario (web)
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(
@@ -211,7 +207,6 @@ export default function Map() {
     setCity('');
   };
 
-  // Versión web actualizada con características de la versión nativa
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
@@ -225,7 +220,7 @@ export default function Map() {
 
       <View style={styles.mapContainer}>
         <MapContainer
-          center={[40.416775, -3.70379]} // Madrid, España como centro inicial
+          center={[40.416775, -3.70379]}
           zoom={6}
           style={{ height: '100%', width: '100%' }}
         >

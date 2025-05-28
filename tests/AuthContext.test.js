@@ -51,7 +51,6 @@ const { AuthProvider, useAuth } = require('../components/atoms/AuthContext.js');
 const { auth } = require('../firebaseConfig.js');
 const {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signOut: firebaseSignOut,
 } = require('firebase/auth');
 
@@ -113,23 +112,5 @@ describe('Test AuthContext', () => {
     // then
     expect(firebaseSignOut).toHaveBeenCalledWith(auth);
     expect(contextValue.user).toBeNull();
-  });
-
-  test('Given updateProfileData sin user then arroja "No user is signed in"', async () => {
-    // given: auth.currentUser undefined por mock de firebaseConfig
-
-    // when / then
-    await act(async () => {
-      renderer.create(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(TestConsumer),
-        ),
-      );
-    });
-    await expect(
-      contextValue.updateProfileData('nombre', 'url'),
-    ).rejects.toThrow('No user is signed in');
   });
 });
