@@ -74,9 +74,14 @@ const RatingScreen = ({ route }) => {
         if (currentUser && currentUser.uid) {
           // Ya tienes getUserData en UserContext, úsalo para cargar los datos
           await getUserData();
-              console.log('User data loaded:', userData);
+          console.log('User data loaded:', userData);
           if (userData && userData.points) {
-            setLoggedRank(getRankByLevel(getLevelInfo(userData.points.current).currentLevel, true));
+            setLoggedRank(
+              getRankByLevel(
+                getLevelInfo(userData.points.current).currentLevel,
+                true,
+              ),
+            );
           }
         }
       } catch (error) {
@@ -84,7 +89,7 @@ const RatingScreen = ({ route }) => {
       }
     };
 
-    loadUserData();  
+    loadUserData();
   }, [currentUser]);
 
   useFocusEffect(
@@ -278,7 +283,10 @@ const RatingScreen = ({ route }) => {
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
       // Determina el rango del usuario basado en los puntos
-      const userRank = getRankByLevel(getLevelInfo(item.authorPoints).currentLevel, true);
+      const userRank = getRankByLevel(
+        getLevelInfo(item.authorPoints).currentLevel,
+        true,
+      );
 
       return (
         <View style={styles.reviewContainer}>
@@ -570,4 +578,3 @@ const styles = StyleSheet.create({
 });
 
 export default RatingScreen;
-

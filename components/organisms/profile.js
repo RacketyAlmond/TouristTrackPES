@@ -16,7 +16,7 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
-import { getAuth, updateProfile  } from 'firebase/auth';
+import { getAuth, updateProfile } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
@@ -60,7 +60,6 @@ const ProfileScreen = ({ onSignOut }) => {
     const user = auth.currentUser;
     if (!user) return;
 
-
     return getDoc(doc(db, 'Users', user.uid))
       .then((userDoc) => {
         if (userDoc.exists()) {
@@ -93,7 +92,6 @@ const ProfileScreen = ({ onSignOut }) => {
     }
   };
 
-
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -114,7 +112,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
     if (user) {
       await updateProfile(user, {
-        photoURL: imageUrl
+        photoURL: imageUrl,
       });
     }
   };
@@ -140,7 +138,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
-    alert("Profile picture updated!");
+    alert('Profile picture updated!');
   };
 
   const handleSend = async () => {
@@ -159,7 +157,6 @@ const ProfileScreen = ({ onSignOut }) => {
         paddingBottom: 150,
         flex: 1,
         backgroundColor: 'white',
-
       }}
     >
       <Image source={map} style={styles.mapBackground} />
@@ -170,7 +167,10 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
+        <TouchableOpacity
+          style={styles.editIcon}
+          onPress={handleChangeProfilePicture}
+        >
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
