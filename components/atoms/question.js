@@ -22,7 +22,7 @@ export default function Question({
 }) {
   // namespace 'foro', además extraemos i18n.language
   const { t, i18n } = useTranslation('foro');
-  const { userData, getUserData } = useUser();
+  const { userData, getUserData, updateUserPoints } = useUser();
 
   const [showAnswers, setShowAnswers] = useState(false);
   const [showNewAnswer, setShowNewAnswer] = useState(false);
@@ -157,6 +157,7 @@ export default function Question({
         }
 
         if (json.success) {
+          updateUserPoints(100);
           const { user, nationality, points } =
             await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 

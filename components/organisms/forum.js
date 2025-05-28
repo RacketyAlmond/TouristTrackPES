@@ -219,7 +219,7 @@ export default function Forum({ route }) {
         }
 
         if (json.success) {
-          updateUserPoints(10);
+          updateUserPoints(50);
           const newQuestionObject = {
             id: json.preguntaId,
             Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado

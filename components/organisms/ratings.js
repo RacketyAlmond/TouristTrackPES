@@ -23,7 +23,7 @@ import { auth } from '../../firebaseConfig.js';
 import { useUser } from '../atoms/UserContext';
 
 const RatingScreen = ({ route }) => {
-  const { userData, getUserData } = useUser();
+  const { userData, getUserData, updateUserPoints } = useUser();
   const currentUser = auth.currentUser;
 
   const defaultAvatar = require('../../public/user.png');
@@ -196,6 +196,7 @@ const RatingScreen = ({ route }) => {
       return;
     }
 
+    updateUserPoints(100); // Añadir puntos al usuario por dejar una reseña
     const newRatingData = {
       authorID: currentUser.uid,
       location: localidad.name,
