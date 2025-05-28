@@ -117,21 +117,20 @@ export default function Question({
   }, [getAnswers]);
 
   useEffect(() => {
-  const loadUserData = async () => {
-    try {
-      if (currentUser && currentUser.uid) {
-        await getUserData();
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          await getUserData();
+        }
+      } catch (error) {
+        console.error('Error cargando datos del usuario:', error);
       }
-    } catch (error) {
-      console.error("Error cargando datos del usuario:", error);
-    }
-  };
-  loadUserData();
-}, [currentUser]);
+    };
+    loadUserData();
+  }, [currentUser]);
 
   // Añadir nueva respuesta
   const handleAddAnswer = async () => {
-
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
@@ -148,7 +147,7 @@ export default function Question({
           },
         );
 
-        print("aaa")
+        print('aaa');
 
         const json = await response.json();
 
@@ -157,13 +156,12 @@ export default function Question({
           return;
         }
 
-
         if (json.success) {
           const { user, nationality, points } =
             await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
-          const firstName = userData.firstName; 
-          console.log(userData.firstName)
+          const firstName = userData.firstName;
+          console.log(userData.firstName);
           const newAnswerObject = {
             id: json.preguntaId,
             userId: idCurrentUser,
@@ -221,9 +219,7 @@ export default function Question({
       >
         <TouchableOpacity onPress={() => setShowAnswers((v) => !v)}>
           <Text style={{ color: '#572364' }}>
-            {showAnswers
-              ? t('hide')
-              : `${allAnswers.length} ${t('answers')}`}
+            {showAnswers ? t('hide') : `${allAnswers.length} ${t('answers')}`}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowNewAnswer((v) => !v)}>

@@ -71,19 +71,19 @@ const RatingScreen = ({ route }) => {
   }, [ratings]);
 
   useEffect(() => {
-  const loadUserData = async () => {
-    try {
-      if (currentUser && currentUser.uid) {
-        // Ya tienes getUserData en UserContext, úsalo para cargar los datos
-        await getUserData();
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          // Ya tienes getUserData en UserContext, úsalo para cargar los datos
+          await getUserData();
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
       }
-    } catch (error) {
-      console.error("Error loading user data:", error);
-    }
-  };
-  
-  loadUserData();
-}, [currentUser]);
+    };
+
+    loadUserData();
+  }, [currentUser]);
 
   useFocusEffect(
     useCallback(() => {
@@ -465,13 +465,13 @@ const RatingScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
+  container: {
+    flex: 1,
     backgroundColor: '#fff',
-        paddingTop:
-          Platform.OS === 'android'
-            ? Math.min(StatusBar.currentHeight || 30, 30)
-            : 0,
+    paddingTop:
+      Platform.OS === 'android'
+        ? Math.min(StatusBar.currentHeight || 30, 30)
+        : 0,
   },
   title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
   subtitle: { color: '#999' },

@@ -126,14 +126,14 @@ export default function Forum({ route }) {
     getQuestions();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const loadUserData = async () => {
       try {
         if (currentUser && currentUser.uid) {
           await getUserData();
         }
       } catch (error) {
-        console.error("Error cargando datos del usuario:", error);
+        console.error('Error cargando datos del usuario:', error);
       }
     };
     loadUserData();

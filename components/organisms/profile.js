@@ -16,7 +16,7 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
-import { getAuth } from "firebase/auth";
+import { getAuth } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
@@ -24,10 +24,10 @@ import LevelProgress from '../molecules/levelProgress';
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData, updateSignOut } = useUser();
+  const { updateUserData, getUserData, updateSignOut, getUserPoints } =
+    useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
-  const { updateUserData, getUserPoints } = useUser();
 
   // Campos de usuario
   const [fname, setFname] = useState('');
@@ -97,14 +97,11 @@ const ProfileScreen = ({ onSignOut }) => {
     getter();
   }, []);
 
-  const [editingField, setEditingField] = useState(null);
-
   const handleSignOut = async () => {
     try {
       await updateSignOut();
       onSignOut();
       console.error('Signed out user:');
-
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -211,12 +208,18 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('UserForumComments')}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('UserForumComments')}
+      >
         <Icon name='visibility' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('Mis valoraciones')}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('Mis valoraciones')}
+      >
         <Icon name='star-border' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>

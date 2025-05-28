@@ -1,8 +1,16 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity,
-  SafeAreaView, ActivityIndicator, Image, StatusBar, Platform
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+  Image,
+  StatusBar,
+  Platform,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../atoms/UserContext';
@@ -18,11 +26,11 @@ const UserForumComments = () => {
   const [questions, setQuestions] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [activeTab, setActiveTab] = useState('questions');
-  
+
   const locale = i18n.language === 'es' ? es : enUS;
-  
+
   useEffect(() => {
-    const fetchComments= async () => {
+    const fetchComments = async () => {
       try {
         setIsLoading(true);
         const data = await getUserForumComments();
@@ -36,13 +44,13 @@ const UserForumComments = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchComments();
   }, []);
-  
+
   const formatDate = (timestamp) => {
     if (!timestamp) return '';
-    
+
     let date;
     if (timestamp._seconds) {
       date = new Date(timestamp._seconds * 1000);
@@ -51,19 +59,19 @@ const UserForumComments = () => {
     } else {
       return '';
     }
-    
+
     return formatDistanceToNow(date, { addSuffix: true, locale });
   };
-  
+
   const navigateToForum = (forumId, forumName) => {
-    navigation.navigate('Forum', { 
+    navigation.navigate('Forum', {
       forumId: forumId,
-      localityName: forumName
+      localityName: forumName,
     });
   };
-  
+
   const renderQuestionItem = ({ item }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => navigateToForum(item.forumId, item.forumName)}
     >
@@ -74,13 +82,15 @@ const UserForumComments = () => {
       </View>
     </TouchableOpacity>
   );
-  
+
   const renderAnswerItem = ({ item }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => navigateToForum(item.forumId, item.forumName)}
     >
-      <Text style={styles.questionText}>En respuesta a: {item.questionText}</Text>
+      <Text style={styles.questionText}>
+        En respuesta a: {item.questionText}
+      </Text>
       <Text style={styles.itemTitle}>{item.text}</Text>
       <View style={styles.itemFooter}>
         <Text style={styles.forumName}>{item.forumName}</Text>
@@ -88,46 +98,61 @@ const UserForumComments = () => {
       </View>
     </TouchableOpacity>
   );
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={styles.backButtonText}>← {t('back')}</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('My Comments')}</Text>
       </View>
-      
+
       <View style={styles.tabs}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'questions' && styles.activeTab]}
           onPress={() => setActiveTab('questions')}
         >
-          <Text style={[styles.tabText, activeTab === 'questions' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'questions' && styles.activeTabText,
+            ]}
+          >
             {t('questions')} ({questions.length})
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.tab, activeTab === 'answers' && styles.activeTab]}
           onPress={() => setActiveTab('answers')}
         >
-          <Text style={[styles.tabText, activeTab === 'answers' && styles.activeTabText]}>
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === 'answers' && styles.activeTabText,
+            ]}
+          >
             {t('answers')} ({answers.length})
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       {isLoading ? (
-        <ActivityIndicator size="large" color="#572364" style={styles.loader} />
+        <ActivityIndicator size='large' color='#572364' style={styles.loader} />
       ) : (
         <FlatList
           data={activeTab === 'questions' ? questions : answers}
-          renderItem={activeTab === 'questions' ? renderQuestionItem : renderAnswerItem}
+          renderItem={
+            activeTab === 'questions' ? renderQuestionItem : renderAnswerItem
+          }
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContainer}
           ListEmptyComponent={
             <Text style={styles.emptyText}>
-              {activeTab === 'questions' 
+              {activeTab === 'questions'
                 ? t('no-questions-found')
                 : t('no-answers-found')}
             </Text>
@@ -142,10 +167,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-        paddingTop:
-          Platform.OS === 'android'
-            ? Math.min(StatusBar.currentHeight || 30, 30)
-            : 0,
+    paddingTop:
+      Platform.OS === 'android'
+        ? Math.min(StatusBar.currentHeight || 30, 30)
+        : 0,
   },
   header: {
     flexDirection: 'row',

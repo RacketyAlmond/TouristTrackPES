@@ -38,7 +38,9 @@ const MessageChatList = ({ messages }) => {
       return i18n.language === 'es' ? 'AYER' : 'YESTERDAY';
     } else {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
-      return messageDate.toLocaleDateString(currentLocale, options).toUpperCase();
+      return messageDate
+        .toLocaleDateString(currentLocale, options)
+        .toUpperCase();
     }
   };
 

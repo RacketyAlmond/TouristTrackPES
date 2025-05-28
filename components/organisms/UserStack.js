@@ -14,71 +14,71 @@ import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default function UserStack() {
-    const [screen, setScreen] = useState('Profile');
-    const [currentUser, setCurrentUser] = useState('notSelected');
-    const getAuthenticated = () => {
-        auth.currentUser == null
-            ? setScreen('Auth')
-            : console.log(`user authenticated = ${auth.currentUser}`);
-        return auth.currentUser;
-    };
-    useEffect(() => {
-        getAuthenticated();
-    }, []);
-    const navigation = useNavigation();
+  const [screen, setScreen] = useState('Profile');
+  const [currentUser, setCurrentUser] = useState('notSelected');
+  const getAuthenticated = () => {
+    auth.currentUser == null
+      ? setScreen('Auth')
+      : console.log(`user authenticated = ${auth.currentUser}`);
+    return auth.currentUser;
+  };
+  useEffect(() => {
+    getAuthenticated();
+  }, []);
+  const navigation = useNavigation();
 
-    return (
-        <ScrollView style={{ flex: 1 }}>
-            <UserProvider>
-                <AuthProvider>
-                    <View style={{ flex: 1 }}>
-                        {screen === 'Auth' && (
-                            <AuthScreen
-                                onAuthenticated={(user, isNewUser) => {
-                                    setCurrentUser(user);
-                                    setScreen(isNewUser ? 'Birthdate' : 'Profile');
-                                }}
-                            />
-                        )}
-                        {screen === 'Birthdate' && (
-                            <BirthdateScreen
-                                user={currentUser}
-                                onComplete={(status) =>
-                                    setScreen(status ? 'Profile' : 'Birthdate')
-                                }
-                            />
-                        )}
-                        {screen === 'Profile' && (
-                            <ProfileScreen
-                                user={currentUser}
-                                onSignOut={() => setScreen('Auth')}
-                            />
-                        )}
-                        {/* In your Settings or Profile screen */}
-                    </View>
-                </AuthProvider>
-            </UserProvider>
-        </ScrollView>
-    );
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <UserProvider>
+        <AuthProvider>
+          <View style={{ flex: 1 }}>
+            {screen === 'Auth' && (
+              <AuthScreen
+                onAuthenticated={(user, isNewUser) => {
+                  setCurrentUser(user);
+                  setScreen(isNewUser ? 'Birthdate' : 'Profile');
+                }}
+              />
+            )}
+            {screen === 'Birthdate' && (
+              <BirthdateScreen
+                user={currentUser}
+                onComplete={(status) =>
+                  setScreen(status ? 'Profile' : 'Birthdate')
+                }
+              />
+            )}
+            {screen === 'Profile' && (
+              <ProfileScreen
+                user={currentUser}
+                onSignOut={() => setScreen('Auth')}
+              />
+            )}
+            {/* In your Settings or Profile screen */}
+          </View>
+        </AuthProvider>
+      </UserProvider>
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
-    settingItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 16,
-        backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    settingItemIconContainer: {
-        marginRight: 16,
-    },
-    settingItemTextContainer: {
-        flex: 1,
-    },
-    settingItemText: {
-        fontSize: 16,
-        color: '#572364',
-    },
+  settingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  settingItemIconContainer: {
+    marginRight: 16,
+  },
+  settingItemTextContainer: {
+    flex: 1,
+  },
+  settingItemText: {
+    fontSize: 16,
+    color: '#572364',
+  },
 });

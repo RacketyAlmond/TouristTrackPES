@@ -49,23 +49,25 @@ export const UserProvider = ({ children }) => {
   const getUserForumComments = async () => {
     try {
       const user = auth.currentUser;
-      
+
       if (!user) {
         throw new Error('No user is signed in');
       }
-      
+
       console.log('Fetching forum activity for user', user.uid);
-      
+
       // Usa la ruta correcta que tienes en el backend
-      const response = await fetch(`***REMOVED***/forums/user-forum-comments/${user.uid}`);
-      
+      const response = await fetch(
+        `***REMOVED***/forums/user-forum-comments/${user.uid}`,
+      );
+
       if (!response.ok) {
         console.error('Response not OK:', response.status);
         const errorText = await response.text();
         console.error('Error response:', errorText);
         throw new Error('Failed to fetch user forum comments');
       }
-      
+
       const data = await response.json();
       console.log('Forum activity data received:', data);
       return data;
@@ -111,12 +113,14 @@ export const UserProvider = ({ children }) => {
     }
   };
   const updateSignOut = async () => {
-    signOut(auth).then(() => {
-      console.log('Successfully signed out the user')
-    }).catch((error) => {
-      throw new Error('Error signing out');
-    });
-  }
+    signOut(auth)
+      .then(() => {
+        console.log('Successfully signed out the user');
+      })
+      .catch((error) => {
+        throw new Error('Error signing out');
+      });
+  };
   const getUserPoints = async () => {
     const user = auth.currentUser;
     try {
@@ -210,7 +214,7 @@ export const UserProvider = ({ children }) => {
         updateSignOut,
         getUserPoints,
         updateUserPoints,
-        getUserForumComments
+        getUserForumComments,
       }}
     >
       {children}

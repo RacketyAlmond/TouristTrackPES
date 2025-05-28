@@ -56,14 +56,14 @@ export const AuthProvider = ({ children }) => {
         setToken('Error getting token: ' + error.message);
       }
     }
-    
+
     getToken();
   }, []);
 
   const saveTokenToBackend = async (userId) => {
     try {
-      const userIdToUse = userId
-      
+      const userIdToUse = userId;
+
       const saveTokenUrl = `***REMOVED***/users/${userIdToUse}/push-token`;
       const response = await fetch(saveTokenUrl, {
         method: 'POST',
@@ -71,10 +71,10 @@ export const AuthProvider = ({ children }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pushToken: token
+          pushToken: token,
         }),
       });
-      
+
       if (response.ok) {
       } else {
         const errorText = await response.text();
