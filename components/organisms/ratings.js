@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 
 const RatingScreen = ({ route }) => {
   const { t } = useTranslation('ratings');
-  const { userData, getUserData } = useUser();
+  const { userData, getUserData, updateUserPoints } = useUser();
   const currentUser = auth.currentUser;
 
   const defaultAvatar = require('../../public/user.png');
@@ -199,6 +199,7 @@ const RatingScreen = ({ route }) => {
       return;
     }
 
+    updateUserPoints(100); // Añadir puntos al usuario por dejar una reseña
     const newRatingData = {
       authorID: currentUser.uid,
       location: localidad.name,
