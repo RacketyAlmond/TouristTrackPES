@@ -196,6 +196,7 @@ const PersonalChat = ({ route, navigation }) => {
         contactName={userData.name}
         contactAvatar={userData.avatar}
         contactDescription={userData.about}
+        contactPoints={userData.points}
         onBackPress={goBack}
       />
       <MessageChatList messages={messages} isLoading={isLoading} />

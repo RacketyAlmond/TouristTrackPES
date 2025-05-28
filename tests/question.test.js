@@ -10,7 +10,7 @@ import { formatDistanceToNow } from 'date-fns';
 jest.mock('date-fns', () => ({
   formatDistanceToNow: jest.fn(),
 }));
-jest.mock('date-fns/locale.cjs', () => ({
+jest.mock('date-fns/locale', () => ({
   es: {},
 }));
 // Stub del componente Comment para evitar dependencias externas
@@ -22,6 +22,22 @@ jest.mock('../components/atoms/comment', () => {
       React.createElement('Comment', { user, date, text }),
   };
 });
+
+jest.mock('../firebaseConfig.js', () => ({
+  auth: {
+    currentUser: {
+      uid: 'test-uid',
+      name: 'Test User',
+    },
+  },
+}));
+
+jest.mock('../components/atoms/UserContext', () => ({
+  useUser: () => ({
+    userData: { firstName: 'TestUser' /* otras propiedades si usas */ },
+    getUserData: jest.fn(),
+  }),
+}));
 
 describe('Test component Question que carga respuestas y gestiona toggles', () => {
   beforeEach(() => {
@@ -80,7 +96,7 @@ describe('Test component Question que carga respuestas y gestiona toggles', () =
     const buttons = tree.root.findAllByType(TouchableOpacity);
     const answersToggle = buttons[0];
     const toggleText = answersToggle.findByType(Text).props.children;
-    expect(toggleText).toBe('2 respuestas');
+    expect(toggleText).toBe('2 answers');
   });
 
   test('Given toggle showAnswers then renderiza los componentes Comment correspondientes', async () => {

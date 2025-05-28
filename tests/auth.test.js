@@ -3,10 +3,28 @@
 // 1) Mock the background image import
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
-import AuthScreen from '../components/molecules/auth.js'; // adjust path if needed
 import { Text, TextInput, TouchableOpacity } from 'react-native';
 
+import AuthScreen from '../components/molecules/auth.js';
+
 jest.mock('../public/mapa.png', () => 1);
+
+jest.mock('expo-auth-session/providers/google', () => ({
+  useAuthRequest: jest.fn(() => [{}, jest.fn(), {}]),
+}));
+
+jest.mock('expo-auth-session', () => ({
+  makeRedirectUri: jest.fn(() => 'mock-redirect-uri'),
+}));
+
+// Añade este mock al principio del archivo auth.test.js, junto con los otros mocks
+jest.mock('react-native', () => {
+  const reactNative = jest.requireActual('react-native');
+  reactNative.Alert = {
+    alert: jest.fn(),
+  };
+  return reactNative;
+});
 
 // 2) Mock useAuth before importing the component
 const mockSignUp = jest.fn();
@@ -16,7 +34,7 @@ jest.mock('../components/atoms/AuthContext.js', () => ({
     signUp: mockSignUp,
     signIn: mockSignIn,
   }),
-}));
+})); // Importa después de mocks
 
 describe('AuthScreen component', () => {
   beforeEach(() => {

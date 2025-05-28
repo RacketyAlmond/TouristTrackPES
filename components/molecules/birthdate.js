@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import { useUser } from '../atoms/UserContext.js';
-import { auth } from '../../firebaseConfig.js'; 
+import { auth } from '../../firebaseConfig.js';
 import map from '../../public/mapa.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Notifications from 'expo-notifications';
@@ -27,28 +27,27 @@ const BirthdateScreen = ({ onComplete }) => {
   const points = useRef(10);
   let authStatus = false;
 
-
   useEffect(() => {
-      async function getToken() {
-        try {
-          const tokenData = await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig?.extra?.eas?.projectId,
-          });
-          setToken(tokenData.data);
-          console.log('Push token:', tokenData.data);
-        } catch (error) {
-          console.error('Error getting push token:', error);
-          setToken('Error getting token: ' + error.message);
-        }
+    async function getToken() {
+      try {
+        const tokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig?.extra?.eas?.projectId,
+        });
+        setToken(tokenData.data);
+        console.log('Push token:', tokenData.data);
+      } catch (error) {
+        console.error('Error getting push token:', error);
+        setToken('Error getting token: ' + error.message);
       }
-      
-      getToken();
-    }, []);
+    }
+
+    getToken();
+  }, []);
 
   const saveTokenToBackend = async (userId) => {
     try {
-      const userIdToUse = userId
-      
+      const userIdToUse = userId;
+
       const saveTokenUrl = `***REMOVED***/users/${userIdToUse}/push-token`;
       const response = await fetch(saveTokenUrl, {
         method: 'POST',
@@ -56,10 +55,10 @@ const BirthdateScreen = ({ onComplete }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pushToken: token
+          pushToken: token,
         }),
       });
-      
+
       if (response.ok) {
       } else {
         const errorText = await response.text();
@@ -82,14 +81,11 @@ const BirthdateScreen = ({ onComplete }) => {
         points,
       );
       authStatus = true;
-      console.log('Wchodzi tutaj a ma nie');
 
       onComplete(authStatus);
-      //obtener el id del usuario
       const currentUser = auth.currentUser;
 
-      saveTokenToBackend(currentUser.uid)
-
+      saveTokenToBackend(currentUser.uid);
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -139,7 +135,7 @@ const BirthdateScreen = ({ onComplete }) => {
             onChangeText={setUserLocation}
             style={styles.input}
           />
-          {fname.length > 3 && userLocation.length > 5 ? (
+          {fname.length > 2 && userLocation.length > 2 ? (
             <TouchableOpacity style={styles.button} onPress={handleSend}>
               <Text style={styles.buttonText}>Save Data</Text>
             </TouchableOpacity>
@@ -202,6 +198,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop:250,
+    paddingBottom: 300,
+
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   text: { width: '80%' },

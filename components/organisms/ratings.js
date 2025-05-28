@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 import {
   View,
   Text,
@@ -11,20 +13,20 @@ import {
   Platform,
   ScrollView,
   Alert,
+  StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-
-const loggedInUser = {
-  id: '1',
-  username: 'mgimor',
-  avatar:
-    'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-};
+import { auth } from '../../firebaseConfig.js';
+import { useUser } from '../atoms/UserContext';
 
 const RatingScreen = ({ route }) => {
+  const { userData, getUserData } = useUser();
+  const currentUser = auth.currentUser;
+
+  const defaultAvatar = require('../../public/user.png');
   const [ratingContent, setRatingContent] = useState('');
   const [ratingStars, setRatingStars] = useState(0);
   const [inputHeight, setInputHeight] = useState(40);
@@ -37,6 +39,8 @@ const RatingScreen = ({ route }) => {
   const [editStars, setEditStars] = useState(0);
 
   const { localidad } = route.params;
+
+  const [loggedRank, setLoggedRank] = useState(0);
 
   const [localidadRating, setLocalidadRating] = useState({
     rating: localidad.rating,
@@ -64,6 +68,25 @@ const RatingScreen = ({ route }) => {
     });
   }, [ratings]);
 
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          // Ya tienes getUserData en UserContext, úsalo para cargar los datos
+          await getUserData();
+              console.log('User data loaded:', userData);
+          if (userData && userData.points) {
+            setLoggedRank(getRankByLevel(getLevelInfo(userData.points.current).currentLevel, true));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
+    };
+
+    loadUserData();  
+  }, [currentUser]);
+
   useFocusEffect(
     useCallback(() => {
       fetchRatings(localidad.name);
@@ -78,7 +101,7 @@ const RatingScreen = ({ route }) => {
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
       setRatings(data);
-      const userRating = data.find((r) => r.authorID === loggedInUser.id);
+      const userRating = data.find((r) => r.authorID === currentUser.uid);
       setHasUserRated(!!userRating);
     } catch (error) {
       console.error('Error:', error);
@@ -117,7 +140,7 @@ const RatingScreen = ({ route }) => {
     if (!ratingToUpdate) return;
 
     const updatedRating = {
-      authorID: loggedInUser.id,
+      authorID: currentUser.uid,
       location: localidad.name,
       stars: editStars,
       content: editContent,
@@ -137,8 +160,8 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
+        authorAvatar: userData.avatar || defaultAvatar,
+        authorFirstName: userData.firstName,
       };
 
       setRatings((prev) =>
@@ -169,7 +192,7 @@ const RatingScreen = ({ route }) => {
     }
 
     const newRatingData = {
-      authorID: loggedInUser.id,
+      authorID: currentUser.uid,
       location: localidad.name,
       stars: ratingStars,
       content: ratingContent,
@@ -186,8 +209,8 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
+        authorAvatar: userData?.avatar || defaultAvatar,
+        authorFirstName: userData?.firstName,
       };
 
       setRatings((prev) => [postedRating, ...prev]);
@@ -254,12 +277,31 @@ const RatingScreen = ({ route }) => {
       // Formatear la fecha
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
+      // Determina el rango del usuario basado en los puntos
+      const userRank = getRankByLevel(getLevelInfo(item.authorPoints).currentLevel, true);
+
       return (
         <View style={styles.reviewContainer}>
-          <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
+          <Image
+            source={
+              item.authorAvatar && typeof item.authorAvatar === 'string'
+                ? { uri: item.authorAvatar }
+                : defaultAvatar
+            }
+            style={styles.avatar}
+          />
           <View style={{ flex: 1 }}>
             <View style={styles.reviewHeader}>
-              <Text style={styles.username}>{item.authorFirstName}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.username}>{item.authorFirstName}</Text>
+                {userRank && (
+                  <Image
+                    source={userRank.icon}
+                    style={styles.rankIcon}
+                    resizeMode='contain'
+                  />
+                )}
+              </View>
               <View style={styles.starsRight}>
                 {item.id === editingRatingId
                   ? renderStars(editStars, true, setEditStars)
@@ -319,7 +361,7 @@ const RatingScreen = ({ route }) => {
                   </Text>
                 </View>
 
-                {item.authorID === loggedInUser.id && (
+                {item.authorID === currentUser.uid && (
                   <View style={styles.rightActions}>
                     <TouchableOpacity onPress={() => handleEdit(item)}>
                       <Text style={[styles.actionText, { color: '#572364' }]}>
@@ -371,10 +413,23 @@ const RatingScreen = ({ route }) => {
           <View style={styles.inputHeader}>
             <View style={styles.inputUser}>
               <Image
-                source={{ uri: loggedInUser.avatar }}
+                source={
+                  userData?.avatar && typeof userData.avatar === 'string'
+                    ? { uri: userData.avatar }
+                    : defaultAvatar
+                }
                 style={styles.avatar}
               />
-              <Text style={styles.username}>{loggedInUser.username}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.username}>{userData?.firstName}</Text>
+                {loggedRank && (
+                  <Image
+                    source={loggedRank.icon}
+                    style={styles.rankIcon}
+                    resizeMode='contain'
+                  />
+                )}
+              </View>
             </View>
             {renderStars(ratingStars, true, setRatingStars)}
           </View>
@@ -412,7 +467,14 @@ const RatingScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop:
+      Platform.OS === 'android'
+        ? Math.min(StatusBar.currentHeight || 30, 30)
+        : 0,
+  },
   title: { fontSize: 22, fontWeight: 'bold', color: '#572364' },
   subtitle: { color: '#999' },
   ratingRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 8 },
@@ -500,6 +562,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#572364',
   },
+  rankIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
+  },
 });
 
 export default RatingScreen;
+

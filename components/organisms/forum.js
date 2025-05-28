@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -20,8 +21,8 @@ import config from '../../config';
 
 export default function Forum({ route }) {
   const { t } = useTranslation('foro');
+  const { userData, getUserData, updateUserPoints } = useUser();
   const { forumId, localityName } = route.params;
-  const { updateUserPoints } = useUser();
   const [actividadInfo, setActividadInfo] = useState('');
   const [isActividad, setIsActividad] = useState(false);
   const [questions, setQuestions] = useState([]);
@@ -75,10 +76,11 @@ export default function Forum({ route }) {
       const json = await response.json();
 
       if (json.success && json.usuario) {
-        const { firstName, userLocation } = json.usuario;
+        const { firstName, userLocation, points } = json.usuario;
         return {
           user: firstName || 'Desconocido',
           nationality: userLocation || 'Desconocido',
+          points: points.current || 0,
         };
       }
     } catch (error) {
@@ -99,7 +101,7 @@ export default function Forum({ route }) {
       if (json.success) {
         const preguntas = await Promise.all(
           json.preguntas.map(async (q) => {
-            const { user, nationality } = await getUserInfo(q.Author);
+            const { user, nationality, points } = await getUserInfo(q.Author);
             return {
               id: q.id,
               userId: q.Author,
@@ -107,6 +109,7 @@ export default function Forum({ route }) {
               date: new Date(q.date._seconds * 1000).toISOString(),
               user,
               nationality,
+              points,
             };
           }),
         );
@@ -122,6 +125,19 @@ export default function Forum({ route }) {
     getForumDetails();
     getQuestions();
   }, []);
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        if (currentUser && currentUser.uid) {
+          await getUserData();
+        }
+      } catch (error) {
+        console.error('Error cargando datos del usuario:', error);
+      }
+    };
+    loadUserData();
+  }, [currentUser]);
 
   // Extraer las nacionalidades únicas de las preguntas
   const availableNationalities = Array.from(
@@ -209,7 +225,7 @@ export default function Forum({ route }) {
             Author: idCurrentUser, // Reemplaza con el ID del usuario autenticado
             question: newQuestion,
             date: new Date().toISOString(),
-            fname,
+            user: userData.firstName,
             userLocation,
           };
 
@@ -289,6 +305,7 @@ export default function Forum({ route }) {
                     text={question.question}
                     user={question.user}
                     date={question.date}
+                    points={question.points}
                   />
                 </View>
               ))}

@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import ProfileScreen from '../components/organisms/profile';
+import { NavigationContainer } from '@react-navigation/native';
+
+jest.mock('react-i18next');
 
 // Mock de react-native-vector-icons
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
@@ -42,7 +45,9 @@ jest.mock('../components/atoms/UserContext.js', () => ({
 describe('ProfileScreen component', () => {
   it('renderiza correctamente el perfil de usuario', async () => {
     const { getAllByText, getByText } = render(
-      <ProfileScreen onSignOut={jest.fn()} />,
+      <NavigationContainer>
+        <ProfileScreen onSignOut={jest.fn()} />
+      </NavigationContainer>,
     );
 
     await waitFor(() => {

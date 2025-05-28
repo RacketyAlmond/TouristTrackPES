@@ -3,6 +3,19 @@ import { render, waitFor } from '@testing-library/react-native';
 import Estadisticas from '../components/organisms/estadisticas';
 import { NavigationContainer } from '@react-navigation/native';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      const translations = {
+        header: 'Estadísticas',
+        tourists: 'tourists',
+        top: 'top',
+      };
+      return translations[key] || key;
+    },
+  }),
+}));
+
 // Simula el hook useRoute directamente
 jest.mock('@react-navigation/native', () => ({
   useRoute: () => ({

@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
   ScrollView,
   View,
@@ -14,15 +16,19 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import { getAuth, updateProfile  } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
+import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
 
 const ProfileScreen = ({ onSignOut }) => {
+  const { updateUserData, getUserData, updateSignOut, getUserPoints } =
+    useUser();
+  const navigation = useNavigation();
   const { t } = useTranslation('profile');
-  const { updateUserData, getUserPoints } = useUser();
 
   // Campos de usuario
   const [fname, setFname] = useState('');
@@ -41,7 +47,6 @@ const ProfileScreen = ({ onSignOut }) => {
   useEffect(() => {
     const fetchPoints = async () => {
       try {
-
         const userPoints = await getUserPoints();
         setPoints(userPoints);
       } catch (err) {
@@ -54,27 +59,12 @@ const ProfileScreen = ({ onSignOut }) => {
   const getter = async () => {
     const user = auth.currentUser;
     if (!user) return;
-    try {
-      const userDoc = await getDoc(doc(db, 'Users', user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        setFname(data.firstName);
-        setBirthdate(data.birthday);
-        setUserLocation(data.userLocation);
-        setAbout(data.about);
-        setPoints(data.points.current);
-      }
-    } catch (err) {
-      console.error('Error fetching user:', err);
-    }
+
 
     return getDoc(doc(db, 'Users', user.uid))
       .then((userDoc) => {
         if (userDoc.exists()) {
           const data = userDoc.data();
-          // console.log(`data = ${data.firstName}`);
-          // console.log(`userData.firstName = ${data.firstName}`);
-          // console.log(`userData.birthday = ${data.birthday}`);
 
           setFname(data.firstName);
           setBirthdate(data.birthday);
@@ -93,10 +83,69 @@ const ProfileScreen = ({ onSignOut }) => {
     getter();
   }, []);
 
-  // Guarda los cambios en Firebase
+  const handleSignOut = async () => {
+    try {
+      await updateSignOut();
+      onSignOut();
+      console.error('Signed out user:');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      return result.assets[0].uri;
+    }
+
+    return null;
+  };
+  const updateUserProfilePicture = async (imageUrl) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await updateProfile(user, {
+        photoURL: imageUrl
+      });
+    }
+  };
+  const uploadImageAsync = async (uri, uid) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const storage = getStorage();
+    const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+    await uploadBytes(imageRef, blob);
+
+    return await getDownloadURL(imageRef);
+  };
+
+  const handleChangeProfilePicture = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const uri = await pickImage();
+    if (!uri) return;
+
+    const imageUrl = await uploadImageAsync(uri, user.uid);
+    await updateUserProfilePicture(imageUrl);
+    alert("Profile picture updated!");
+  };
+
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about);
+      await updateUserData(fname, birthdate, userLocation, about, points);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -107,10 +156,11 @@ const ProfileScreen = ({ onSignOut }) => {
     <ScrollView
       contentContainerStyle={{
         alignItems: 'center',
-        paddingBottom: 20,
+        paddingBottom: 150,
         flex: 1,
         backgroundColor: 'white',
-      }} // Mueve aquí los estilos relacionados con el contenido
+
+      }}
     >
       <Image source={map} style={styles.mapBackground} />
 
@@ -120,7 +170,7 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon}>
+        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
@@ -140,8 +190,6 @@ const ProfileScreen = ({ onSignOut }) => {
           <Icon name='edit' size={20} color='gray' />
         </TouchableOpacity>
       </View>
-
-
 
       <LevelProgress points={points} />
 
@@ -197,12 +245,18 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('UserForumComments')}
+      >
         <Icon name='visibility' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('Mis valoraciones')}
+      >
         <Icon name='star-border' size={16} color='black' />
         <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>
@@ -226,7 +280,8 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       )}
 
-      <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
         <Text style={styles.logoutText}>{t('log-out')}</Text>
       </TouchableOpacity>
 
@@ -240,16 +295,11 @@ const ProfileScreen = ({ onSignOut }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
   mapBackground: {
     width: '100%',
     height: 160,
     position: 'absolute',
-    top: 120,
+    top: 0,
   },
   backButton: {
     position: 'absolute',
@@ -266,7 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 3,
     borderColor: 'white',
-    marginTop: 90,
+    marginTop: 110,
   },
   editIcon: {
     position: 'absolute',
@@ -305,7 +355,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   infoText: {
     fontSize: 16,

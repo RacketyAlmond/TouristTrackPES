@@ -9,19 +9,20 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getRankByLevel } from '../molecules/levelProgress';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 
 const ChatHeader = ({
   contactName,
   contactAvatar,
   contactDescription,
+  contactPoints,
   onBackPress,
 }) => {
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
     // Determina el rango del usuario basado en los puntos
-    const rank = getRankByLevel(15, true); // Usa los puntos del contacto o 0 por defecto
+    const rank = getRankByLevel(getLevelInfo(contactPoints).currentLevel, true); // Usa los puntos del contacto o 0 por defecto
     setUserRank(rank);
   }, []);
   return (

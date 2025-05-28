@@ -16,15 +16,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-
-const loggedInUser = {
-  id: '1',
-  username: 'mgimor',
-  avatar:
-    'https://media.licdn.com/dms/image/v2/D4D03AQGCT0QZTTCUkA/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1732472771264?e=2147483647&v=beta&t=6lzmddSAK92B5eku-PTZL4jeAwaOUvAt3myspirOwLM',
-};
+import { auth } from '../../firebaseConfig.js';
 
 const RatingScreen = () => {
+  const currentUser = auth.currentUser;
   const [expandedRatings, setExpandedRatings] = useState({});
   const [textOverflowMap, setTextOverflowMap] = useState({});
   const [ratings, setRatings] = useState([]);
@@ -45,7 +40,7 @@ const RatingScreen = () => {
   const fetchRatings = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/author/${loggedInUser.id}`,
+        `http://192.168.1.77:8080/ratings/author/${currentUser.uid}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -65,7 +60,7 @@ const RatingScreen = () => {
           text: 'Eliminar',
           style: 'destructive',
           onPress: async () => {
-            await fetch(`***REMOVED***/ratings/${id}`, {
+            await fetch(`http://192.168.1.77:8080/ratings/${id}`, {
               method: 'DELETE',
             });
             setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -86,7 +81,7 @@ const RatingScreen = () => {
     if (!ratingToUpdate) return;
 
     const updatedRating = {
-      authorID: loggedInUser.id,
+      authorID: currentUser.uid,
       location: ratingToUpdate.location,
       stars: editStars,
       content: editContent,
@@ -94,7 +89,7 @@ const RatingScreen = () => {
 
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/${ratingToUpdate.id}`,
+        `http://192.168.1.77:8080/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -106,8 +101,8 @@ const RatingScreen = () => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: loggedInUser.avatar,
-        authorFirstName: loggedInUser.username,
+        authorAvatar: currentUser.avatar,
+        authorFirstName: currentUser.username,
       };
 
       setRatings((prev) =>
@@ -249,7 +244,7 @@ const RatingScreen = () => {
                     </Text>
                   </View>
 
-                  {item.authorID === loggedInUser.id && (
+                  {item.authorID === currentUser.uid && (
                     <View style={styles.rightActions}>
                       <TouchableOpacity onPress={() => handleEdit(item)}>
                         <Text style={[styles.actionText, { color: '#572364' }]}>

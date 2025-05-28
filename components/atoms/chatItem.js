@@ -1,14 +1,14 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image } from 'react-native';
-import { getRankByLevel } from '../molecules/levelProgress';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 
 export default function ChatItem({ item }) {
   const [userRank, setUserRank] = useState(null);
 
   useEffect(() => {
     // Determina el rango del usuario basado en los puntos
-    const rank = getRankByLevel(15, true); // Usa los puntos del usuario o 0 por defecto
+    const rank = getRankByLevel(getLevelInfo(item.points).currentLevel, true); // Usa los puntos del usuario o 0 por defecto
     setUserRank(rank);
   }, [item.points]);
 

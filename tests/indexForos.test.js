@@ -63,7 +63,7 @@ describe('IndexForos component', () => {
       </NavigationContainer>,
     );
 
-    const input = getByPlaceholderText('Busca una localidad...');
+    const input = getByPlaceholderText('search');
     fireEvent.changeText(input, 'Madrid');
 
     await waitFor(() => {
@@ -79,7 +79,7 @@ describe('IndexForos component', () => {
       </NavigationContainer>,
     );
 
-    const input = getByPlaceholderText('Busca una localidad...');
+    const input = getByPlaceholderText('search');
     fireEvent.changeText(input, 'Zaragoza');
 
     await waitFor(() => {
