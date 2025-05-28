@@ -163,6 +163,7 @@ export default function Question({
           const firstName = userData.firstName;
           console.log(userData.firstName);
           const newAnswerObject = {
+
             id: json.preguntaId,
             userId: idCurrentUser,
             answer: newAnswer,

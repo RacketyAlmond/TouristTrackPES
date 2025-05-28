@@ -16,16 +16,17 @@ import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
-import { getAuth } from 'firebase/auth';
+import { getAuth, updateProfile } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LevelProgress from '../molecules/levelProgress';
+import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
+import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData, updateSignOut, getUserPoints } =
-    useUser();
+  const { updateUserData, getUserData, updateSignOut, getUserPoints } = useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
 
@@ -35,6 +36,7 @@ const ProfileScreen = ({ onSignOut }) => {
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
   const [points, setPoints] = useState(null);
+  const [profileImage, setProfileImage] = useState("");
 
   // Estado para saber qué campo estamos editando
   const [editingField, setEditingField] = useState(null);
@@ -58,27 +60,11 @@ const ProfileScreen = ({ onSignOut }) => {
   const getter = async () => {
     const user = auth.currentUser;
     if (!user) return;
-    try {
-      const userDoc = await getDoc(doc(db, 'Users', user.uid));
-      if (userDoc.exists()) {
-        const data = userDoc.data();
-        setFname(data.firstName);
-        setBirthdate(data.birthday);
-        setUserLocation(data.userLocation);
-        setAbout(data.about);
-        setPoints(data.points.current);
-      }
-    } catch (err) {
-      console.error('Error fetching user:', err);
-    }
 
     return getDoc(doc(db, 'Users', user.uid))
       .then((userDoc) => {
         if (userDoc.exists()) {
           const data = userDoc.data();
-          // console.log(`data = ${data.firstName}`);
-          // console.log(`userData.firstName = ${data.firstName}`);
-          // console.log(`userData.birthday = ${data.birthday}`);
 
           setFname(data.firstName);
           setBirthdate(data.birthday);
@@ -107,9 +93,78 @@ const ProfileScreen = ({ onSignOut }) => {
     }
   };
 
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      return result.assets[0].uri;
+    }
+
+    return null;
+  };
+
+
+  const updateUserProfilePicture = async (imageUrl) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await updateProfile(user, {
+        photoURL: imageUrl,
+      });
+    }
+
+    await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
+    console.log('Profile image URL: ');
+
+    console.log(imageUrl);
+  };
+  const uploadImageAsync = async (uri, uid) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      const storage = getStorage();
+      const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+      await uploadBytes(imageRef, blob);
+
+      return await getDownloadURL(imageRef);
+      console.log('Profile image URL: ');
+      console.log(profileImage);
+    }
+    catch{
+
+    }
+  };
+
+  const handleChangeProfilePicture = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const uri = await pickImage();
+    if (!uri) return;
+
+    const imageUrl = await uploadImageAsync(uri, user.uid);
+    await updateUserProfilePicture(imageUrl);
+    setProfileImage(imageUrl)
+    console.log('image URL (in handler): ');
+    console.log(imageUrl);
+
+    alert("Profile picture updated!");
+
+  };
+
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about);
+      let imageUrl = profileImage !== "" ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055'
+      await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -120,10 +175,10 @@ const ProfileScreen = ({ onSignOut }) => {
     <ScrollView
       contentContainerStyle={{
         alignItems: 'center',
-        paddingBottom: 20,
+        paddingBottom: 150,
         flex: 1,
         backgroundColor: 'white',
-      }} // Mueve aquí los estilos relacionados con el contenido
+      }}
     >
       <Image source={map} style={styles.mapBackground} />
 
@@ -132,8 +187,12 @@ const ProfileScreen = ({ onSignOut }) => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon}>
+        <Image
+            source={{
+              uri: profileImage ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0'      }}
+            style={styles.profileImage}
+        />
+        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
@@ -258,11 +317,6 @@ const ProfileScreen = ({ onSignOut }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
   mapBackground: {
     width: '100%',
     height: 160,
@@ -284,7 +338,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 3,
     borderColor: 'white',
-    marginTop: 90,
+    marginTop: 110,
   },
   editIcon: {
     position: 'absolute',

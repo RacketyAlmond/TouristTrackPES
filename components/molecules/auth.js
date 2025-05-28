@@ -120,6 +120,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop: 250,
+    paddingBottom: 300,
     backgroundColor: 'rgba(255,255,255,0.5)', // Ensures text is readable
   },
   title: {

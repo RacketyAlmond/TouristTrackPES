@@ -9,17 +9,42 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import SearchBar from '../molecules/searchBar';
+import InfoLocalidad from '../molecules/InfoLocalidad';
 import {
   listOriginCountries,
   getSummaryData,
   getTotalTouristsOfMunicipality,
 } from '../../dataestur';
 import { getCoordinatesFromCity } from '../../utils';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Circle,
+  useMap,
+} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
+const AreaComponent = ({ coords, numTuristes }) => {
+  if (!coords) return null;
+
+  return (
+    <Circle
+      center={[coords.lat, coords.lon]}
+      radius={numTuristes ? Math.min(numTuristes * 50, 5000) : 2000}
+      pathOptions={{
+        fillColor: '#572364',
+        fillOpacity: 0.2,
+        color: '#572364',
+        weight: 1,
+      }}
+    />
+  );
+};
+
 // Componente para actualizar la vista del mapa cuando cambian las coordenadas
-const MapUpdater = ({ coords, city }) => {
+const MapUpdater = ({ coords, city, location, goToUserLocation }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -27,6 +52,12 @@ const MapUpdater = ({ coords, city }) => {
       map.flyTo([coords.lat, coords.lon], 13);
     }
   }, [coords, map]);
+
+  useEffect(() => {
+    if (goToUserLocation && location) {
+      map.flyTo([location.latitude, location.longitude], 15);
+    }
+  }, [goToUserLocation, location, map]);
 
   return null;
 };
@@ -43,6 +74,8 @@ export default function Map() {
   const [data, setData] = useState([]);
   const [cityId, setCityId] = useState(null);
   const [location, setLocation] = useState(null);
+  const [goToUserLocation, setGoToUserLocation] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     navigation.setOptions({ title: t('header') });
@@ -80,15 +113,23 @@ export default function Map() {
   // Solicitar ubicación del usuario (web)
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+      navigator.geolocation.watchPosition(
         (position) => {
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
+          setErrorMsg(null);
         },
         (error) => {
           console.error('Error obteniendo ubicación: ', error);
+          setErrorMsg('Error al obtener la ubicación.');
+          setLocation(null);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
         },
       );
     }
@@ -160,7 +201,17 @@ export default function Map() {
     }
   };
 
-  // Cambiar a componente WebMap para la versión web
+  const handleGoToMyLocation = () => {
+    if (location) {
+      setGoToUserLocation((prev) => !prev);
+    }
+  };
+
+  const handleCloseInfoLocalidad = () => {
+    setCity('');
+  };
+
+  // Versión web actualizada con características de la versión nativa
   return (
     <SafeAreaView style={styles.container}>
       <SearchBar
@@ -192,40 +243,46 @@ export default function Map() {
 
           {/* Marcador de la ciudad buscada */}
           {coords && (
-            <Marker position={[coords.lat, coords.lon]}>
-              <Popup>
-                <strong>{city}</strong>
-                <br />
-                Turistas: {totalTourists || 'No disponible'}
-              </Popup>
-            </Marker>
+            <>
+              {/* Círculo de área similar al componente Area nativo */}
+              <AreaComponent coords={coords} numTuristes={totalTourists} />
+            </>
           )}
 
           {/* Componente que actualiza la vista del mapa */}
-          <MapUpdater coords={coords} city={city} />
+          <MapUpdater
+            coords={coords}
+            city={city}
+            location={location}
+            goToUserLocation={goToUserLocation}
+          />
         </MapContainer>
       </View>
 
+      {/* Botón para ir a mi ubicación (similar al nativo) */}
+      <div style={styles.locationButtonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.myLocationButton,
+            !location ? styles.locationUnavailable : styles.locationAvailable,
+          ]}
+          onPress={handleGoToMyLocation}
+          disabled={!location}
+        >
+          <Text style={styles.buttonIcon}>📍</Text>
+        </TouchableOpacity>
+      </div>
+
+      {/* Panel de información de la ciudad */}
       {city && (
-        <View style={styles.cityInfo}>
-          <Text style={styles.cityTitle}>{city}</Text>
-          <Text style={styles.cityText}>
-            Turistas: {totalTourists || 'No disponible'}
-          </Text>
-          <TouchableOpacity
-            style={styles.cityButton}
-            onPress={() => {
-              if (cityId) {
-                navigation.navigate('Forum', {
-                  forumId: cityId,
-                  localityName: city,
-                });
-              }
-            }}
-          >
-            <Text style={styles.buttonText}>Ver foro</Text>
-          </TouchableOpacity>
-        </View>
+        <div style={styles.infoLocalidadContainer}>
+          <InfoLocalidad
+            city={city}
+            id={cityId}
+            numTourists={totalTourists}
+            onClose={handleCloseInfoLocalidad}
+          />
+        </div>
       )}
     </SafeAreaView>
   );
@@ -273,5 +330,62 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  locationButtonContainer: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    zIndex: 1000,
+  },
+  myLocationButton: {
+    backgroundColor: 'white',
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+  },
+  locationAvailable: {
+    opacity: 1,
+  },
+  locationUnavailable: {
+    opacity: 0.5,
+  },
+  buttonIcon: {
+    color: '#572364',
+    fontSize: 20,
+  },
+  locationButtonText: {
+    fontSize: 20,
+  },
+  infoLocalidadContainer: {
+    position: 'absolute',
+    top: 600,
+    left: '50%',
+    width: '80%',
+    maxWidth: 400,
+    zIndex: 1100,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+    padding: 10,
+    transform: 'translateX(50%)',
+    scale: 0.9,
   },
 });
