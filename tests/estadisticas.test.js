@@ -1,7 +1,12 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import Estadisticas from '../components/organisms/estadisticas';
+import { Alert } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
+
+// Mock global de Alert.alert
+jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -16,7 +21,6 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-// Simula el hook useRoute directamente
 jest.mock('@react-navigation/native', () => ({
   useRoute: () => ({
     params: {
@@ -30,7 +34,6 @@ jest.mock('@react-navigation/native', () => ({
   NavigationContainer: ({ children }) => children,
 }));
 
-// Mocks de funciones de lógica
 jest.mock('../dataestur', () => ({
   getDataOfMunicipality: jest.fn(() =>
     Promise.resolve([
@@ -59,7 +62,6 @@ jest.mock('../utils', () => ({
   getCountryFlag: (country) => `https://flags.com/${country}.png`,
 }));
 
-// Mockea componentes pesados
 jest.mock(
   '../components/molecules/selectorPlataforma',
   () => 'SelectorPlataforma',

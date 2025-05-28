@@ -1,7 +1,10 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import NavBar from '../components/organisms/navBar';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
+
+// Mock Alert.alert para evitar errores en tests
+jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
 // Mock de navegación
 const mockNavigate = jest.fn();
