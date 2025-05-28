@@ -1,0 +1,13 @@
+{
+    "eliminarReseña": "Eliminar reseña",
+    "eliminarReseñaDesc": "¿Estás seguro de que quieres eliminar esta reseña?",
+    "errorActReseña": "Error actualizando reseña",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "published": "Publicado el:",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "calificadoYa": "Ya has calificado",
+    "calificadoYaDesc": "Solo puedes dejar una reseña por lugar.",
+    "writeReview": "Escribe aquí tu reseña..."
+}

@@ -144,7 +144,7 @@ export default function Estadisticas() {
           </View>
           <View>
             {filteredData.length > 0 ? (
-              <Grafica data={data} title='Número Turistas' />
+              <Grafica data={data} title={t('numTourists')} />
             ) : (
               <></>
             )}

@@ -2,5 +2,7 @@
   "header": "Estadísticas",
   "tourists": "Nº de turistas:",
   "top": "Top países de los visitantes",
-  "expense": "Gasto"
+  "expense": "Gasto",
+  "numTourists": "Número de Turistas"
+
 }

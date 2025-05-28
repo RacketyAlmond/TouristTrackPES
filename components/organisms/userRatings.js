@@ -17,8 +17,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { auth } from '../../firebaseConfig.js';
+import { useTranslation } from 'react-i18next';
 
 const RatingScreen = () => {
+  const { t } = useTranslation('ratings');
   const currentUser = auth.currentUser;
   const [expandedRatings, setExpandedRatings] = useState({});
   const [textOverflowMap, setTextOverflowMap] = useState({});
@@ -51,23 +53,19 @@ const RatingScreen = () => {
   };
 
   const handleDelete = async (id) => {
-    Alert.alert(
-      'Eliminar reseña',
-      '¿Estás seguro de que quieres eliminar esta reseña?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: async () => {
-            await fetch(`http://192.168.1.77:8080/ratings/${id}`, {
-              method: 'DELETE',
-            });
-            setRatings((prev) => prev.filter((r) => r.id !== id));
-          },
+    Alert.alert(t('eliminarReseña'), t('eliminarReseñaDesc'), [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar',
+        style: 'destructive',
+        onPress: async () => {
+          await fetch(`http://192.168.1.77:8080/ratings/${id}`, {
+            method: 'DELETE',
+          });
+          setRatings((prev) => prev.filter((r) => r.id !== id));
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const handleEdit = (rating) => {
@@ -97,7 +95,7 @@ const RatingScreen = () => {
         },
       );
 
-      if (!response.ok) throw new Error('Error actualizando reseña');
+      if (!response.ok) throw new Error(t('errorActReseña'));
 
       const updatedData = {
         ...(await response.json()),
@@ -206,12 +204,12 @@ const RatingScreen = () => {
                   <View style={styles.actionButtons}>
                     <TouchableOpacity onPress={handleUpdate}>
                       <Text style={[styles.actionText, { color: '#572364' }]}>
-                        Guardar
+                        {t('save')}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={cancelEdit}>
                       <Text style={[styles.actionText, { color: '#999' }]}>
-                        Cancelar
+                        {t('cancel')}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -240,7 +238,7 @@ const RatingScreen = () => {
                       )}
                     </View>
                     <Text style={styles.dateText}>
-                      Publicado el: {formattedDate}
+                      {t('published')} {formattedDate}
                     </Text>
                   </View>
 
@@ -248,12 +246,12 @@ const RatingScreen = () => {
                     <View style={styles.rightActions}>
                       <TouchableOpacity onPress={() => handleEdit(item)}>
                         <Text style={[styles.actionText, { color: '#572364' }]}>
-                          Editar
+                          {t('edit')}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => handleDelete(item.id)}>
                         <Text style={[styles.actionText, { color: 'red' }]}>
-                          Eliminar
+                          {t('delete')}
                         </Text>
                       </TouchableOpacity>
                     </View>
