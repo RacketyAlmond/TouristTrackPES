@@ -16,13 +16,14 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
-    avatar,
+    profileImage,
   ) => {
     const user = auth.currentUser;
 
     if (!user) {
       throw new Error('No user is signed in');
     }
+
 
     try {
       await setDoc(doc(db, 'Users', user.uid), {
@@ -31,6 +32,7 @@ export const UserProvider = ({ children }) => {
         userLocation: userLocation,
         about: about,
         points: points,
+        profileImage: profileImage,
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
@@ -83,6 +85,7 @@ export const UserProvider = ({ children }) => {
     userLocation,
     about,
     points,
+    profileImage,
   ) => {
     const user = auth.currentUser;
 
@@ -91,13 +94,14 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-      // Save to Firestore
+
       await updateDoc(doc(db, 'Users', user.uid), {
         firstName: fname,
         birthday: birthday,
         userLocation: userLocation,
         about: about,
         points: points,
+        profileImage: profileImage
       });
 
       const userDoc = await getDoc(doc(db, 'Users', user.uid));

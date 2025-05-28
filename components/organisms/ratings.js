@@ -165,7 +165,7 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: userData.avatar || defaultAvatar,
+        authorAvatar: userData?.profileImage || defaultAvatar || '',
         authorFirstName: userData.firstName,
       };
 
@@ -214,7 +214,7 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: userData?.avatar || defaultAvatar,
+        authorAvatar: userData?.profileImage || userData?.avatar || defaultAvatar,
         authorFirstName: userData?.firstName,
       };
 
@@ -294,7 +294,7 @@ const RatingScreen = ({ route }) => {
             source={
               item.authorAvatar && typeof item.authorAvatar === 'string'
                 ? { uri: item.authorAvatar }
-                : defaultAvatar
+                : item.profileImage || defaultAvatar
             }
             style={styles.avatar}
           />
@@ -422,8 +422,8 @@ const RatingScreen = ({ route }) => {
             <View style={styles.inputUser}>
               <Image
                 source={
-                  userData?.avatar && typeof userData.avatar === 'string'
-                    ? { uri: userData.avatar }
+                  userData?.profileImage && typeof userData?.profileImage === 'string'
+                    ? { uri: userData.profileImage }
                     : defaultAvatar
                 }
                 style={styles.avatar}

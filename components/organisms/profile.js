@@ -23,10 +23,10 @@ import LevelProgress from '../molecules/levelProgress';
 import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
+import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData, updateSignOut, getUserPoints } =
-    useUser();
+  const { updateUserData, getUserData, updateSignOut, getUserPoints } = useUser();
   const navigation = useNavigation();
   const { t } = useTranslation('profile');
 
@@ -36,6 +36,7 @@ const ProfileScreen = ({ onSignOut }) => {
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
   const [points, setPoints] = useState(null);
+  const [profileImage, setProfileImage] = useState("");
 
   // Estado para saber qué campo estamos editando
   const [editingField, setEditingField] = useState(null);
@@ -106,6 +107,8 @@ const ProfileScreen = ({ onSignOut }) => {
 
     return null;
   };
+
+
   const updateUserProfilePicture = async (imageUrl) => {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -115,16 +118,28 @@ const ProfileScreen = ({ onSignOut }) => {
         photoURL: imageUrl,
       });
     }
+
+    await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
+    console.log('Profile image URL: ');
+
+    console.log(imageUrl);
   };
   const uploadImageAsync = async (uri, uid) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
 
-    const storage = getStorage();
-    const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
-    await uploadBytes(imageRef, blob);
+      const storage = getStorage();
+      const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+      await uploadBytes(imageRef, blob);
 
-    return await getDownloadURL(imageRef);
+      return await getDownloadURL(imageRef);
+      console.log('Profile image URL: ');
+      console.log(profileImage);
+    }
+    catch{
+
+    }
   };
 
   const handleChangeProfilePicture = async () => {
@@ -138,12 +153,18 @@ const ProfileScreen = ({ onSignOut }) => {
 
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
-    alert('Profile picture updated!');
+    setProfileImage(imageUrl)
+    console.log('image URL (in handler): ');
+    console.log(imageUrl);
+
+    alert("Profile picture updated!");
+
   };
 
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about, points);
+      let imageUrl = profileImage !== "" ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055'
+      await updateUserData(fname, birthdate, userLocation, about, points, imageUrl);
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -166,11 +187,12 @@ const ProfileScreen = ({ onSignOut }) => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity
-          style={styles.editIcon}
-          onPress={handleChangeProfilePicture}
-        >
+        <Image
+            source={{
+              uri: profileImage ? profileImage : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0'      }}
+            style={styles.profileImage}
+        />
+        <TouchableOpacity style={styles.editIcon}  onPress={handleChangeProfilePicture}>
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
