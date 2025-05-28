@@ -165,7 +165,7 @@ export default function Question({
           console.log(userData.firstName);
           const newAnswerObject = {
 
-            id: json.preguntaId,
+            id: json.respuestaId,
             userId: idCurrentUser,
             answer: newAnswer,
             date: new Date().toISOString(),
