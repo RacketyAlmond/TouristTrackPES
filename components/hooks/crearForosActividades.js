@@ -18,7 +18,6 @@ export default function useSyncForosActividades() {
       }
       return data;
     } catch (err) {
-      console.error('Error fetchActividades:', err);
       setError(err.message);
       return [];
     }
@@ -32,7 +31,6 @@ export default function useSyncForosActividades() {
         throw new Error(data.message || 'Error al obtener foros');
       return data.forums || [];
     } catch (err) {
-      console.error('Error fetchForos:', err);
       setError(err.message);
       return [];
     }
@@ -59,7 +57,6 @@ export default function useSyncForosActividades() {
       if (!response.ok) throw new Error(json.message || 'Error al crear foro');
       return true;
     } catch (err) {
-      console.error('Error crearForo:', err);
       setError(err.message);
       return false;
     }
@@ -89,7 +86,6 @@ export default function useSyncForosActividades() {
         await crearForo(actividad);
       }
     } catch (err) {
-      console.error('Error en sincronización:', err);
       setError(err.message);
     } finally {
       setLoading(false);

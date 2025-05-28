@@ -44,8 +44,8 @@ const ProfileScreen = ({ onSignOut }) => {
       try {
         const userPoints = await getUserPoints();
         setPoints(userPoints);
-      } catch (err) {
-        console.error('Failed to load user points:', err);
+      } catch (error) {
+        console.error('Error fetching points:', error);
       }
     };
 
@@ -80,7 +80,6 @@ const ProfileScreen = ({ onSignOut }) => {
     try {
       await updateSignOut();
       onSignOut();
-      console.error('Signed out user:');
     } catch (error) {
       console.error('Error saving profile:', error);
     }
