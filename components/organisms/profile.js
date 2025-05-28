@@ -66,7 +66,6 @@ const ProfileScreen = ({ onSignOut }) => {
           setAbout(data.about);
           setPoints(data.points.current);
         }
-        console.log('User profile fetched successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);
@@ -120,9 +119,6 @@ const ProfileScreen = ({ onSignOut }) => {
       points,
       imageUrl,
     );
-    console.log('Profile image URL: ');
-
-    console.log(imageUrl);
   };
   const uploadImageAsync = async (uri, uid) => {
     try {
@@ -149,8 +145,6 @@ const ProfileScreen = ({ onSignOut }) => {
     const imageUrl = await uploadImageAsync(uri, user.uid);
     await updateUserProfilePicture(imageUrl);
     setProfileImage(imageUrl);
-    console.log('image URL (in handler): ');
-    console.log(imageUrl);
 
     alert('Profile picture updated!');
   };

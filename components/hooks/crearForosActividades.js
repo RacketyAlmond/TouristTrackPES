@@ -16,7 +16,6 @@ export default function useSyncForosActividades() {
         const msg = data?.message || 'Error al obtener actividades';
         throw new Error(msg);
       }
-      console.log('📥 Actividades recibidas:', data);
       return data;
     } catch (err) {
       console.error('Error fetchActividades:', err);
@@ -58,7 +57,6 @@ export default function useSyncForosActividades() {
       });
       const json = await response.json();
       if (!response.ok) throw new Error(json.message || 'Error al crear foro');
-      console.log('✅ Foro creado:', actividad.nom);
       return true;
     } catch (err) {
       console.error('Error crearForo:', err);

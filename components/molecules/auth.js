@@ -41,9 +41,7 @@ const AuthScreen = ({ onAuthenticated }) => {
   });
 
   useEffect(() => {
-    console.log('Jest w response');
     if (response?.type === 'success') {
-      console.log('WESZLO');
       const { authentication } = response;
 
       (async () => {

@@ -33,9 +33,7 @@ export default function Estadisticas() {
   useEffect(() => {
     const loadDataMunicipality = async () => {
       try {
-        console.log('loadDataMunicipality...');
         const municipality = locality.name;
-        console.log('locality: ', municipality);
         const data = await getDataOfMunicipality(municipality);
         setDataMunicipality(data);
       } catch (err) {
@@ -46,7 +44,6 @@ export default function Estadisticas() {
     loadDataMunicipality();
   }, [locality]);
 
-  console.log('top.... ');
   const topPaises = getTopCountries(dataMunicipality);
 
   const [selectedItemPaises, setSelectedItemPaises] = useState('Italia');
@@ -62,8 +59,6 @@ export default function Estadisticas() {
       )
     : [];
 
-  console.log('filteredData2.... ');
-
   const opcionesAnos = dataMunicipality
     ? listYearsOfMunicipality(dataMunicipality)
     : ['2021'];
@@ -72,7 +67,6 @@ export default function Estadisticas() {
     ? listOriginCountriesOfMunicipality(dataMunicipality)
     : ['Italia'];
 
-  console.log('transformData.... ');
   const data = transformDataForChart(filteredData);
 
   return (

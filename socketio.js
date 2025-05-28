@@ -16,16 +16,11 @@ class SocketService {
     }
 
     this.userId = userId;
-    console.log(
-      `Conectando socket para usuario ${userId} a ${this.API_BASE_URL}`,
-    );
 
     try {
       const socketUrl = this.API_BASE_URL.startsWith('http')
         ? this.API_BASE_URL
         : `http://${this.API_BASE_URL}`;
-
-      console.log(`URL final del socket: ${socketUrl}`);
 
       this.socket = io(socketUrl, {
         transports: ['websocket', 'polling'], // Allow polling fallback
@@ -47,7 +42,6 @@ class SocketService {
 
       // Configurar manejadores para eventos básicos
       this.socket.on('connect', () => {
-        console.log(`Socket conectado: ${this.socket.id}`);
         this.connected = true;
         this.socket.emit('register_user', userId);
 
@@ -69,14 +63,6 @@ class SocketService {
 
       // Configurar los listeners para los eventos de chat
       this.socket.on('new_message', (message) => {
-        console.log('Nuevo mensaje recibido:', message);
-
-        console.log('/////////////////////////////');
-        console.log('ID del mensaje:', message.id);
-        console.log('Contenido del mensaje:', message.content);
-        console.log('ID del remitente:', message.sentByID);
-        console.log('ID del destinatario:', message.sentToID);
-
         // Llamar a los callbacks registrados para 'new_message'
         if (this.listeners.new_message) {
           this.listeners.new_message.forEach((callback) => callback(message));
@@ -122,30 +108,23 @@ class SocketService {
       this.socket.disconnect();
       this.socket = null;
       this.connected = false;
-      console.log('Socket desconectado manualmente');
     }
   }
 
   // Registrar un callback para un evento
   // En socketio.js - Mejora el método on() para confirmar que los eventos se registran correctamente
   on(event, callback) {
-    console.log(`➡️ Registrando listener para evento: ${event}`);
-
     if (!this.listeners[event]) {
       this.listeners[event] = [];
     }
 
     this.listeners[event].push(callback);
-    console.log(
-      `✅ Listener registrado para ${event}, total: ${this.listeners[event].length}`,
-    );
 
     return () => {
       if (this.listeners[event]) {
         this.listeners[event] = this.listeners[event].filter(
           (cb) => cb !== callback,
         );
-        console.log(`❌ Eliminado listener para ${event}`);
       }
     };
   }
@@ -175,8 +154,6 @@ class SocketService {
         timestamp: new Date(),
       };
 
-      console.log('Enviando mensaje vía socket:', messageData);
-
       this.socket.emit('send_message', messageData, (response) => {
         if (response && response.success) {
           resolve(response.message);
@@ -190,7 +167,6 @@ class SocketService {
   // Marcar mensaje como leído
   markAsRead(messageId) {
     if (this.socket && this.socket.connected) {
-      console.log(`Marcando mensaje ${messageId} como leído`);
       this.socket.emit('mark_read', { messageId });
     }
   }

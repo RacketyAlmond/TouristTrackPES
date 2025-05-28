@@ -35,7 +35,6 @@ const BirthdateScreen = ({ onComplete }) => {
           projectId: Constants.expoConfig?.extra?.eas?.projectId,
         });
         setToken(tokenData.data);
-        console.log('Push token:', tokenData.data);
       } catch (error) {
         console.error('Error getting push token:', error);
         setToken('Error getting token: ' + error.message);

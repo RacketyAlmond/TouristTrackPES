@@ -74,7 +74,6 @@ const RatingScreen = ({ route }) => {
       try {
         if (currentUser && currentUser.uid) {
           await getUserData();
-          console.log('User data loaded:', userData);
           if (userData && userData.points) {
             setLoggedRank(
               getRankByLevel(

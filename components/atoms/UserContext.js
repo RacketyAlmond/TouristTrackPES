@@ -40,7 +40,6 @@ export const UserProvider = ({ children }) => {
         setUserData(data);
       }
 
-      console.log('User profile created/updated successfully!');
     } catch (error) {
       console.error('Error creating/updating profile:', error);
       throw error;
@@ -55,9 +54,6 @@ export const UserProvider = ({ children }) => {
         throw new Error('No user is signed in');
       }
 
-      console.log('Fetching forum activity for user', user.uid);
-
-      // Usa la ruta correcta que tienes en el backend
       const response = await fetch(
         `***REMOVED***/forums/user-forum-comments/${user.uid}`,
       );
@@ -70,7 +66,6 @@ export const UserProvider = ({ children }) => {
       }
 
       const data = await response.json();
-      console.log('Forum activity data received:', data);
       return data;
     } catch (error) {
       console.error('Error fetching user forum comments:', error);
@@ -108,7 +103,6 @@ export const UserProvider = ({ children }) => {
         setUserData(data);
       }
 
-      console.log('User profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;
@@ -134,8 +128,6 @@ export const UserProvider = ({ children }) => {
       if (userDoc.exists()) {
         const data = userDoc.data();
         const rawPoints = data.points;
-
-        console.log('Raw Points:', rawPoints);
 
         if (typeof rawPoints === 'object' && rawPoints?.current !== undefined) {
           return rawPoints.current;
@@ -215,7 +207,6 @@ export const UserProvider = ({ children }) => {
         setUserData(data);
       }
 
-      console.log('User profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;

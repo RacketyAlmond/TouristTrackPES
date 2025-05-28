@@ -165,7 +165,6 @@ export default function Forum({ route }) {
     setFilteredQuestions(filtered);
   };
   const getter = async () => {
-    console.log(`user = ${idCurrentUser}`);
 
     if (!currentUser) {
       return Promise.reject(new Error('No user is signed in'));
@@ -179,7 +178,6 @@ export default function Forum({ route }) {
           setFname(data.firstName);
           setUserLocation(data.userLocation);
         }
-        console.log('User profile created successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);

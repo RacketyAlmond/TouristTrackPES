@@ -160,7 +160,6 @@ export default function Question({
             await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const firstName = userData.firstName;
-          console.log(userData.firstName);
           const newAnswerObject = {
             id: json.preguntaId,
             userId: idCurrentUser,
