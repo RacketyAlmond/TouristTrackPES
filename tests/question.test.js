@@ -32,6 +32,13 @@ jest.mock('../firebaseConfig.js', () => ({
   },
 }));
 
+jest.mock('../components/atoms/UserContext', () => ({
+  useUser: () => ({
+    userData: { firstName: 'TestUser' /* otras propiedades si usas */ },
+    getUserData: jest.fn(),
+  }),
+}));
+
 describe('Test component Question que carga respuestas y gestiona toggles', () => {
   beforeEach(() => {
     jest.clearAllMocks();
