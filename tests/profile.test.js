@@ -2,6 +2,8 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import ProfileScreen from '../components/organisms/profile';
 
+jest.mock('react-i18next');
+
 // Mock de react-native-vector-icons
 jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
 

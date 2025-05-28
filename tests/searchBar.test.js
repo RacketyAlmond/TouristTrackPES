@@ -7,6 +7,15 @@ import renderer, { act } from 'react-test-renderer';
 import { TextInput, TouchableOpacity, ScrollView, Text } from 'react-native';
 import SearchBar from '../components/molecules/searchBar.js';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key) => {
+      if (key === 'search.placeholder') return 'Search for a locality in Spain';
+      return key;
+    },
+  }),
+}));
+
 jest.mock('@expo/vector-icons', () => {
   const React = require('react');
   return {
