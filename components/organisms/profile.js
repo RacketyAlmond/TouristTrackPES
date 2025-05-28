@@ -23,6 +23,7 @@ import LevelProgress from '../molecules/levelProgress';
 import * as ImagePicker from 'expo-image-picker';
 
 import LanguageModal from '../molecules/LanguageModal';
+import {getStorage, ref, uploadBytes, getDownloadURL} from "firebase/storage";
 
 const ProfileScreen = ({ onSignOut }) => {
   const { updateUserData, getUserData, updateSignOut, getUserPoints } =
