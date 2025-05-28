@@ -39,7 +39,6 @@ export const UserProvider = ({ children }) => {
         const data = userDoc.data();
         setUserData(data);
       }
-
     } catch (error) {
       console.error('Error creating/updating profile:', error);
       throw error;
@@ -102,7 +101,6 @@ export const UserProvider = ({ children }) => {
         const data = userDoc.data();
         setUserData(data);
       }
-
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;
@@ -206,7 +204,6 @@ export const UserProvider = ({ children }) => {
         const data = userDoc.data();
         setUserData(data);
       }
-
     } catch (error) {
       console.error('Error updating profile:', error);
       throw error;

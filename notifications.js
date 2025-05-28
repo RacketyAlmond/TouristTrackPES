@@ -43,7 +43,6 @@ export async function registerForPushNotificationsAsync(userId) {
     })
   ).data;
 
-
   // Save to server
   try {
     const response = await fetch(

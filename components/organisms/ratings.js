@@ -274,13 +274,10 @@ const RatingScreen = ({ route }) => {
         true,
       );
 
-      console.log(item)
-      console.log(item.authorAvatar)
-
-      const avatarSource = item.authorAvatar || 
-        (item.authorID === currentUser.uid && userData?.profileImage) || 
+      const avatarSource =
+        item.authorAvatar ||
+        (item.authorID === currentUser.uid && userData?.profileImage) ||
         null;
-
 
       return (
         <View style={styles.reviewContainer}>

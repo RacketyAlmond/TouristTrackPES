@@ -165,7 +165,6 @@ export default function Forum({ route }) {
     setFilteredQuestions(filtered);
   };
   const getter = async () => {
-
     if (!currentUser) {
       return Promise.reject(new Error('No user is signed in'));
     }
