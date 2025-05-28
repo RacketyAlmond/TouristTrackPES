@@ -72,7 +72,6 @@ const ProfileScreen = ({ onSignOut }) => {
           setUserLocation(data.userLocation);
           setAbout(data.about);
           setPoints(data.points.current);
-          setProfileImage(data.profileImage);
         }
         console.log('User profile fetched successfully!');
       })
