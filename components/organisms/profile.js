@@ -41,11 +41,13 @@ const ProfileScreen = ({ onSignOut }) => {
 
   useEffect(() => {
     const fetchPoints = async () => {
-      try {
-        const userPoints = await getUserPoints();
-        setPoints(userPoints);
-      } catch (error) {
-        console.error('Error fetching points:', error);
+      if (auth.currentUser) {
+        try {
+          const userPoints = await getUserPoints();
+          setPoints(userPoints);
+        } catch (error) {
+          console.error('Error fetching points:', error);
+        }
       }
     };
 
