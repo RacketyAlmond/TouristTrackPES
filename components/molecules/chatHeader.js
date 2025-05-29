@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,13 +8,21 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 
 const ChatHeader = ({
   contactName,
   contactAvatar,
   contactDescription,
+  contactPoints,
   onBackPress,
 }) => {
+  const [userRank, setUserRank] = useState(null);
+
+  useEffect(() => {
+    const rank = getRankByLevel(getLevelInfo(contactPoints).currentLevel, true);
+    setUserRank(rank);
+  }, []);
   return (
     <SafeAreaView style={styles.header}>
       <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
@@ -23,7 +30,16 @@ const ChatHeader = ({
       </TouchableOpacity>
       <Image source={{ uri: contactAvatar }} style={styles.avatar} />
       <View style={styles.nameContainer}>
-        <Text style={styles.name}>{contactName}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={styles.name}>{contactName}</Text>
+          {userRank && (
+            <Image
+              source={userRank.icon}
+              style={styles.rankIcon}
+              resizeMode='contain'
+            />
+          )}
+        </View>
         <Text style={styles.description} numberOfLines={1}>
           {contactDescription}
         </Text>
@@ -62,6 +78,11 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 12,
     color: '#888',
+  },
+  rankIcon: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
   },
 });
 

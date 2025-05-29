@@ -6,7 +6,6 @@ export default function TitleLocalidadForo({ LocName, forumId }) {
   const navigation = useNavigation();
 
   const handlePress = () => {
-    // Navigate to the Forum screen for this locality
     navigation.navigate('Forum', {
       localityName: LocName,
       forumId: forumId,
@@ -21,7 +20,6 @@ export default function TitleLocalidadForo({ LocName, forumId }) {
           marginVertical: 0,
           borderTopColor: '#ccc',
           borderTopWidth: 1,
-          elevation: 1,
         }}
       >
         <View

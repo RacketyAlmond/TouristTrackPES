@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 // BirthdateScreen.js
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,29 +8,86 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import { useUser } from '../atoms/UserContext.js';
+import { auth } from '../../firebaseConfig.js';
 import map from '../../public/mapa.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Button } from 'react-native';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const BirthdateScreen = ({ onComplete }) => {
   const { createUserData } = useUser();
   const [fname, setFname] = useState('');
   const [userLocation, setUserLocation] = useState('');
+  const [token, setToken] = useState('');
   const [birthdate, setBirthdate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const points = useRef(10);
+  const profileImage = useRef('');
+  let authStatus = false;
+
+  useEffect(() => {
+    async function getToken() {
+      try {
+        const tokenData = await Notifications.getExpoPushTokenAsync({
+          projectId: Constants.expoConfig?.extra?.eas?.projectId,
+        });
+        setToken(tokenData.data);
+      } catch (error) {
+        console.error('Error getting push token:', error);
+        setToken('Error getting token: ' + error.message);
+      }
+    }
+
+    getToken();
+  }, []);
+
+  const saveTokenToBackend = async (userId) => {
+    try {
+      const userIdToUse = userId;
+
+      const saveTokenUrl = `***REMOVED***/users/${userIdToUse}/push-token`;
+      const response = await fetch(saveTokenUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pushToken: token,
+        }),
+      });
+
+      if (response.ok) {
+      } else {
+        const errorText = await response.text();
+        throw new Error(`Failed to save token: ${errorText}`);
+      }
+    } catch (error) {
+      console.error('Error saving token:', error);
+      Alert.alert('Error', `Could not save token: ${error.message}`);
+    }
+  };
 
   const handleSend = async () => {
     try {
       const about = "Hi! I'm using TouristTrack";
+
       await createUserData(
         fname,
         birthdate.toDateString(),
         userLocation,
         about,
+        points,
+        profileImage,
       );
-      onComplete();
+      authStatus = true;
+
+      onComplete(authStatus);
+      const currentUser = auth.currentUser;
+
+      saveTokenToBackend(currentUser.uid);
     } catch (error) {
       console.error('Error saving profile:', error);
     }
@@ -79,9 +137,13 @@ const BirthdateScreen = ({ onComplete }) => {
             onChangeText={setUserLocation}
             style={styles.input}
           />
-          <TouchableOpacity style={styles.button} onPress={handleSend}>
-            <Text style={styles.buttonText}>Save Data</Text>
-          </TouchableOpacity>
+          {fname.length > 2 && userLocation.length > 2 ? (
+            <TouchableOpacity style={styles.button} onPress={handleSend}>
+              <Text style={styles.buttonText}>Save Data</Text>
+            </TouchableOpacity>
+          ) : (
+            ''
+          )}
         </View>
       </View>
     </ImageBackground>
@@ -138,6 +200,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    marginTop: 250,
+    paddingBottom: 300,
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   text: { width: '80%' },

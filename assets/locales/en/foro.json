@@ -1,0 +1,16 @@
+{
+  "header": "Forum",
+  "search": "Find a location...",
+  "question": "Search question...",
+  "write": "Write your question...",
+  "answers": "replies",
+  "reply": "Reply",
+  "days": "days ago",
+  "no-reply": "Don't reply",
+  "answer": "Write your reply",
+  "hide": "Hide answers",
+  "unknown": "Unknown",
+  "createForum": "Create new forum",
+  "nombreLocForo": "Name the location of the forum you want to create...",
+  "createForumButton": "Create Forum"
+}

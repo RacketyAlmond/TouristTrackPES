@@ -1,0 +1,19 @@
+{
+  "header": "Foro",
+  "search": "Buscar una localidad...",
+  "question": "Buscar pregunta...",
+  "write": "Escribe tu pregunta...",
+  "answers": "respuestas",
+  "reply": "Responder",
+  "days": "días atrás",
+  "no-reply": "No responder",
+  "answer": "Escribe tu respuesta",
+  "hide": "Ocultar",
+  "unknown": "Desconocido",
+  "createForum": "Crea un nuevo foro",
+  "nombreLocForo": "Nombre localidad foro que quieres crear...",
+  "createForumButton": "Crear Forum"
+}
+
+
+

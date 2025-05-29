@@ -10,23 +10,33 @@ import {
 import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 export default function IndexForos() {
+  const { t } = useTranslation('foro');
   const [searchLocalidad, setSearchLocalidad] = useState('');
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [Localidades, setLocalidades] = useState([]);
-  const [newForoName, setNewForoName] = useState(''); // Estado para el nombre del nuevo foro
+  const [newForoName, setNewForoName] = useState('');
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch('http://localhost:3001/forums'); // Cambia esto por la URL de tu servidor
+      const response = await fetch(`***REMOVED***/forums`);
       const json = await response.json();
 
       if (json.success) {
-        const locs = json.forums.map((forum) => ({
-          id: forum.id,
-          localidad: forum.Localidad,
-        }));
+        const locs = json.forums.map((forum) => {
+          /*coger titulo de la Actividad o Localidad*/
+          const actividad = forum.Actividad?.trim();
+          const localidad = forum.Localidad?.trim();
+
+          const titulo = actividad || localidad || 'Foro sin título';
+
+          return {
+            id: forum.id,
+            titulo,
+          };
+        });
         setLocalidades(locs);
       }
     } catch (error) {
@@ -41,7 +51,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch('http://localhost:3001/forums', {
+      const response = await fetch(`***REMOVED***/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,8 +62,8 @@ export default function IndexForos() {
       const json = await response.json();
       if (json.success) {
         alert('Foro creado exitosamente.');
-        setNewForoName(''); // Limpiar el campo de texto
-        obtenerForos(); // Actualizar la lista de foros
+        setNewForoName('');
+        obtenerForos();
       } else {
         alert('Error al crear el foro.');
       }
@@ -63,21 +73,18 @@ export default function IndexForos() {
     }
   };
 
-  // Filtrar las localidades cuando cambie el texto de búsqueda
   useEffect(() => {
     filteredLocalidades.length === 0 && setNewForoName(searchLocalidad);
     if (searchLocalidad) {
       const filtered = Localidades.filter((loc) =>
-        loc.localidad.toLowerCase().includes(searchLocalidad.toLowerCase()),
+        loc.titulo.toLowerCase().includes(searchLocalidad.toLowerCase()),
       );
       setFilteredLocalidades(filtered);
     } else {
-      // Si no hay texto de búsqueda, mostrar todas las localidades
       setFilteredLocalidades(Localidades);
     }
   }, [searchLocalidad, Localidades]);
 
-  // Inicializar las localidades filtradas al cargar el componente
   useEffect(() => {
     setFilteredLocalidades(Localidades);
     obtenerForos();
@@ -107,7 +114,7 @@ export default function IndexForos() {
             borderRadius: 20,
           }}
         >
-          <Title title='Foros' />
+          <Title title={t('header')} />
 
           {/* Campo para buscar un foro */}
           <View
@@ -126,7 +133,7 @@ export default function IndexForos() {
                 borderRadius: 5,
                 padding: 10,
               }}
-              placeholder='Busca una localidad...'
+              placeholder={t('search')} //'Busca una localidad...'
               placeholderTextColor='#888'
               value={searchLocalidad}
               onChangeText={setSearchLocalidad}
@@ -142,7 +149,7 @@ export default function IndexForos() {
                   fontWeight: 'bold',
                 }}
               >
-                Crea un nuevo foro
+                {t('createForum')}
               </Text>
               <View
                 style={{
@@ -159,7 +166,7 @@ export default function IndexForos() {
                     borderRadius: 5,
                     padding: 10,
                   }}
-                  placeholder='Nombre localidad foro que quieres crear...'
+                  placeholder={t('nombreLocForo')}
                   placeholderTextColor='#888'
                   value={newForoName}
                   onChangeText={setNewForoName}
@@ -168,9 +175,9 @@ export default function IndexForos() {
               <TouchableOpacity
                 onPress={crearForo}
                 style={{
-                  backgroundColor: '#572364', // Color de fondo del botón
+                  backgroundColor: '#572364',
                   padding: 10,
-                  borderRadius: 5, // Bordes redondeados
+                  borderRadius: 5,
                   alignItems: 'center',
                   marginTop: 10,
                 }}
@@ -178,7 +185,7 @@ export default function IndexForos() {
                 <Text
                   style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}
                 >
-                  Crear Foro
+                  {t('createForumButton')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -186,10 +193,7 @@ export default function IndexForos() {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               {filteredLocalidades.map((loc, index) => (
                 <View key={index} style={{ marginVertical: 0 }}>
-                  <TitleLocalidadForo
-                    forumId={loc.id}
-                    LocName={loc.localidad}
-                  />
+                  <TitleLocalidadForo forumId={loc.id} LocName={loc.titulo} />
                 </View>
               ))}
             </ScrollView>

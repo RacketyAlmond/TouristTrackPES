@@ -1,3 +1,5 @@
+// components/molecules/SearchBar.js
+
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
@@ -10,6 +12,7 @@ import {
 } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import Filter from './filter';
+import { useTranslation } from 'react-i18next';
 
 const LOCALITIES = [
   { name: 'Madrid' },
@@ -25,22 +28,25 @@ export default function SearchBar({
   selectedCountries,
   setSelectedCountries,
 }) {
+  const { t } = useTranslation();
   const [searchText, setSearchText] = useState('');
   const [filterVisible, setFilterVisible] = useState(false);
 
   const filteredLocalities = useMemo(() => {
     if (!searchText) return [];
-    return LOCALITIES.filter((locality) =>
-      locality.name.toLowerCase().startsWith(searchText.toLowerCase()),
+    return LOCALITIES.filter((l) =>
+      l.name.toLowerCase().startsWith(searchText.toLowerCase()),
     );
   }, [searchText]);
 
-  const handleSearch = useCallback((text) => setSearchText(text), []);
+  const handleSearch = useCallback((text) => {
+    setSearchText(text);
+  }, []);
 
   const handleSelectLocality = useCallback(
-    (locality) => {
-      onSearch(locality.name);
-      setSearchText(locality.name);
+    (loc) => {
+      onSearch(loc.name);
+      setSearchText(loc.name);
     },
     [onSearch],
   );
@@ -51,7 +57,7 @@ export default function SearchBar({
         <FontAwesome name='search' size={20} color='black' />
         <TextInput
           style={styles.input}
-          placeholder='Search for a locality in Spain'
+          placeholder={t('search.placeholder')}
           value={searchText}
           onChangeText={handleSearch}
           onSubmitEditing={() =>
@@ -62,6 +68,7 @@ export default function SearchBar({
           <MaterialIcons name='filter-list' size={24} color='blue' />
         </TouchableOpacity>
       </View>
+
       {filterVisible && (
         <Filter
           countryArray={availableNacionalities}
@@ -69,15 +76,16 @@ export default function SearchBar({
           setSelectedCountries={setSelectedCountries}
         />
       )}
+
       {filteredLocalities.length > 0 && (
         <ScrollView style={styles.results}>
-          {filteredLocalities.map((locality) => (
+          {filteredLocalities.map((l) => (
             <TouchableOpacity
-              key={locality.name}
+              key={l.name}
               style={styles.countryButton}
-              onPress={() => handleSelectLocality(locality)}
+              onPress={() => handleSelectLocality(l)}
             >
-              <Text style={styles.countryName}>{locality.name}</Text>
+              <Text style={styles.countryName}>{l.name}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -111,10 +119,10 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginLeft: 10,
-    outlineStyle: 'none',
   },
   results: {
     marginTop: 5,
+    width: '90%',
   },
   countryButton: {
     flexDirection: 'row',
@@ -124,7 +132,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginHorizontal: 5,
-    marginVertical: 10,
+    marginVertical: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

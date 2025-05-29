@@ -2,7 +2,7 @@ import 'fast-text-encoding';
 
 export const getSummaryData = async (countries = []) => {
   try {
-    const baseUrl = 'http://localhost:3001/tourism/municipalities';
+    const baseUrl = '***REMOVED***/tourism/municipalities';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url =
@@ -10,11 +10,9 @@ export const getSummaryData = async (countries = []) => {
         ? `${baseUrl}?countries=${encodeURIComponent(countries.join(','))}`
         : baseUrl;
 
-    console.log('url: ', url);
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
-    console.log('✅ Datos recibidos del backend');
     return data;
   } catch (error) {
     throw error;
@@ -23,16 +21,14 @@ export const getSummaryData = async (countries = []) => {
 
 export const getDataOfMunicipality = async (municipality) => {
   try {
-    const baseUrl = 'http://localhost:3001/tourism/municipality';
+    const baseUrl = '***REMOVED***/tourism/municipality';
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
 
-    console.log('url: ', url);
     const resp = await fetch(url);
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
-    console.log('✅ Datos recibidos del backend');
     return data;
   } catch (error) {
     throw error;
@@ -41,7 +37,9 @@ export const getDataOfMunicipality = async (municipality) => {
 
 export const listOriginCountries = async () => {
   try {
-    const resp = await fetch('http://localhost:3001/tourism/originCountries');
+    const resp = await fetch(
+      '***REMOVED***/tourism/originCountries',
+    );
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();
     return data;

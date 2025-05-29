@@ -1,13 +1,18 @@
-/* eslint-disable prettier/prettier */
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Platform,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../../firebaseConfig.js';
 
 export default function NavBar() {
   const navigation = useNavigation();
-
   return (
-    <View style={styles.navbar}>
+    <View style={[styles.navbar, Platform.OS === 'web' && styles.navbarWeb]}>
       <TouchableOpacity
         style={styles.navButton}
         onPress={() => navigation.navigate('Mapa')}
@@ -21,7 +26,11 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Foros')}
+        onPress={() => {
+          auth.currentUser != null
+            ? navigation.navigate('Foros')
+            : navigation.navigate('User');
+        }}
       >
         <Image
           source={require('../../public/forum.png')}
@@ -32,7 +41,11 @@ export default function NavBar() {
 
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate('Chats')}
+        onPress={() => {
+          auth.currentUser != null
+            ? navigation.navigate('Chats')
+            : navigation.navigate('User');
+        }}
       >
         <Image
           source={require('../../public/chat.png')}
@@ -63,14 +76,25 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#f0f0f0',
   },
+  navbarWeb: {
+    flexDirection: 'row',
+    height: 60,
+    width: '100%',
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    justifyContent: 'space-around',
+    padding: 5,
+    boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.1)',
+  },
   navButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    ...(Platform.OS === 'web' && {
+      marginHorizontal: 10,
+      padding: 5,
+    }),
   },
-  navImage: {
-    width: 30,
-    height: 30,
-    tintColor: '#572364',
-  },
+  navImage: { width: 30, height: 30, tintColor: '#572364' },
 });

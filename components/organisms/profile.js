@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
+  ScrollView,
   View,
   Text,
   Image,
@@ -9,41 +11,64 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useUser } from '../atoms/UserContext.js';
-import logo from '../../public/logo.png';
 import map from '../../public/mapa.png';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../../firebaseConfig.js';
+import { getAuth, updateProfile } from 'firebase/auth';
+import { useTranslation } from 'react-i18next';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import LevelProgress from '../molecules/levelProgress';
+import * as ImagePicker from 'expo-image-picker';
+
+import LanguageModal from '../molecules/LanguageModal';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const ProfileScreen = ({ onSignOut }) => {
-  const { updateUserData, getUserData } = useUser();
+  const { updateUserData, updateSignOut, getUserPoints } = useUser();
+  const navigation = useNavigation();
+  const { t } = useTranslation('profile');
 
   const [fname, setFname] = useState('');
   const [birthdate, setBirthdate] = useState('');
   const [userLocation, setUserLocation] = useState('');
   const [about, setAbout] = useState('');
+  const [points, setPoints] = useState(null);
+  const [profileImage, setProfileImage] = useState('');
 
+  const [editingField, setEditingField] = useState(null);
+
+  const [langModalVisible, setLangModalVisible] = useState(false);
+
+  useEffect(() => {
+    const fetchPoints = async () => {
+      if (auth.currentUser) {
+        try {
+          const userPoints = await getUserPoints();
+          setPoints(userPoints);
+        } catch (error) {
+          console.error('Error fetching points:', error);
+        }
+      }
+    };
+
+    fetchPoints();
+  }, [points]);
   const getter = async () => {
     const user = auth.currentUser;
-    console.log(`user = ${user.uid}`);
-
-    if (!user) {
-      return Promise.reject(new Error('No user is signed in'));
-    }
+    if (!user) return;
 
     return getDoc(doc(db, 'Users', user.uid))
       .then((userDoc) => {
         if (userDoc.exists()) {
           const data = userDoc.data();
-          // console.log(`data = ${data.firstName}`);
-          // console.log(`userData.firstName = ${data.firstName}`);
-          // console.log(`userData.birthday = ${data.birthday}`);
 
           setFname(data.firstName);
           setBirthdate(data.birthday);
           setUserLocation(data.userLocation);
           setAbout(data.about);
+          setPoints(data.points.current);
+          setProfileImage(data.profileImage);
         }
-        console.log('User profile created successfully!');
       })
       .catch((error) => {
         console.error('Error updating profile:', error);
@@ -54,11 +79,92 @@ const ProfileScreen = ({ onSignOut }) => {
     getter();
   }, []);
 
-  const [editingField, setEditingField] = useState(null);
+  const handleSignOut = async () => {
+    try {
+      await updateSignOut();
+      onSignOut();
+    } catch (error) {
+      console.error('Error saving profile:', error);
+    }
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      return result.assets[0].uri;
+    }
+
+    return null;
+  };
+
+  const updateUserProfilePicture = async (imageUrl) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user) {
+      await updateProfile(user, {
+        photoURL: imageUrl,
+      });
+    }
+
+    await updateUserData(
+      fname,
+      birthdate,
+      userLocation,
+      about,
+      points,
+      imageUrl,
+    );
+  };
+  const uploadImageAsync = async (uri, uid) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+
+      const storage = getStorage();
+      const imageRef = ref(storage, `profilePictures/${uid}.jpg`);
+      await uploadBytes(imageRef, blob);
+
+      return await getDownloadURL(imageRef);
+    } catch {}
+  };
+
+  const handleChangeProfilePicture = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const uri = await pickImage();
+    if (!uri) return;
+
+    const imageUrl = await uploadImageAsync(uri, user.uid);
+    await updateUserProfilePicture(imageUrl);
+    setProfileImage(imageUrl);
+
+    alert('Profile picture updated!');
+  };
 
   const handleSend = async () => {
     try {
-      await updateUserData(fname, birthdate, userLocation, about);
+      let imageUrl =
+        profileImage !== ''
+          ? profileImage
+          : 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png';
+      await updateUserData(
+        fname,
+        birthdate,
+        userLocation,
+        about,
+        points,
+        imageUrl,
+      );
       setEditingField(null);
     } catch (error) {
       console.error('Error saving profile:', error);
@@ -66,27 +172,47 @@ const ProfileScreen = ({ onSignOut }) => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Background map image */}
-      <Image
-        source={map} // Replace with actual map URL
-        style={styles.mapBackground}
-      />
+    <ScrollView
+      contentContainerStyle={{
+        alignItems: 'center',
+        paddingBottom: 150,
+        flex: 1,
+        backgroundColor: 'white',
+      }}
+    >
+      <Image source={map} style={styles.mapBackground} />
 
-      {/* Back Button */}
       <TouchableOpacity style={styles.backButton}>
         <Icon name='arrow-back' size={24} color='black' />
       </TouchableOpacity>
 
-      {/* Profile Picture with Edit Icon */}
       <View style={styles.profileContainer}>
-        <Image source={logo} style={styles.profileImage} />
-        <TouchableOpacity style={styles.editIcon}>
+        <Image
+          source={
+            profileImage &&
+            typeof profileImage === 'string' &&
+            profileImage.startsWith('http')
+              ? { uri: profileImage }
+              : {
+                  uri: 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png',
+                } // URL de imagen de perfil estable
+          }
+          defaultSource={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png',
+          }}
+          style={styles.profileImage}
+          onError={(e) =>
+            console.log('Error cargando imagen:', e.nativeEvent.error)
+          }
+        />
+        <TouchableOpacity
+          style={styles.editIcon}
+          onPress={handleChangeProfilePicture}
+        >
           <Icon name='edit' size={18} color='white' />
         </TouchableOpacity>
       </View>
 
-      {/* Username */}
       <View style={styles.mainRow}>
         {editingField === 'fname' ? (
           <TextInput
@@ -103,7 +229,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Location */}
+      <LevelProgress points={points} />
 
       <View style={styles.secoundRow}>
         <Icon name='location-on' size={20} color='gray' />
@@ -122,8 +248,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* About */}
-      <Text style={styles.sectionTitle}>Sobre mí</Text>
+      <Text style={styles.sectionTitle}>{t('about-me')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'about' ? (
           <TextInput
@@ -141,8 +266,7 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Birthdate */}
-      <Text style={styles.sectionTitle}>Fecha de nacimiento</Text>
+      <Text style={styles.sectionTitle}>{t('birthdate')}</Text>
       <View style={styles.infoRow}>
         {editingField === 'birthdate' ? (
           <TextInput
@@ -159,33 +283,83 @@ const ProfileScreen = ({ onSignOut }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Buttons for Comments & Reviews */}
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate('UserForumComments')}
+      >
         <Icon name='visibility' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis comentarios</Text>
+        <Text style={styles.actionButtonText}>{t('see-comments')}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.actionButton}>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => navigation.navigate(t('mis-valoraciones'))}
+      >
         <Icon name='star-border' size={16} color='black' />
-        <Text style={styles.actionButtonText}>Ver mis reseñas</Text>
+        <Text style={styles.actionButtonText}>{t('see-reviews')}</Text>
       </TouchableOpacity>
 
-      {/* Save Button (Only visible in edit mode) */}
+      {/* 3. Botón “Change Language” */}
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => setLangModalVisible(true)}
+      >
+        <MaterialCommunityIcons name='translate' size={16} color='black' />
+        <Text style={styles.actionButtonText}>{t('change-language')}</Text>
+      </TouchableOpacity>
+
       {editingField && (
         <TouchableOpacity style={styles.saveButton} onPress={handleSend}>
-          <Text style={styles.saveText}>Guardar cambios</Text>
+          <Text style={styles.saveText}>{t('save-changes')}</Text>
         </TouchableOpacity>
       )}
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={onSignOut}>
-        <Text style={styles.logoutText}>Cerrar sesión</Text>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleSignOut}>
+        <Text style={styles.logoutText}>{t('log-out')}</Text>
       </TouchableOpacity>
-    </View>
+
+      {/* 4. Renderiza el modal de idioma */}
+      <LanguageModal
+        visible={langModalVisible}
+        onClose={() => setLangModalVisible(false)}
+      />
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  mapBackground: {
+    width: '100%',
+    height: 160,
+    position: 'absolute',
+    top: 0,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    position: 'relative',
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: 'white',
+    marginTop: 110,
+  },
+  editIcon: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    backgroundColor: '#7B1FA2',
+    borderRadius: 15,
+    padding: 5,
+  },
   mainRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -201,43 +375,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 2,
   },
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    alignItems: 'center',
-  },
-  mapBackground: {
-    width: '100%',
-    height: 160,
-    position: 'absolute',
-    top: 120,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-  },
-  profileContainer: {
-    marginTop: 120,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 3,
-    borderColor: 'white',
-    marginTop: 90,
-  },
-  editIcon: {
-    position: 'absolute',
-    bottom: 5,
-    right: 5,
-    backgroundColor: '#7B1FA2',
-    borderRadius: 15,
-    padding: 5,
-  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -252,7 +389,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: 0,
   },
   infoText: {
     fontSize: 16,
@@ -267,7 +404,7 @@ const styles = StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 12,
   },
   actionButtonText: {
     fontSize: 16,
