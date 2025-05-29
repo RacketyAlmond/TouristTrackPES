@@ -42,5 +42,6 @@
   "notLoadSentRequests": "Could not load sent requests. Please try again later.",
   "notLoadChats": "Could not load chats. Please try again later.",
   "notDeleteChat": "Could not delete chat. Please try again.",
-  "failedSendMessage": "Failed to send message. Please try again."
+  "failedSendMessage": "Failed to send message. Please try again.",
+  "writeMessage": "Write a message..."
 }

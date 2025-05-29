@@ -328,7 +328,7 @@ export default function Forum({ route }) {
                   padding: 10,
                   backgroundColor: 'white',
                 }}
-                placeholder={t('write')} //'Escribe tu pregunta...'
+                placeholder={t('write')}
                 placeholderTextColor='#888'
                 value={newQuestion}
                 onChangeText={setNewQuestion}

@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 const MessageChatInput = ({ onSendMessage }) => {
+    const { t } = useTranslation('chats');
   const [message, setMessage] = useState('');
 
   const handleSend = () => {
@@ -18,7 +20,7 @@ const MessageChatInput = ({ onSendMessage }) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder='Write a message...'
+          placeholder={t('writeMessage')}
           value={message}
           onChangeText={setMessage}
           multiline
