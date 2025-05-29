@@ -188,12 +188,22 @@ const ProfileScreen = ({ onSignOut }) => {
 
       <View style={styles.profileContainer}>
         <Image
-          source={{
-            uri: profileImage
-              ? profileImage
-              : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FVB6UUBUd6QhcIVg6UzZtJLPKGPW2.jpg?alt=media&token=e8bdd114-68bc-4d37-bdab-d5f4b676fd1f',
+          source={
+            profileImage &&
+            typeof profileImage === 'string' &&
+            profileImage.startsWith('http')
+              ? { uri: profileImage }
+              : {
+                  uri: 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png',
+                } // URL de imagen de perfil estable
+          }
+          defaultSource={{
+            uri: 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png',
           }}
           style={styles.profileImage}
+          onError={(e) =>
+            console.log('Error cargando imagen:', e.nativeEvent.error)
+          }
         />
         <TouchableOpacity
           style={styles.editIcon}
