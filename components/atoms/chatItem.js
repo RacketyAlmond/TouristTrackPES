@@ -14,7 +14,7 @@ export default function ChatItem({ item }) {
   return (
     <View style={styles.userContainer}>
       <Image
-        source={{ uri: item.avatar }}
+        source={{ uri: item.profileImage }}
         style={styles.avatarRequests}
         resizeMode='cover'
       />

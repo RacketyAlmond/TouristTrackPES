@@ -156,7 +156,7 @@ const ProfileScreen = ({ onSignOut }) => {
       let imageUrl =
         profileImage !== ''
           ? profileImage
-          : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FYY17v10QVJgCmoXvN1WLlL4EOAO2.jpg?alt=media&token=25d6f0bb-a52e-4655-9b44-41d5643fe055';
+          : 'https://cdn-icons-png.flaticon.com/512/4792/4792929.png';
       await updateUserData(
         fname,
         birthdate,
