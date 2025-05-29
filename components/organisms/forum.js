@@ -157,11 +157,15 @@ export default function Forum({ route }) {
       );
     }
 
-    if (countries.length > 0) {
-      const countryNames = countries.map((country) => country.name);
-      filtered = filtered.filter((q) => countryNames.includes(q.nationality));
+    if (Array.isArray(countries) && countries.length > 0) {
+      try {
+        const countryNames = countries.map((country) => country.name);
+        filtered = filtered.filter((q) => countryNames.includes(q.nationality));
+      } catch (error) {
+        console.error('Error al procesar países:', error);
+        console.log('Contenido de countries:', countries);
+      }
     }
-
     setFilteredQuestions(filtered);
   };
   const getter = async () => {

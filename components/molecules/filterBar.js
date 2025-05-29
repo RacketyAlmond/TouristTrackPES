@@ -22,7 +22,7 @@ export default function FilterBar({
   const filtered = useMemo(() => {
     if (!query) return countriesWithFlags;
     return countriesWithFlags.filter((c) =>
-      c.name.toLowerCase().includes(query.toLowerCase()),
+      c.name?.toLowerCase().includes(query.toLowerCase()),
     );
   }, [query, countriesWithFlags]);
 
