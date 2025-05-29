@@ -95,7 +95,6 @@ export const UserProvider = ({ children }) => {
         points: points,
         profileImage: profileImage,
       });
-
       const userDoc = await getDoc(doc(db, 'Users', user.uid));
       if (userDoc.exists()) {
         const data = userDoc.data();

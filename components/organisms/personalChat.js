@@ -189,7 +189,7 @@ const PersonalChat = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <ChatHeader
         contactName={userData.name}
-        contactAvatar={userData.avatar}
+        contactAvatar={userData.profileImage}
         contactDescription={userData.about}
         contactPoints={userData.points}
         onBackPress={goBack}

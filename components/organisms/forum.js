@@ -35,33 +35,29 @@ export default function Forum({ route }) {
   const idCurrentUser = currentUser.uid;
 
   const getForumDetails = async () => {
-    try {
-      const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
-      const json = await response.json();
+    const response = await fetch(`${config.BASE_URL}/forums/${forumId}`);
+    const json = await response.json();
 
-      if (json.success && json.forum) {
-        const forum = json.forum;
+    if (json.success && json.forum) {
+      const forum = json.forum;
 
-        const isActividadForum =
-          forum.Actividad !== undefined && forum.Actividad !== null;
-        setIsActividad(isActividadForum);
+      const isActividadForum =
+        forum.Actividad !== undefined && forum.Actividad !== null;
+      setIsActividad(isActividadForum);
 
-        if (isActividadForum) {
-          const actividadData = {
-            Titulo: forum.Actividad,
-            Descripcion: forum.Descripcion ?? '',
-            Ubicacion: forum.Ubicacion ?? { latitud: 0, longitud: 0 },
-            DataIni: forum.DataIni ?? '',
-            DataFi: forum.DataFi ?? '',
-            Creador: forum.Creador ?? '',
-          };
-          setActividadInfo(actividadData);
-        } else {
-          setActividadInfo(null);
-        }
+      if (isActividadForum) {
+        const actividadData = {
+          Titulo: forum.Actividad,
+          Descripcion: forum.Descripcion ?? '',
+          Ubicacion: forum.Ubicacion ?? { latitud: 0, longitud: 0 },
+          DataIni: forum.DataIni ?? '',
+          DataFi: forum.DataFi ?? '',
+          Creador: forum.Creador ?? '',
+        };
+        setActividadInfo(actividadData);
+      } else {
+        setActividadInfo(null);
       }
-    } catch (error) {
-      console.error('Error al obtener detalles del foro:', error);
     }
   };
 

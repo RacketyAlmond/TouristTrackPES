@@ -67,6 +67,7 @@ const ProfileScreen = ({ onSignOut }) => {
           setUserLocation(data.userLocation);
           setAbout(data.about);
           setPoints(data.points.current);
+          setProfileImage(data.profileImage);
         }
       })
       .catch((error) => {
@@ -190,7 +191,7 @@ const ProfileScreen = ({ onSignOut }) => {
           source={{
             uri: profileImage
               ? profileImage
-              : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2F88Qg2pbpxFXcTFl1je7DOPW0vK23.jpg?alt=media&token=61effac2-d02d-4697-bc8f-d1956cc825f0',
+              : 'https://firebasestorage.googleapis.com/v0/b/pes-2025-9d10e.firebasestorage.app/o/profilePictures%2FVB6UUBUd6QhcIVg6UzZtJLPKGPW2.jpg?alt=media&token=e8bdd114-68bc-4d37-bdab-d5f4b676fd1f',
           }}
           style={styles.profileImage}
         />

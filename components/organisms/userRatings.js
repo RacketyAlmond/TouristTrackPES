@@ -175,7 +175,7 @@ const RatingScreen = () => {
             <Text style={styles.title}>{item.location}</Text>
           </View>
           <View style={styles.reviewContainer}>
-            <Image source={{ uri: item.authorAvatar }} style={styles.avatar} />
+            <Image source={{ uri: item.image }} style={styles.avatar} />
             <View style={{ flex: 1 }}>
               <View style={styles.reviewHeader}>
                 <Text style={styles.username}>{item.authorFirstName}</Text>

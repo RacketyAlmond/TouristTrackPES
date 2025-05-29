@@ -160,7 +160,7 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: userData.profileImage || defaultAvatar || '',
+        profileImage: userData.profileImage || defaultAvatar || '',
         authorFirstName: userData.firstName,
       };
 
@@ -207,7 +207,7 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar:
+        profileImage:
           userData?.profileImage || userData?.avatar || defaultAvatar,
         authorFirstName: userData?.firstName,
       };
@@ -273,9 +273,9 @@ const RatingScreen = ({ route }) => {
         getLevelInfo(item.authorPoints).currentLevel,
         true,
       );
-
+      console.log(item);
       const avatarSource =
-        item.authorAvatar ||
+        item.profileImage ||
         (item.authorID === currentUser.uid && userData?.profileImage) ||
         null;
 
