@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const [response] = Google.useAuthRequest({
+  const [request, response, promptAsync] = Google.useAuthRequest({
     clientId:
       '***REMOVED***',
     scopes: ['profile', 'email'],
