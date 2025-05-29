@@ -35,7 +35,7 @@ const AuthScreen = ({ onAuthenticated }) => {
     }
   };
 
-  const [response, promptAsync] = Google.useAuthRequest({
+  const [request, response, promptAsync] = Google.useAuthRequest({
     clientId:
       '***REMOVED***',
     scopes: ['profile', 'email'],
