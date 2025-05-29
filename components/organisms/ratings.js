@@ -395,7 +395,6 @@ const RatingScreen = ({ route }) => {
         keyboardShouldPersistTaps='handled'
       >
         <Text style={styles.title}>{localidad.name}</Text>
-        <Text style={styles.subtitle}>{localidad.comunidad}</Text>
 
         <View style={styles.ratingRow}>
           {renderStars(localidadRating.rating)}

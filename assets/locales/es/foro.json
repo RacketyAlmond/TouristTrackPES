@@ -9,5 +9,11 @@
   "no-reply": "No responder",
   "answer": "Escribe tu respuesta",
   "hide": "Ocultar",
-  "unknown": "Desconocido"
+  "unknown": "Desconocido",
+  "createForum": "Crea un nuevo foro",
+  "nombreLocForo": "Nombre localidad foro que quieres crear...",
+  "createForumButton": "Crear Forum"
 }
+
+
+

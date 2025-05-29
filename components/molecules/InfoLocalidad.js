@@ -106,7 +106,7 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
         <Text style={styles.ratingCountText}>({locality.ratingCount})</Text>
       </TouchableOpacity>
       <View style={{ flexDirection: 'row' }}>
-        <Text style={styles.info}>Número de turistas: </Text>
+        <Text style={styles.info}>{t('numTur')}</Text>
         <Text style={styles.valueInfo}>{locality.tourists}</Text>
         <Text style={styles.parameter}> {t('annually')}</Text>
       </View>
@@ -121,7 +121,7 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
         style={styles.estadisticasButton}
         onPress={handleMoveForum}
       >
-        <Text style={styles.textButton}>Ir al foro</Text>
+        <Text style={styles.textButton}>{t('goForo')}</Text>
       </TouchableOpacity>
     </View>
   );

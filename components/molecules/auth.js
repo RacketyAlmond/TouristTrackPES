@@ -10,8 +10,10 @@ import {
 import { useAuth } from '../atoms/AuthContext.js';
 import map from '../../public/mapa.png';
 import * as Google from 'expo-auth-session/providers/google';
+import { useTranslation } from 'react-i18next';
 
 const AuthScreen = ({ onAuthenticated }) => {
+  const { t, i18n } = useTranslation('auth');
   const { signUp, signIn, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -59,16 +61,16 @@ const AuthScreen = ({ onAuthenticated }) => {
     <ImageBackground source={map} style={styles.backgroundImage}>
       <View style={styles.overlay} />
       <View style={styles.container}>
-        <Text style={styles.title}>{isSignUp ? 'Sign Up' : 'Sign In'}</Text>
+        <Text style={styles.title}>{isSignUp ? t('signUp') : t('signIn')}</Text>
         {error ? <Text style={styles.error}>{error}</Text> : null}
         <TextInput
-          placeholder='Email'
+          placeholder={t('email')}
           value={email}
           onChangeText={setEmail}
           style={styles.input}
         />
         <TextInput
-          placeholder='Password'
+          placeholder={t('password')}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -76,18 +78,16 @@ const AuthScreen = ({ onAuthenticated }) => {
         />
         <TouchableOpacity style={styles.button} onPress={handleAuth}>
           <Text style={styles.buttonText}>
-            {isSignUp ? 'Sign Up' : 'Sign In'}
+            {isSignUp ? t('signUp') : t('signIn')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setIsSignUp(!isSignUp)}>
           <Text style={styles.toggleText}>
-            {isSignUp
-              ? 'Already have an account? Sign In'
-              : 'New user? Sign Up'}
+            {isSignUp ? t('alreadyAccount') : t('newUser')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => promptAsync()}>
-          <Text style={styles.toggleText}>Google ID</Text>
+          <Text style={styles.toggleText}>{t('googleID')}</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

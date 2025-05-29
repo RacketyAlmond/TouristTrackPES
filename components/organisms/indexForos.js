@@ -149,7 +149,7 @@ export default function IndexForos() {
                   fontWeight: 'bold',
                 }}
               >
-                Crea un nuevo foro
+                {t('createForum')}
               </Text>
               <View
                 style={{
@@ -166,7 +166,7 @@ export default function IndexForos() {
                     borderRadius: 5,
                     padding: 10,
                   }}
-                  placeholder='Nombre localidad foro que quieres crear...'
+                  placeholder={t('nombreLocForo')}
                   placeholderTextColor='#888'
                   value={newForoName}
                   onChangeText={setNewForoName}
@@ -185,7 +185,7 @@ export default function IndexForos() {
                 <Text
                   style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}
                 >
-                  Crear Foro
+                  {t('createForumButton')}
                 </Text>
               </TouchableOpacity>
             </View>
