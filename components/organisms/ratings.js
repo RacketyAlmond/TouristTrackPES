@@ -273,7 +273,6 @@ const RatingScreen = ({ route }) => {
         getLevelInfo(item.authorPoints).currentLevel,
         true,
       );
-      console.log(item);
       const avatarSource =
         item.profileImage ||
         (item.authorID === currentUser.uid && userData?.profileImage) ||
