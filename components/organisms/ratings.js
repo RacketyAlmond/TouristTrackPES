@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress';
 import {
@@ -23,10 +22,9 @@ import { auth } from '../../firebaseConfig.js';
 import { useUser } from '../atoms/UserContext';
 import { useTranslation } from 'react-i18next';
 
-
 const RatingScreen = ({ route }) => {
   const { t } = useTranslation('ratings');
-  const { userData, getUserData } = useUser();
+  const { userData, getUserData, updateUserPoints } = useUser();
   const currentUser = auth.currentUser;
 
   const defaultAvatar = require('../../public/user.png');
@@ -75,9 +73,7 @@ const RatingScreen = ({ route }) => {
     const loadUserData = async () => {
       try {
         if (currentUser && currentUser.uid) {
-          // Ya tienes getUserData en UserContext, úsalo para cargar los datos
           await getUserData();
-          console.log('User data loaded:', userData);
           if (userData && userData.points) {
             setLoggedRank(
               getRankByLevel(
@@ -117,24 +113,20 @@ const RatingScreen = ({ route }) => {
   };
 
   const handleDelete = async (id) => {
-    Alert.alert(
-      t('eliminarReseña'),
-      t('eliminarReseñaDesc'),
-      [
-        { text: t('cancel'), style: 'cancel' },
-        {
-          text: t('delete'),
-          style: 'destructive',
-          onPress: async () => {
-            await fetch(`***REMOVED***/ratings/${id}`, {
-              method: 'DELETE',
-            });
-            setRatings((prev) => prev.filter((r) => r.id !== id));
-            setHasUserRated(false);
-          },
+    Alert.alert(t('eliminarReseña'), t('eliminarReseñaDesc'), [
+      { text: t('cancel'), style: 'cancel' },
+      {
+        text: t('delete'),
+        style: 'destructive',
+        onPress: async () => {
+          await fetch(`***REMOVED***/ratings/${id}`, {
+            method: 'DELETE',
+          });
+          setRatings((prev) => prev.filter((r) => r.id !== id));
+          setHasUserRated(false);
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const handleEdit = (rating) => {
@@ -168,7 +160,7 @@ const RatingScreen = ({ route }) => {
 
       const updatedData = {
         ...(await response.json()),
-        authorAvatar: userData?.profileImage || defaultAvatar || '',
+        authorAvatar: userData.profileImage || defaultAvatar || '',
         authorFirstName: userData.firstName,
       };
 
@@ -192,13 +184,11 @@ const RatingScreen = ({ route }) => {
 
   const handleSend = async () => {
     if (hasUserRated) {
-      Alert.alert(
-        t('calificadoYa'),
-        t('calificadoYaDesc'),
-      );
+      Alert.alert(t('calificadoYa'), t('calificadoYaDesc'));
       return;
     }
 
+    updateUserPoints(100);
     const newRatingData = {
       authorID: currentUser.uid,
       location: localidad.name,
@@ -217,7 +207,8 @@ const RatingScreen = ({ route }) => {
 
       const postedRating = {
         ...(await response.json()),
-        authorAvatar: userData?.profileImage || userData?.avatar || defaultAvatar,
+        authorAvatar:
+          userData?.profileImage || userData?.avatar || defaultAvatar,
         authorFirstName: userData?.firstName,
       };
 
@@ -274,30 +265,27 @@ const RatingScreen = ({ route }) => {
   };
 
   const renderItem = ({ item }) => {
-    // Verifica si item.postedAt es el objeto con _seconds y _nanoseconds
     if (item.postedAt && item.postedAt._seconds !== undefined) {
-      // Convertir el _seconds a un objeto Date
       const postedAtDate = new Date(item.postedAt._seconds * 1000);
-
-      // Si también quieres considerar los nanosegundos, puedes agregar el valor de _nanoseconds
-      // pero normalmente los nanosegundos no son necesarios para mostrar solo la fecha.
-
-      // Formatear la fecha
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
-      // Determina el rango del usuario basado en los puntos
       const userRank = getRankByLevel(
         getLevelInfo(item.authorPoints).currentLevel,
         true,
       );
 
+      const avatarSource =
+        item.authorAvatar ||
+        (item.authorID === currentUser.uid && userData?.profileImage) ||
+        null;
+
       return (
         <View style={styles.reviewContainer}>
           <Image
             source={
-              item.authorAvatar && typeof item.authorAvatar === 'string'
-                ? { uri: item.authorAvatar }
-                : item.profileImage || defaultAvatar
+              avatarSource && typeof avatarSource === 'string'
+                ? { uri: avatarSource }
+                : defaultAvatar
             }
             style={styles.avatar}
           />
@@ -392,7 +380,6 @@ const RatingScreen = ({ route }) => {
         </View>
       );
     } else {
-      // Si no está presente o no es válido, no mostramos nada
       return null;
     }
   };
@@ -424,7 +411,8 @@ const RatingScreen = ({ route }) => {
             <View style={styles.inputUser}>
               <Image
                 source={
-                  userData?.profileImage && typeof userData?.profileImage === 'string'
+                  userData?.profileImage &&
+                  typeof userData?.profileImage === 'string'
                     ? { uri: userData.profileImage }
                     : defaultAvatar
                 }

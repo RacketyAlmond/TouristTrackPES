@@ -15,7 +15,6 @@ export default function Grafica({ data, title }) {
         data={data}
         width={screenWidth}
         height={220}
-        yAxisLabel='$'
         chartConfig={{
           backgroundGradientFrom: '#fff',
           backgroundGradientTo: '#fff',

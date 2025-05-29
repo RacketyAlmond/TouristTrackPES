@@ -33,9 +33,7 @@ export default function Estadisticas() {
   useEffect(() => {
     const loadDataMunicipality = async () => {
       try {
-        console.log('loadDataMunicipality...');
         const municipality = locality.name;
-        console.log('locality: ', municipality);
         const data = await getDataOfMunicipality(municipality);
         setDataMunicipality(data);
       } catch (err) {
@@ -46,48 +44,17 @@ export default function Estadisticas() {
     loadDataMunicipality();
   }, [locality]);
 
-  console.log('top.... ');
   const topPaises = getTopCountries(dataMunicipality);
 
-  //segundo desplegable nº turistas (paises)
   const [selectedItemPaises, setSelectedItemPaises] = useState('Italia');
-  //const [opcionesAnos, setOpcionesAnos] = useState(['2021', '2019', '2020']);
 
   const [selectedItemAnos, setSelectedItemAnos] = useState('2021');
-
-  //primer desplegable gasto (años)
-  const [selectedItemAnos2, setSelectedItemAnos2] = useState('2021');
-
-  //segundo desplegable gasto (paises)
-  const [selectedItemPaises2, setSelectedItemPaises2] =
-    useState('Todos los países');
-
-  //tercer desplegable gasto (gastos)
-  const [selectedItemGasto, setSelectedItemGasto] = useState('Alimentación');
-
-  //opciones gastos
-  const opcionesGastos = [
-    'Alimentación',
-    'Transporte',
-    'Alojamiento',
-    'Compras',
-  ];
 
   const filteredData = dataMunicipality
     ? filterData(
         [parseInt(selectedItemAnos)],
         [],
         [selectedItemPaises],
-        dataMunicipality,
-      )
-    : [];
-
-  console.log('filteredData2.... ');
-  const filteredData2 = dataMunicipality
-    ? filterData(
-        [parseInt(selectedItemAnos2)],
-        [],
-        [selectedItemPaises2],
         dataMunicipality,
       )
     : [];
@@ -100,11 +67,7 @@ export default function Estadisticas() {
     ? listOriginCountriesOfMunicipality(dataMunicipality)
     : ['Italia'];
 
-  //const filteredData = filterData([2019], [], ['Italia'], dataMunicipality); //selectedItemPaises pot ser tots, per tant s'ha de mirar el codi del marc per veure que passa
-
-  console.log('transformData.... ');
   const data = transformDataForChart(filteredData);
-  const data2 = transformDataForChart(filteredData2);
 
   return (
     <ScrollView style={styles.container}>
@@ -183,7 +146,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 20,
-    //position: 'absolute',
   },
   sub_container: {
     padding: 10,
@@ -193,9 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'flex-start',
-    //alignItems: 'center',
     gap: 10,
-    //paddingRight: 10,
   },
   select_container: {
     padding: 0,
@@ -223,16 +183,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   pickerAno: {
-    flex: 1, //new
-    //width: 65,
-    minWidth: 65, //new
+    flex: 1,
+    minWidth: 65,
     backgroundColor: '#dddddd',
     borderRadius: 5,
   },
   pickerPais: {
-    flex: 1, //new
-    //width: 125,
-    minWidth: 100, //new
+    flex: 1,
+    minWidth: 100,
     backgroundColor: '#dddddd',
     borderRadius: 5,
   },

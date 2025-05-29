@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
@@ -8,7 +7,6 @@ import Comment from './comment';
 import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js'; // Importa la función de rangos
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
-import config from '../../config';
 import { useUser } from '../atoms/UserContext';
 
 export default function Question({
@@ -22,7 +20,7 @@ export default function Question({
 }) {
   // namespace 'foro', además extraemos i18n.language
   const { t, i18n } = useTranslation('foro');
-  const { userData, getUserData } = useUser();
+  const { userData, getUserData, updateUserPoints } = useUser();
 
   const [showAnswers, setShowAnswers] = useState(false);
   const [showNewAnswer, setShowNewAnswer] = useState(false);
@@ -157,13 +155,12 @@ export default function Question({
         }
 
         if (json.success) {
+          updateUserPoints(100);
           const { user, nationality, points } =
             await getUserInfo(idCurrentUser); // Reemplaza con el ID del usuario autenticado
 
           const firstName = userData.firstName;
-          console.log(userData.firstName);
           const newAnswerObject = {
-
             id: json.preguntaId,
             userId: idCurrentUser,
             answer: newAnswer,

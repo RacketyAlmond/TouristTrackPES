@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
   value: {
     color: '#333',
     fontSize: 15,
-    marginLeft: 24, // indentación visual
+    marginLeft: 24,
   },
 });

@@ -16,7 +16,6 @@ export const getCoordinatesFromCity = async (cityName) => {
       const { lat, lon, name } = data[0];
       return { lat, lon, name };
     } else {
-      console.log('No se encontraron resultados.');
       return null;
     }
   } catch (error) {

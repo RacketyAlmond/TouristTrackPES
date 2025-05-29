@@ -12,7 +12,6 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
@@ -164,12 +163,9 @@ const RatingScreen = () => {
   };
 
   const renderItem = ({ item }) => {
-    // Verifica si item.postedAt es el objeto con _seconds y _nanoseconds
     if (item.postedAt && item.postedAt._seconds !== undefined) {
-      // Convertir el _seconds a un objeto Date
       const postedAtDate = new Date(item.postedAt._seconds * 1000);
 
-      // Formatear la fecha
       const formattedDate = `${postedAtDate.getDate()}/${postedAtDate.getMonth() + 1}/${postedAtDate.getFullYear()}`;
 
       return (
@@ -263,7 +259,6 @@ const RatingScreen = () => {
         </View>
       );
     } else {
-      // Si no está presente o no es válido, no mostramos nada
       return null;
     }
   };
@@ -292,9 +287,9 @@ const RatingScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   title: {
-    fontSize: 18, // tamaño del texto
-    fontWeight: 'bold', // si quieres que el nombre de la localidad se vea más destacado
-    color: '#572364', // color del texto
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#572364',
     marginLeft: -10,
   },
   subtitle: { color: '#999' },
@@ -384,8 +379,8 @@ const styles = StyleSheet.create({
     color: '#572364',
   },
   locationContainer: {
-    marginBottom: 8, // espacio entre la localidad y el contenido de la reseña
-    marginLeft: 10, // o el margen que desees
+    marginBottom: 8,
+    marginLeft: 10,
   },
   reviewAndLocationContainer: { flexDirection: 'column' },
 });

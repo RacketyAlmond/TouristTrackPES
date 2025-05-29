@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -77,22 +77,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   navbarWeb: {
-    flexDirection: 'row', // Horizontal en web
+    flexDirection: 'row',
     height: 60,
     width: '100%',
     position: 'fixed',
     left: 0,
-    bottom: 0, // Posicionado en la parte inferior
+    bottom: 0,
     justifyContent: 'space-around',
     padding: 5,
-    boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.1)', // Sombra sutil arriba
+    boxShadow: '0px -2px 10px rgba(0, 0, 0, 0.1)',
   },
   navButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     ...(Platform.OS === 'web' && {
-      marginHorizontal: 10, // Espaciado horizontal en vez de vertical
+      marginHorizontal: 10,
       padding: 5,
     }),
   },

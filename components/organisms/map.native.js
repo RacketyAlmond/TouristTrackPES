@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
-import { SafeAreaView, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import SearchBar from '../molecules/searchBar';
 import InfoLocalidad from '../molecules/InfoLocalidad';
 import Area from '../atoms/area';
@@ -18,8 +18,8 @@ import {
 } from '../../dataestur';
 
 export default function Map() {
-  const { t } = useTranslation(); // usa el namespace por defecto
-  const navigation = useNavigation(); // para actualizar el título dinámicamente
+  const { t } = useTranslation();
+  const navigation = useNavigation();
 
   const [city, setCity] = useState('');
   const [coords, setCoords] = useState(null);
@@ -34,23 +34,18 @@ export default function Map() {
 
   const getIdCity = async () => {
     try {
-      // Primer intento: buscar el foro por ciudad
       const response = await fetch(
         `***REMOVED***/forums/localidad/${city}`,
       );
       const json = await response.json();
 
       if (json.success) {
-        // Si el foro existe, devuelve su ID
         const cityData = json.forum;
         if (cityData && cityData.id) {
-          console.log(`ID de la ciudad "${city}":`, cityData.id);
           return cityData.id;
         }
       }
 
-      // Si no existe, intenta crearlo
-      console.log(`No se encontró la ciudad "${city}". Creando el foro...`);
       const response2 = await fetch(`***REMOVED***/forums`, {
         method: 'POST',
         headers: {
@@ -60,13 +55,12 @@ export default function Map() {
       });
       const json2 = await response2.json();
       if (json2.success) {
-        console.log(`Foro creado para la ciudad "${city}". ID:`, json2.forumId);
         return json2.forumId;
       } else {
         console.error(`Error al crear el foro para la ciudad "${city}".`);
       }
 
-      return null; // Si no se pudo crear el foro, devuelve null
+      return null;
     } catch (error) {
       console.error('Error al obtener o crear la ID de la ciudad:', error);
       return null;
@@ -77,7 +71,6 @@ export default function Map() {
     const fetchCityId = async () => {
       if (city) {
         const id = await getIdCity();
-        console.log(`ID de la ciudad "${city}":`, id);
         setCityId(id);
       } else {
         setCityId(null);
@@ -95,26 +88,25 @@ export default function Map() {
       const servicesEnabled = await Location.hasServicesEnabledAsync();
       if (!servicesEnabled) {
         setErrorMsg('Location services are disabled');
-        setLocation(null); // Limpia la ubicación si los servicios están desactivados
+        setLocation(null);
         return;
       }
 
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         setErrorMsg('Permission to access location was denied');
-        setLocation(null); // Limpia la ubicación si no hay permisos
+        setLocation(null);
         return;
       }
 
-      // Observa los cambios en la ubicación
       subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
-          timeInterval: 1000, // Actualiza cada 1 segundo
-          distanceInterval: 1, // Actualiza si el usuario se mueve al menos 1 metro
+          timeInterval: 1000,
+          distanceInterval: 1,
         },
         (newLocation) => {
-          setLocation(newLocation.coords); // Actualiza el estado con la nueva ubicación
+          setLocation(newLocation.coords);
         },
       );
     };
@@ -123,18 +115,16 @@ export default function Map() {
       const servicesEnabled = await Location.hasServicesEnabledAsync();
       if (!servicesEnabled) {
         setErrorMsg('Location services are disabled');
-        setLocation(null); // Limpia la ubicación si los servicios están desactivados
+        setLocation(null);
       } else {
-        setErrorMsg(null); // Limpia el mensaje de error si los servicios están habilitados
+        setErrorMsg(null);
       }
     };
 
     startWatchingLocation();
 
-    // Verifica periódicamente si los servicios de ubicación están habilitados
-    interval = setInterval(checkLocationServices, 5000); // Verifica cada 5 segundos
+    interval = setInterval(checkLocationServices, 5000);
 
-    // Limpia la suscripción y el intervalo cuando el componente se desmonte
     return () => {
       if (subscription) {
         subscription.remove();
@@ -157,7 +147,6 @@ export default function Map() {
     navigation.setOptions({ title: t('header') });
   }, [t, navigation]);
 
-  // Carga inicial de datos (lista de países y resumen global)
   useEffect(() => {
     (async () => {
       try {
@@ -173,7 +162,6 @@ export default function Map() {
     })();
   }, []);
 
-  // Actualiza el resumen cuando cambian los países seleccionados
   useEffect(() => {
     (async () => {
       try {
@@ -186,10 +174,8 @@ export default function Map() {
     })();
   }, [selectedCountries]);
 
-  // Total de turistas para la localidad actual
   const totalTourists = getTotalTouristsOfMunicipality(city, data);
 
-  // Función para buscar y centrar la ciudad en el mapa
   const searchCity = async (name) => {
     try {
       const result = await getCoordinatesFromCity(name);
@@ -281,7 +267,7 @@ export default function Map() {
       <TouchableOpacity
         style={[styles.button]}
         onPress={handleGoToMyLocation}
-        disabled={!location} // Deshabilitar si no hay ubicación
+        disabled={!location}
       >
         <Icon
           name={!location ? 'location-searching' : 'my-location'}
@@ -320,10 +306,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   locationAvailable: {
-    backgroundColor: '#4CAF50', // Verde si la ubicación está disponible
+    backgroundColor: '#4CAF50',
   },
   locationUnavailable: {
-    backgroundColor: '#D32F2F', // Rojo si la ubicación no está disponible
+    backgroundColor: '#D32F2F',
   },
   buttonText: {
     color: 'white',

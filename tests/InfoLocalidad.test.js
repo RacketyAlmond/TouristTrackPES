@@ -1,6 +1,11 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import InfoLocalidad from '../components/molecules/InfoLocalidad';
+import { Alert } from 'react-native';
+
+jest.mock('react-native/Libraries/Alert/Alert', () => ({
+  alert: jest.fn(),
+}));
 
 // Mocks
 jest.mock('@expo/vector-icons', () => {

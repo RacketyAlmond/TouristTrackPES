@@ -1,14 +1,10 @@
-/* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
   Platform,
   StatusBar,
   Alert,
-  AppState,
-  TouchableOpacity,
-  Text,
 } from 'react-native';
 import ChatHeader from '../molecules/chatHeader.js';
 import MessageChatList from '../molecules/messageChatList.js';
@@ -24,7 +20,6 @@ const PersonalChat = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [state, setState] = useState(route.params.state); // 0 = chat, 1 = requested, 2 = request
-  const AppStateRef = useRef(AppState.currentState);
 
   const transformFirebaseTimestamp = (timestamp) => {
     return new Date(timestamp._seconds * 1000).toISOString();

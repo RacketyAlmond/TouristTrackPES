@@ -14,7 +14,6 @@ import {
   Alert,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-//import UsersJson from '../../json/userFriends.json';
 import ChatItem from '../atoms/chatItem';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../../firebaseConfig.js';
@@ -24,9 +23,6 @@ export default function Chats() {
   const currentUser = auth.currentUser;
   const { t } = useTranslation('chats');
   const idCurrentSession = currentUser.uid;
-  //const dataJson = UsersJson.find(
-  //(user) => user.idUser === idCurrentSession,
-  //).friends;
   const navigation = useNavigation();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState([]);
@@ -67,7 +63,6 @@ export default function Chats() {
     fetchChats();
   }, [fetchChats]);
 
-  // Ejecutar fetchChats cada vez que el componente reciba el foco
   useFocusEffect(
     useCallback(() => {
       fetchChats();
@@ -162,9 +157,7 @@ export default function Chats() {
             const updatedChats = filter.filter((chat) => chat.id !== item.id);
             setFilter(updatedChats);
 
-            //funció per eliminar els missatges del chat
             deleteChat(idCurrentSession, item.id);
-            //afagir a sota la funció amb la petició per eliminar el chat de la base de dades d'allowed
             deleteAllowedChat(idCurrentSession, item.id);
 
             Alert.alert(
@@ -230,7 +223,7 @@ export default function Chats() {
             navigation.navigate('AddChat', {
               currentUser,
               state,
-              dataJson: chats, // <-- Aquí le pasas la lista de chats a AddChat
+              dataJson: chats,
             })
           }
         >
