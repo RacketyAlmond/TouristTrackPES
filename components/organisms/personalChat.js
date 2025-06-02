@@ -8,9 +8,10 @@ import {
 } from 'react-native';
 import ChatHeader from '../molecules/chatHeader.js';
 import MessageChatList from '../molecules/messageChatList.js';
-import MessageChatInput from '../atoms/messageChatInput.js';
+import MessasgeChatInput from '../atoms/messageChatInput.js';
 import socketService from '../../socketio.js';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config';
 
 const PersonalChat = ({ route, navigation }) => {
   const { t } = useTranslation('chats');
@@ -29,7 +30,7 @@ const PersonalChat = ({ route, navigation }) => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `***REMOVED***/messages/between/${idCurrentSession}/${userData.id}`,
+        `${API_BASE_URL}/messages/between/${idCurrentSession}/${userData.id}`,
       );
 
       if (!response.ok) {
@@ -89,7 +90,7 @@ const PersonalChat = ({ route, navigation }) => {
   const sendRequest = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/pending-requests`,
+        `${API_BASE_URL}/pending-requests`,
         {
           method: 'POST',
           headers: {
@@ -157,7 +158,7 @@ const PersonalChat = ({ route, navigation }) => {
 
       try {
         const response = await fetch(
-          `***REMOVED***/messages`,
+          `${API_BASE_URL}/messages`,
           {
             method: 'POST',
             headers: {

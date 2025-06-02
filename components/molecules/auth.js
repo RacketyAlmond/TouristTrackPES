@@ -11,6 +11,8 @@ import { useAuth } from '../atoms/AuthContext.js';
 import map from '../../public/mapa.png';
 import * as Google from 'expo-auth-session/providers/google';
 import { useTranslation } from 'react-i18next';
+import Constants from 'expo-constants';
+
 
 const AuthScreen = ({ onAuthenticated }) => {
   const { t, i18n } = useTranslation('auth');
@@ -36,10 +38,9 @@ const AuthScreen = ({ onAuthenticated }) => {
   };
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId:
-      '***REMOVED***',
+    clientId: Constants.expoConfig.extra.GOOGLE_CLIENT_ID,
     scopes: ['profile', 'email'],
-    redirectUri: '***REMOVED***',
+    redirectUri: Constants.expoConfig.extra.GOOGLE_REDIRECT_URI,
   });
 
   useEffect(() => {

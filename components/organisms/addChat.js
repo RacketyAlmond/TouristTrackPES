@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ChatItem from '../atoms/chatItem';
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config';
 
 export default function AddChat({ route }) {
   const { t } = useTranslation('chats');
@@ -42,7 +43,7 @@ export default function AddChat({ route }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`***REMOVED***/users/`);
+      const response = await fetch(`${API_BASE_URL}/users/`);
       if (!response.ok) {
         throw new Error(t('failedFetchUsers'));
       }
@@ -63,7 +64,7 @@ export default function AddChat({ route }) {
   const fetchRequests = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/pending-requests/received/${idCurrentUser}`,
+        `${API_BASE_URL}/pending-requests/received/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error(t('failedFetchRequests'));
@@ -86,7 +87,7 @@ export default function AddChat({ route }) {
   const fetchSentRequests = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/pending-requests/sent/${idCurrentUser}`,
+        `${API_BASE_URL}/pending-requests/sent/${idCurrentUser}`,
       );
       if (!response.ok) {
         throw new Error(t('failedFetchSentRequests'));
@@ -207,7 +208,7 @@ export default function AddChat({ route }) {
 
     try {
       const response = await fetch(
-        `***REMOVED***/allowed-chats`,
+        `${API_BASE_URL}/allowed-chats`,
         {
           method: 'POST',
           headers: {
@@ -246,7 +247,7 @@ export default function AddChat({ route }) {
 
     try {
       const response = await fetch(
-        `***REMOVED***/pending-requests`,
+        `${API_BASE_URL}/pending-requests`,
         {
           method: 'DELETE',
           headers: {

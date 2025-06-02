@@ -1,9 +1,9 @@
-/* eslint-disable prettier/prettier */
-// UserContext.js
 import React, { createContext, useState, useContext } from 'react';
 import { auth, db } from '../../firebaseConfig.js';
 import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import { API_BASE_URL } from '../../config';
+
 
 export const UserContext = createContext();
 
@@ -54,7 +54,7 @@ export const UserProvider = ({ children }) => {
       }
 
       const response = await fetch(
-        `***REMOVED***/forums/user-forum-comments/${user.uid}`,
+        `${API_BASE_URL}/forums/user-forum-comments/${user.uid}`,
       );
 
       if (!response.ok) {

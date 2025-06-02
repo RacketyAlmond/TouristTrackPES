@@ -18,6 +18,8 @@ import { auth, db } from '../../firebaseConfig.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { useTranslation } from 'react-i18next';
 import config from '../../config';
+import { API_BASE_URL } from '../../config';
+
 
 export default function Forum({ route }) {
   const { t } = useTranslation('foro');
@@ -64,7 +66,7 @@ export default function Forum({ route }) {
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `***REMOVED***/users/${userId}`,
+        `${API_BASE_URL}/users/${userId}`,
       );
       const json = await response.json();
 
@@ -86,7 +88,7 @@ export default function Forum({ route }) {
   const getQuestions = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/forums/${forumId}/preguntas`,
+        `${API_BASE_URL}/forums/${forumId}/preguntas`,
       );
 
       const json = await response.json();
@@ -190,7 +192,7 @@ export default function Forum({ route }) {
     if (newQuestion.trim() !== '') {
       try {
         const response = await fetch(
-          `***REMOVED***/forums/${forumId}/preguntas/`,
+          `${API_BASE_URL}/forums/${forumId}/preguntas/`,
           {
             method: 'POST',
             headers: {

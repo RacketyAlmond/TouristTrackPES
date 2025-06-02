@@ -8,6 +8,7 @@ import { getRankByLevel, getLevelInfo } from '../molecules/levelProgress.js'; //
 import { auth } from '../../firebaseConfig.js';
 import { useTranslation } from 'react-i18next';
 import { useUser } from '../atoms/UserContext';
+import { API_BASE_URL } from '../../config';
 
 export default function Question({
   forumId,
@@ -43,7 +44,7 @@ export default function Question({
   const getUserInfo = async (userId) => {
     try {
       const response = await fetch(
-        `***REMOVED***/users/${userId}`,
+        `${API_BASE_URL}/users/${userId}`,
       );
       const json = await response.json();
 
@@ -65,7 +66,7 @@ export default function Question({
   const deleteAnswer = async (answerId) => {
     try {
       const response = await fetch(
-        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
+        `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas/${answerId}`,
         {
           method: 'DELETE',
         },
@@ -85,7 +86,7 @@ export default function Question({
   const getAnswers = useCallback(async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
+        `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
       );
       const json = await response.json();
       if (json.success) {
@@ -132,7 +133,7 @@ export default function Question({
     if (newAnswer.trim() !== '') {
       try {
         const response = await fetch(
-          `***REMOVED***/forums/${forumId}/preguntas/${questionId}/respuestas`,
+          `${API_BASE_URL}/forums/${forumId}/preguntas/${questionId}/respuestas`,
           {
             method: 'POST',
             headers: {

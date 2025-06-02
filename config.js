@@ -1,8 +1,4 @@
-// config.js
-const LOCAL_IP = 'http://172.16.20.81:3001'; // Cambia esta IP según tu red
-const EXTERNAL_IP = '***REMOVED***/api/activitats'; // API externa dek otro grupo
+import Constants from 'expo-constants';
 
-export default {
-  BASE_URL: LOCAL_IP,
-  EXTERNAL_API: EXTERNAL_IP,
-};
+//environment variable with fallback
+export const API_BASE_URL = Constants.expoConfig?.extra?.apiBaseUrl || 'http://localhost:3000';

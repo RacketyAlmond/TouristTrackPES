@@ -11,6 +11,7 @@ import Title from '../atoms/title';
 import TitleLocalidadForo from '../atoms/titleLocalidadForo';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config';
 
 export default function IndexForos() {
   const { t } = useTranslation('foro');
@@ -21,7 +22,7 @@ export default function IndexForos() {
 
   const obtenerForos = async () => {
     try {
-      const response = await fetch(`***REMOVED***/forums`);
+      const response = await fetch(`${API_BASE_URL}/forums`);
       const json = await response.json();
 
       if (json.success) {
@@ -51,7 +52,7 @@ export default function IndexForos() {
     }
 
     try {
-      const response = await fetch(`***REMOVED***/forums`, {
+      const response = await fetch(`${API_BASE_URL}/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

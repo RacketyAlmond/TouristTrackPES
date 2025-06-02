@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { auth } from '../../firebaseConfig.js';
+import { API_BASE_URL } from '../../config';
 
 export default function InfoLocalidad({ city, id, numTourists, onClose }) {
   const navigation = useNavigation();
@@ -21,7 +22,7 @@ export default function InfoLocalidad({ city, id, numTourists, onClose }) {
       const fetchRatingStats = async () => {
         try {
           const response = await fetch(
-            `***REMOVED***/ratings/location/${city}/stats`,
+            `${API_BASE_URL}/ratings/location/${city}/stats`,
           );
           const data = await response.json();
           setRatingStats({

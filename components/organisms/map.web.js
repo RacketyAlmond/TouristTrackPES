@@ -25,6 +25,7 @@ import {
   useMap,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { API_BASE_URL } from '../../config';
 
 const AreaComponent = ({ coords, numTuristes }) => {
   if (!coords) return null;
@@ -134,7 +135,7 @@ export default function Map() {
   const getIdCity = async () => {
     try {
       const response = await fetch(
-        `***REMOVED***/forums/localidad/${city}`,
+        `${API_BASE_URL}/forums/localidad/${city}`,
       );
       const json = await response.json();
 
@@ -145,7 +146,7 @@ export default function Map() {
         }
       }
 
-      const response2 = await fetch(`***REMOVED***/forums`, {
+      const response2 = await fetch(`${API_BASE_URL}/forums`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { auth } from '../../firebaseConfig.js';
 import {
@@ -15,6 +14,7 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
+import { API_BASE_URL } from '../../config.js';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -26,10 +26,9 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId:
-      '***REMOVED***',
+    clientId: Constants.expoConfig.extra.GOOGLE_CLIENT_ID,
     scopes: ['profile', 'email'],
-    redirectUri: '***REMOVED***',
+    redirectUri: Constants.expoConfig.extra.GOOGLE_REDIRECT_URI,
   });
 
   useEffect(() => {
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const userIdToUse = userId;
 
-      const saveTokenUrl = `***REMOVED***/users/${userIdToUse}/push-token`;
+      const saveTokenUrl = `${API_BASE_URL}/users/${userIdToUse}/push-token`;
       const response = await fetch(saveTokenUrl, {
         method: 'POST',
         headers: {

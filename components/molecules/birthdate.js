@@ -16,6 +16,7 @@ import map from '../../public/mapa.png';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { API_BASE_URL } from '../../config';
 
 const BirthdateScreen = ({ onComplete }) => {
   const { createUserData } = useUser();
@@ -48,7 +49,7 @@ const BirthdateScreen = ({ onComplete }) => {
     try {
       const userIdToUse = userId;
 
-      const saveTokenUrl = `***REMOVED***/users/${userIdToUse}/push-token`;
+      const saveTokenUrl = `${API_BASE_URL}/users/${userIdToUse}/push-token`;
       const response = await fetch(saveTokenUrl, {
         method: 'POST',
         headers: {
