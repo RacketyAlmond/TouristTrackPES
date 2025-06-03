@@ -1,8 +1,9 @@
 import 'fast-text-encoding';
+import { API_BASE_URL } from 'config';
 
 export const getSummaryData = async (countries = []) => {
   try {
-    const baseUrl = '***REMOVED***/tourism/municipalities';
+    const baseUrl = `${API_BASE_URL}/tourism/municipalities`;
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url =
@@ -21,7 +22,7 @@ export const getSummaryData = async (countries = []) => {
 
 export const getDataOfMunicipality = async (municipality) => {
   try {
-    const baseUrl = '***REMOVED***/tourism/municipality';
+    const baseUrl = `${API_BASE_URL}/tourism/municipality`;
 
     // Si se pasa un array, lo convertimos a string tipo query
     const url = `${baseUrl}/${encodeURIComponent(municipality)}`;
@@ -38,7 +39,7 @@ export const getDataOfMunicipality = async (municipality) => {
 export const listOriginCountries = async () => {
   try {
     const resp = await fetch(
-      '***REMOVED***/tourism/originCountries',
+      `${API_BASE_URL}/tourism/originCountries`,
     );
     if (!resp.ok) throw new Error(`Error en la solicitud: ${resp.status}`);
     const data = await resp.json();

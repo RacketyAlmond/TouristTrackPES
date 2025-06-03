@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import { API_BASE_URL } from '/config';
 
 class SocketService {
   constructor() {
@@ -6,7 +7,7 @@ class SocketService {
     this.connected = false;
     this.listeners = {};
     this.userId = null;
-    this.API_BASE_URL = '***REMOVED***';
+    this.API_BASE_URL = `${API_BASE_URL}`;
   }
 
   connect(userId) {

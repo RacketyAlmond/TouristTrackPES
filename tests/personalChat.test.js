@@ -8,6 +8,7 @@
 import React from 'react';
 import renderer, { act } from 'react-test-renderer';
 import PersonalChat from '../components/organisms/personalChat.js';
+import { API_BASE_URL } from '../config';
 
 jest.mock('../components/molecules/chatHeader.js', () => {
   const React = require('react');
@@ -99,7 +100,7 @@ describe('PersonalChat component', () => {
     expect(list.props.messages).toHaveLength(1);
 
     expect(fetch.mock.calls[1][0]).toBe(
-      '***REMOVED***/messages',
+      `${API_BASE_URL}/messages`,
     );
     expect(fetch.mock.calls[1][1].method).toBe('POST');
   });

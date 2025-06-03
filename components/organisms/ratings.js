@@ -21,6 +21,7 @@ import { useCallback } from 'react';
 import { auth } from '../../firebaseConfig.js';
 import { useUser } from '../atoms/UserContext';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config';
 
 const RatingScreen = ({ route }) => {
   const { t } = useTranslation('ratings');
@@ -100,7 +101,7 @@ const RatingScreen = ({ route }) => {
   const fetchRatings = async (city) => {
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/location/${city}`,
+        `${API_BASE_URL}/ratings/location/${city}`,
       );
       if (!response.ok) throw new Error('Error fetching ratings');
       const data = await response.json();
@@ -119,7 +120,7 @@ const RatingScreen = ({ route }) => {
         text: t('delete'),
         style: 'destructive',
         onPress: async () => {
-          await fetch(`***REMOVED***/ratings/${id}`, {
+          await fetch(`${API_BASE_URL}/ratings/${id}`, {
             method: 'DELETE',
           });
           setRatings((prev) => prev.filter((r) => r.id !== id));
@@ -148,7 +149,7 @@ const RatingScreen = ({ route }) => {
 
     try {
       const response = await fetch(
-        `***REMOVED***/ratings/${ratingToUpdate.id}`,
+        `${API_BASE_URL}/ratings/${ratingToUpdate.id}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -197,7 +198,7 @@ const RatingScreen = ({ route }) => {
     };
 
     try {
-      const response = await fetch('***REMOVED***/ratings', {
+      const response = await fetch(`${API_BASE_URL}/ratings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newRatingData),

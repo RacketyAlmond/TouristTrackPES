@@ -3,6 +3,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { Platform, Alert } from 'react-native';
+import { API_BASE_URL } from '/config';
 
 // Configure how notifications appear when app is in foreground
 Notifications.setNotificationHandler({
@@ -46,7 +47,7 @@ export async function registerForPushNotificationsAsync(userId) {
   // Save to server
   try {
     const response = await fetch(
-      `***REMOVED***/users/${userId}/push-token`,
+      `${API_BASE_URL}/users/${userId}/push-token`,
       {
         method: 'POST',
         headers: {
