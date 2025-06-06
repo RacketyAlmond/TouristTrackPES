@@ -58,7 +58,7 @@ Detailed Firebase setup guide: [Firebase Documentation](https://firebase.google.
    - Under Sign-in method, enable Google
    - Add your OAuth 2.0 Client ID and Client Secret
 
-For detailed Google Auth setup: [Google Sign-In Documentation](https://developers.google.com/identity/sign-in/ios/start-integrating)
+For detailed Google Auth setup (Not of much use but it's there): [Google Sign-In Documentation](https://developers.google.com/identity/sign-in/ios/start-integrating)
 
 ## Environment Setup
 
@@ -93,7 +93,36 @@ For detailed Google Auth setup: [Google Sign-In Documentation](https://developer
    - Press 'a' for Android emulator
    - Press 'i' for iOS simulator
 
-## Available Scripts
+
+
+
+## Troubleshooting
+
+If you encounter authentication issues:
+- Verify OAuth 2.0 credentials are correctly configured
+- Ensure `google-services.json` and `GoogleService-Info.plist` are properly placed
+- Check if all required APIs are enabled in Google Cloud Console
+- Verify Firebase configuration in `firebaseConfig.js`
+
+Common errors:
+1. "Google Sign-In failed":
+   - Check if Google Cloud Console credentials match your `.env.local`
+   - Verify OAuth consent screen is properly configured
+
+2. "Firebase configuration error":
+   - Ensure all required fields in `firebaseConfig.js` are filled correctly
+   - Verify Firebase project settings match your configuration
+
+## Additional Resources
+
+- [Firebase Authentication Guide](https://firebase.google.com/docs/auth)
+- [Firestore Setup Guide](https://firebase.google.com/docs/firestore/quickstart)
+- [Firebase Storage Guide](https://firebase.google.com/docs/storage)
+
+## Support
+
+For issues and questions, please [open an issue](https://github.com/RacketyAlmond/TouristTrackPES/issues) on GitHub.
+
 
 
 
