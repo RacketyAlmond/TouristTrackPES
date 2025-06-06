@@ -7,4 +7,7 @@ Para ejecutarlo usar: - npm run - npm start
 
 
 
-![copy_53284C88-C097-424B-BB15-5C1796C42253 (4) (1)](https://github.com/user-attachments/assets/6714d494-6c56-4ad8-a37e-c4a08657b4d9)
+
+
+https://github.com/user-attachments/assets/68e458e1-94dc-44d6-8f06-d5044b8cc8d4
+
