@@ -8,7 +8,7 @@
   npm install -g expo-cli
   ```
 - A Firebase account
-- A Google Cloud Console account
+- A Google Cloud Console account (Only for Sign in with Google)
 
 ## Firebase Setup
 
