@@ -43,7 +43,7 @@
 
 Detailed Firebase setup guide: [Firebase Documentation](https://firebase.google.com/docs/web/setup)
 
-## Google Authentication Setup
+## Google Authentication Setup (OPTIONAL)
 
 1. Configure Google Sign-In:
    - Go to [Google Cloud Console](https://console.cloud.google.com/)
