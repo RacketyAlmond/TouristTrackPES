@@ -92,7 +92,7 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
   <img src="https://github.com/user-attachments/assets/2bc943f9-ebe4-4ce9-9ae1-671cedbe2ef7" alt="logo7" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
   
   <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
   <img src="https://github.com/user-attachments/assets/e158882f-05df-42a4-b8c9-e67170056458" alt="logo10" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
 </p>
 
@@ -103,7 +103,7 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
 ### System Architecture:
 
 <p>
-  <img src="https://github.com/user-attachments/assets/34ce45a3-7486-4cb8-9db6-c960e85b21b5" alt="System Architecture" width="600" style="margin-top: 20px;"/>
+<img src="https://github.com/user-attachments/assets/34ce45a3-7486-4cb8-9db6-c960e85b21b5" alt="System Architecture" style="width: 100%; height: auto; margin-top: 20px;" />
 </p>
 
 
