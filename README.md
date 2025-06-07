@@ -22,20 +22,20 @@ It also includes **forums** and **private chats** to connect with other users. A
 
 ---
 
-## 🔑 Key Features
+## Key Features
 
 <ul>
   <li>🗺️ <strong>Interactive map</strong> of Spain with color-coded tourist volume</li>
-  <li>📌 <strong>Tooltips</strong> with:
-    <ul>
-      <li>Number of tourists</li>
-      <li>Tourist's country of origin</li>
-    </ul>
-  </li>
   <li>🎛️ <strong>Filter menu</strong> to select:
     <ul>
       <li>Year and month</li>
       <li>Country of origin</li>
+    </ul>
+  </li>
+  <li>📌 <strong>Tooltips</strong> with:
+    <ul>
+      <li>Number of tourists</li>
+      <li>Tourist's country of origin</li>
     </ul>
   </li>
   <li>👤 User management:
@@ -50,7 +50,7 @@ It also includes **forums** and **private chats** to connect with other users. A
   <li>🌐 Multilanguage interface</li>
   <li>📈 Trend graphs showing tourism evolution</li>
   <li>💬 Forums (general & municipality-specific)</li>
-  <li>📨 Private chat + message notifications (even when closed)</li>
+  <li>📨 Private chat + message notifications (When app is closed)</li>
   <li>📍 Geolocation</li>
   <li>🎮 Gamification system:
     <ul>
@@ -59,9 +59,6 @@ It also includes **forums** and **private chats** to connect with other users. A
     </ul>
   </li>
 </ul>
-
-📈 Data Source
-Tourism data is fetched weekly from Spain’s official Ministerio de Industria y Turismo.
 
 
 
