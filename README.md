@@ -10,6 +10,29 @@ TourisTrack - Your go-to app for connecting with travellers
 </div>
 
 
+TourisTrack is a mobile application focused on providing a visual representation of tourism data in Spain, improving access to key information for travellers such as the tourist density in each province of Spain, along with detailed monthly data throughout the last years, origin of tourists and more through an interactive map of Spain and its municipalities.
+Additionally, it offers users the ability to start conversations with other by encouraging in detailed forums (both general and minicipality-based or chatting privately to resolve any questions they may have about upcoming trips.
+
+
+KEY FEATURES:
+•  Interactive map of Spain with colors representing the number of tourists
+•  Informative tooltip showing detailed statistics when hovering over a region
+    Number of tourists
+    Tourist's country of origin
+•  Filter menu at the top to select:
+    Year and month
+    Tourist's country of origin
+•  Region rating system
+•  User management system (log in, sign up, change user data, log out)
+•  Google sign in
+•  Set profile picture
+•  Multilanguage support
+•  Trend graphs showing the evolution of tourism in different destinations
+•  Forum
+•  Chat
+•  Geolocation
+•  Points system for participating and helping others, which increases your level and changes how your user profile appears based on the level (Gamification)
+•  Chat message notifications (Also when the application is closed)
 
 
 
