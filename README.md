@@ -11,12 +11,15 @@ TourisTrack - Your go-to app for connecting with travellers
 
 
 
+<div align="center">
+  <video width="300" controls>
+    [Watch the project in action](https://github.com/user-attachments/assets/0d2f78a4-44ba-420a-aa8d-6ba80d704ffe)
+  </video>
+</div>
 
 
 
 
-
-[Watch the project in action](https://github.com/user-attachments/assets/0d2f78a4-44ba-420a-aa8d-6ba80d704ffe)
 
 
 
