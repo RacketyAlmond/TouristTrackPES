@@ -36,28 +36,25 @@ It also includes **forums** and **private chats** to connect with other users. A
     <ul>
       <li>Year and month</li>
       <li>Country of origin</li>
-      <li>Type of tourist (day-tripper or overnight)</li>
-      <li>Autonomous community and province</li>
-      <li>Specific location within province (if available)</li>
     </ul>
   </li>
-  <li>⭐ Region rating system</li>
   <li>👤 User management:
     <ul>
       <li>Log in / Sign up / Log out</li>
-      <li>Edit user profile</li>
+      <li>Edit user details</li>
       <li>Set profile picture</li>
     </ul>
   </li>
+  <li>⭐ Region rating system</li>
   <li>🔐 Google Sign-In support</li>
   <li>🌐 Multilanguage interface</li>
   <li>📈 Trend graphs showing tourism evolution</li>
   <li>💬 Forums (general & municipality-specific)</li>
   <li>📨 Private chat + message notifications (even when closed)</li>
-  <li>📍 Geolocation support</li>
+  <li>📍 Geolocation</li>
   <li>🎮 Gamification system:
     <ul>
-      <li>Earn points by helping others</li>
+      <li>Earn points through rating minicipalities and forum activity</li>
       <li>Level up and unlock profile changes</li>
     </ul>
   </li>
