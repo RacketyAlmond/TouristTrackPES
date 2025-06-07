@@ -86,16 +86,15 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
   <img src="https://github.com/user-attachments/assets/3657b0b1-4eb6-444a-a925-c78ccb384d82" alt="logo2" width="50" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/87b4f8a9-fbe9-4e6e-9900-55996606c918" alt="logo3" width="80" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/c4ecdea3-9e4c-4489-90be-1837774541bd" alt="logo4" width="80" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/478e8c89-6830-4cd4-bd32-6f0781c1b672" alt="logo5" width="70" height="60" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/72944dcb-9106-466c-acdb-ad828232ee8b" alt="logo6" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/f84e87eb-2029-46f6-ae26-8dabc1193851" alt="logo7" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  
+  <img src="https://github.com/user-attachments/assets/741946d6-48a6-4578-9aa8-5a8082cf04d2" alt="logo5" width="70" height="60" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/b40d6725-44b3-4a84-a060-b4008578d79a" alt="logo6" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/96ae6085-f5aa-45f4-898c-2a0192540e0f" alt="logo7" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  
   <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/e158882f-05df-42a4-b8c9-e67170056458" alt="logo10" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
 </p>
-![image](https://github.com/user-attachments/assets/741946d6-48a6-4578-9aa8-5a8082cf04d2)
-![image](https://github.com/user-attachments/assets/b40d6725-44b3-4a84-a060-b4008578d79a)
-![image](https://github.com/user-attachments/assets/96ae6085-f5aa-45f4-898c-2a0192540e0f)
 
 <br/><br/>
 
