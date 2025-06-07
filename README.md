@@ -84,9 +84,9 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
 <p>
   <img src="https://github.com/user-attachments/assets/4eb6b1d1-68b4-496e-9b3d-040f020471e3" alt="logo1" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/3657b0b1-4eb6-444a-a925-c78ccb384d82" alt="logo2" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/87b4f8a9-fbe9-4e6e-9900-55996606c918" alt="logo3" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/c4ecdea3-9e4c-4489-90be-1837774541bd" alt="logo4" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/478e8c89-6830-4cd4-bd32-6f0781c1b672" alt="logo5" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/87b4f8a9-fbe9-4e6e-9900-55996606c918" alt="logo3" width="80" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/c4ecdea3-9e4c-4489-90be-1837774541bd" alt="logo4" width="80" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/478e8c89-6830-4cd4-bd32-6f0781c1b672" alt="logo5" width="80" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/72944dcb-9106-466c-acdb-ad828232ee8b" alt="logo6" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/f84e87eb-2029-46f6-ae26-8dabc1193851" alt="logo7" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
