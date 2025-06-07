@@ -9,30 +9,60 @@
 TourisTrack - Your go-to app for connecting with travellers
 </div>
 
+TourisTrack is a mobile application developed in React Native's Expo, designed to visually represent tourism data across Spain. It provides users with access to essential information—such as tourist density per province, monthly trends, and country of origin—through an interactive map of Spain and its municipalities.
 
-TourisTrack is a mobile application focused on providing a visual representation of tourism data in Spain, improving access to key information for travellers such as the tourist density in each province of Spain, along with detailed monthly data throughout the last years, origin of tourists and more through an interactive map of Spain and its municipalities.
-Additionally, it offers users the ability to start conversations with other by encouraging in detailed forums (both general and minicipality-based or chatting privately to resolve any questions they may have about upcoming trips.
+But it’s more than just data. TourisTrack encourages connections between users via discussion forums and private chat, making it easier to get real insights before traveling. All data is updated weekly using information from Spain’s Ministerio de Industria y Turismo.
 
+🔑 Key Features
+🗺️ Interactive Map & Data Insights
+Interactive map of Spain with color-coded tourist volume
 
-KEY FEATURES:
-•  Interactive map of Spain with colors representing the number of tourists
-•  Informative tooltip showing detailed statistics when hovering over a region
-    Number of tourists
-    Tourist's country of origin
-•  Filter menu at the top to select:
-    Year and month
-    Tourist's country of origin
-•  Region rating system
-•  User management system (log in, sign up, change user data, log out)
-•  Google sign in
-•  Set profile picture
-•  Multilanguage support
-•  Trend graphs showing the evolution of tourism in different destinations
-•  Forum
-•  Chat
-•  Geolocation
-•  Points system for participating and helping others, which increases your level and changes how your user profile appears based on the level (Gamification)
-•  Chat message notifications (Also when the application is closed)
+Tooltips showing:
+
+Number of tourists
+
+Tourist country of origin
+
+🎯 Powerful Filters
+Year and month
+
+Tourist’s country of origin
+
+Autonomous community and destination province
+
+Specific location within a province (if available)
+
+💬 Social & Communication Tools
+General and municipality-based forums
+
+Private chat
+
+Chat notifications (even when app is closed)
+
+📊 Data Visualization
+Trend graphs showing the evolution of tourism across destinations
+
+👥 User System
+Sign up, log in, log out, and edit profile
+
+Google sign-in
+
+Profile picture upload
+
+Multilanguage support
+
+🧩 Gamification
+Earn points by helping others
+
+Level system that changes your user appearance based on contributions
+
+📍 Extra Features
+Geolocation support
+
+Region rating system
+
+📈 Data Source
+Tourism data is fetched weekly from Spain’s official Ministerio de Industria y Turismo.
 
 
 
