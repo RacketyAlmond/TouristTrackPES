@@ -1,3 +1,26 @@
+
+
+
+![logo](https://github.com/user-attachments/assets/c8848fad-0ab3-4bf3-8fe5-0b337692260f)
+
+
+TourisTrack - Your go-to app for connecting with travellers
+
+
+
+
+
+
+
+
+
+[Watch the project in action](https://github.com/user-attachments/assets/0d2f78a4-44ba-420a-aa8d-6ba80d704ffe)
+
+
+
+
+
+
 # Project Setup Guide
 
 ## Prerequisites
@@ -43,6 +66,24 @@
 
 Detailed Firebase setup guide: [Firebase Documentation](https://firebase.google.com/docs/web/setup)
 
+
+## Environment Setup
+
+1. Create local environment file:
+   - Create a copy of the example environment file:
+     ```javascript
+     copy .env.example .env.local
+     ```
+
+2. Configure environment variables in `.env.local`:
+   ```plaintext
+   API_BASE_URL=your_backend_url
+   GOOGLE_WEB_CLIENT_ID=your_google_web_client_id
+   GOOGLE_ANDROID_CLIENT_ID=your_google_android_client_id
+   GOOGLE_IOS_CLIENT_ID=your_google_ios_client_id
+   ```
+
+
 ## Google Authentication Setup (OPTIONAL)
 
 1. Configure Google Sign-In:
@@ -60,21 +101,6 @@ Detailed Firebase setup guide: [Firebase Documentation](https://firebase.google.
 
 For detailed Google Auth setup (Not of much use but it's there): [Google Sign-In Documentation](https://developers.google.com/identity/sign-in/ios/start-integrating)
 
-## Environment Setup
-
-1. Create local environment file:
-   - Create a copy of the example environment file:
-     ```javascript
-     copy .env.example .env.local
-     ```
-
-2. Configure environment variables in `.env.local`:
-   ```plaintext
-   API_BASE_URL=your_backend_url
-   GOOGLE_WEB_CLIENT_ID=your_google_web_client_id
-   GOOGLE_ANDROID_CLIENT_ID=your_google_android_client_id
-   GOOGLE_IOS_CLIENT_ID=your_google_ios_client_id
-   ```
 
 ## Installation and Running the Project
 
@@ -130,5 +156,6 @@ For issues and questions, please [open an issue](https://github.com/RacketyAlmon
 
 
 
-https://github.com/user-attachments/assets/68e458e1-94dc-44d6-8f06-d5044b8cc8d4
+
+
 
