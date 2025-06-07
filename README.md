@@ -9,57 +9,59 @@
 TourisTrack - Your go-to app for connecting with travellers
 </div>
 
-TourisTrack is a mobile application developed in React Native's Expo, designed to visually represent tourism data across Spain. It provides users with access to essential information—such as tourist density per province, monthly trends, and country of origin—through an interactive map of Spain and its municipalities.
+## 🌍 Overview
 
-But it’s more than just data. TourisTrack encourages connections between users via discussion forums and private chat, making it easier to get real insights before traveling. All data is updated weekly using information from Spain’s Ministerio de Industria y Turismo.
+**TourisTrack** is a mobile application that provides a visual and interactive experience of tourism trends across Spain. It helps travelers explore:
 
-🔑 Key Features
-🗺️ Interactive Map & Data Insights
-Interactive map of Spain with color-coded tourist volume
+- **Tourist density by region**
+- **Monthly and historical trends**
+- **Visitor country of origin**
+- **Insights through a dynamic map interface**
 
-Tooltips showing:
+It also includes **forums** and **private chats** to connect with other users. All data is pulled **weekly** from Spain’s official *Ministerio de Industria y Turismo*.
 
-Number of tourists
+---
 
-Tourist country of origin
+## 🔑 Key Features
 
-🎯 Powerful Filters
-Year and month
-
-Tourist’s country of origin
-
-Autonomous community and destination province
-
-Specific location within a province (if available)
-
-💬 Social & Communication Tools
-General and municipality-based forums
-
-Private chat
-
-Chat notifications (even when app is closed)
-
-📊 Data Visualization
-Trend graphs showing the evolution of tourism across destinations
-
-👥 User System
-Sign up, log in, log out, and edit profile
-
-Google sign-in
-
-Profile picture upload
-
-Multilanguage support
-
-🧩 Gamification
-Earn points by helping others
-
-Level system that changes your user appearance based on contributions
-
-📍 Extra Features
-Geolocation support
-
-Region rating system
+<ul>
+  <li>🗺️ <strong>Interactive map</strong> of Spain with color-coded tourist volume</li>
+  <li>📌 <strong>Tooltips</strong> with:
+    <ul>
+      <li>Number of tourists</li>
+      <li>Tourist's country of origin</li>
+    </ul>
+  </li>
+  <li>🎛️ <strong>Filter menu</strong> to select:
+    <ul>
+      <li>Year and month</li>
+      <li>Country of origin</li>
+      <li>Type of tourist (day-tripper or overnight)</li>
+      <li>Autonomous community and province</li>
+      <li>Specific location within province (if available)</li>
+    </ul>
+  </li>
+  <li>⭐ Region rating system</li>
+  <li>👤 User management:
+    <ul>
+      <li>Log in / Sign up / Log out</li>
+      <li>Edit user profile</li>
+      <li>Set profile picture</li>
+    </ul>
+  </li>
+  <li>🔐 Google Sign-In support</li>
+  <li>🌐 Multilanguage interface</li>
+  <li>📈 Trend graphs showing tourism evolution</li>
+  <li>💬 Forums (general & municipality-specific)</li>
+  <li>📨 Private chat + message notifications (even when closed)</li>
+  <li>📍 Geolocation support</li>
+  <li>🎮 Gamification system:
+    <ul>
+      <li>Earn points by helping others</li>
+      <li>Level up and unlock profile changes</li>
+    </ul>
+  </li>
+</ul>
 
 📈 Data Source
 Tourism data is fetched weekly from Spain’s official Ministerio de Industria y Turismo.
