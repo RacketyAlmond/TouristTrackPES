@@ -89,7 +89,7 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
   
   <img src="https://github.com/user-attachments/assets/47fa1072-e873-4a6b-9fd2-1100a16b71c9" alt="logo5" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/0d2d846e-b92e-40c9-8ad2-72502f6dccf3" alt="logo6" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
-  <img src="https://github.com/user-attachments/assets/780325fc-9610-4bcb-ae04-be821e4fd5ed" alt="logo7" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
+  <img src="https://github.com/user-attachments/assets/2bc943f9-ebe4-4ce9-9ae1-671cedbe2ef7" alt="logo7" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   
   <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
   <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" width="40" height="40" style="border-radius: 50%; margin-right: 8px;"/>
