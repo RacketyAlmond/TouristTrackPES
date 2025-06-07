@@ -1,8 +1,8 @@
 
 
 
-![logo](https://github.com/user-attachments/assets/c8848fad-0ab3-4bf3-8fe5-0b337692260f)
 
+<img src="https://github.com/user-attachments/assets/c8848fad-0ab3-4bf3-8fe5-0b337692260f" alt="logo" style="width:50%; height:auto;">
 
 TourisTrack - Your go-to app for connecting with travellers
 
