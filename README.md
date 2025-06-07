@@ -10,11 +10,11 @@ TourisTrack - Your go-to app for connecting with travellers
 </div>
 
 
-<p align="center">
-  <a href="[https://github.com/yourusername/yourrepo/assets/yourvideo.mp4](https://youtu.be/iHlyXfFLQgA?si=oEH_nH6ZBrbNe04q)">
-    <img src="[https://github.com/yourusername/yourrepo/assets/thumbnail.png](https://youtu.be/iHlyXfFLQgA?si=oEH_nH6ZBrbNe04q)" width="300" />
-  </a>
-</p>
+
+
+
+https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
+
 
 
 
