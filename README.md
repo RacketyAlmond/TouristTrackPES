@@ -82,18 +82,18 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
 ### Key technologies utilized:
 
 <p align="center" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-  <img src="https://github.com/user-attachments/assets/4eb6b1d1-68b4-496e-9b3d-040f020471e3" alt="logo1" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/3657b0b1-4eb6-444a-a925-c78ccb384d82" alt="logo2" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/b16638d3-4f7b-4c52-8b59-bfb8e055d273" alt="logo3" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/c4ecdea3-9e4c-4489-90be-1837774541bd" alt="logo4" style="width: 8vw; max-width: 120px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/4eb6b1d1-68b4-496e-9b3d-040f020471e3" alt="logo1" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/3657b0b1-4eb6-444a-a925-c78ccb384d82" alt="logo2" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/b16638d3-4f7b-4c52-8b59-bfb8e055d273" alt="logo3" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/c4ecdea3-9e4c-4489-90be-1837774541bd" alt="logo4" style="width: 6vw; max-width: 120px; height: auto; border-radius: 50%;" />
   
-  <img src="https://github.com/user-attachments/assets/47fa1072-e873-4a6b-9fd2-1100a16b71c9" alt="logo5" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/0d2d846e-b92e-40c9-8ad2-72502f6dccf3" alt="logo6" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/2bc943f9-ebe4-4ce9-9ae1-671cedbe2ef7" alt="logo7" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/47fa1072-e873-4a6b-9fd2-1100a16b71c9" alt="logo5" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/0d2d846e-b92e-40c9-8ad2-72502f6dccf3" alt="logo6" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/2bc943f9-ebe4-4ce9-9ae1-671cedbe2ef7" alt="logo7" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
   
-  <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
-  <img src="https://github.com/user-attachments/assets/e158882f-05df-42a4-b8c9-e67170056458" alt="logo10" style="width: 5vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/fd1a12ac-6b26-41c3-b205-55e7b662bbb0" alt="logo8" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/b02d2a67-abec-4b7a-b951-cf5004f2b7e3" alt="logo9" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
+  <img src="https://github.com/user-attachments/assets/e158882f-05df-42a4-b8c9-e67170056458" alt="logo10" style="width: 6vw; max-width: 80px; height: auto; border-radius: 50%;" />
 </p>
 
 
