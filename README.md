@@ -72,7 +72,7 @@ It also includes **forums** and **private chats** to connect with other users. A
 
 
 
-https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
+https://github.com/user-attachments/assets/7f8ec032-c6b0-4cd3-b3fb-2cae8e9a7948
 
 
 
@@ -98,6 +98,9 @@ https://github.com/user-attachments/assets/352fc121-3a02-43f3-8eea-ad5ddbb999f1
 
 
 <br/><br/>
+
+
+
 
 
 ### System Architecture:
