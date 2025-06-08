@@ -4,15 +4,18 @@
 <div align="center">
 <p><em>A comprehensive tourism analytics and social networking platform for Spain</em></p>
 </div>
-<br>
+<br/>
+
 ### 🌟 What is TouristTrackPES?
 
 *TouristTrackPES* is a React Native mobile application that transforms how people explore and understand tourism in Spain. By combining *real-time data visualization*, *social networking*, and *gamification*, it creates a unique platform where travelers, tourism professionals, and data enthusiasts can discover, share, and engage with Spain's tourism landscape.
-<br>
+<br/>
+
 ### 🎯 The Problem We Solve
 
 Spain is one of the world's top tourist destinations, but accessing and understanding tourism data has traditionally been limited to industry professionals. TouristTrackPES democratizes this information, making tourism analytics accessible and engaging for everyone while fostering a community of travel enthusiasts.
-<br>
+<br/>
+
 ### 💡 Our Approach
 
 The app bridges the gap between *data and community* by offering:
@@ -27,8 +30,9 @@ The app bridges the gap between *data and community* by offering:
 
 
 - *📱 Mobile-First Experience*: Native iOS/Android apps with full web compatibility
-<br>
-<br>
+<br/>
+<br/>
+
 ### 🌍 Core Functionality
 
 
