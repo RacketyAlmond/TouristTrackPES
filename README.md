@@ -1,3 +1,4 @@
+<p align="center">
 <img src="https://github.com/user-attachments/assets/c8848fad-0ab3-4bf3-8fe5-0b337692260f" alt="logo" style="width:50%; height:auto;">
 </p>
 <div align="center">
@@ -18,8 +19,14 @@ Spain is one of the world's top tourist destinations, but accessing and understa
 The app bridges the gap between *data and community* by offering:
 
 - *📊 Interactive Data Visualization*: Transform complex tourism statistics into intuitive, visual experiences
+
+
 -*🤝 Social Connectivity**: Connect travelers through forums and real-time chat
+
+
 -*🎮 Engagement Through Gamification**: Reward user participation with points, levels, and achievements
+
+
 -*📱 Mobile-First Experience**: Native iOS/Android apps with full web compatibility
 
 ## 🌍 Core Functionality
