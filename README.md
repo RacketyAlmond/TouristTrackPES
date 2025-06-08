@@ -24,26 +24,41 @@ The app bridges the gap between *data and community* by offering:
 
 ## 🌍 Core Functionality
 
-*TourisTrack* provides a comprehensive tourism experience through:
 
-### Data Analytics & Visualization
-- *Real-time tourism density mapping* across Spanish regions
-- *Historical trend analysis* with interactive charts and graphs
-- *Country-of-origin insights* showing visitor demographics
-- *Municipal-level statistics* with detailed breakdowns
-- *Weekly data updates* from Spain's official Ministerio de Industria y Turismo
-
-### Social Features
-- *Community forums* for general travel discussion and municipality-specific conversations
-- *Real-time private messaging* with push notifications
-- *User profiles* with customizable avatars and travel preferences
-- *Rating and review system* for Spanish destinations
-
-### Smart Features
-- *Intelligent search* with autocomplete for Spanish municipalities
-- *Geolocation integration* for location-based recommendations
-- *Multi-language support* (Spanish/English)
-- *Cross-platform compatibility* (iOS, Android, Web)
+<ul>
+  <li><strong>Interactive map</strong> of Spain with color-coded tourist volume</li><br>
+  <li><strong>Filter menu</strong> to select:
+    <ul>
+      <li>Year and month</li>
+      <li>Country of origin</li>
+    </ul>
+  </li><br>
+  <li><strong>Tooltips</strong> with:
+    <ul>
+      <li>Number of tourists</li>
+      <li>Tourist's country of origin</li>
+    </ul>
+  </li><br>
+  <li>User management:
+    <ul>
+      <li>Log in / Sign up / Log out</li>
+      <li>Edit user details</li>
+      <li>Set profile picture</li>
+    </ul>
+  </li><br>
+  <li>Region rating system</li><br>
+  <li>Google Sign-In support</li><br>
+  <li>Multilanguage interface</li><br>
+  <li>Trend graphs showing tourism evolution</li><br>
+  <li>Forums (general & municipality-specific)</li><br>
+  <li>Private chat + message notifications (When app is closed)</li><br>
+  <li>Geolocation</li><br>
+  <li>Gamification system:
+    <ul>
+      <li>Earn points through rating municipalities and forum activity</li>
+      <li>Level up and unlock profile changes</li>
+    </ul>
+  </li>
 
 
 
